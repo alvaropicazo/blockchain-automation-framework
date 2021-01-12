@@ -1,0 +1,87 @@
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  name: storealvstorealvibft
+  namespace: storealv-bes
+  annotations:
+    flux.weave.works/automated: "false"
+spec:
+  releaseName: storealvstorealvibft
+  chart:
+    git: git@github.com:alvaropicazo/blockchain-automation-framework.git
+    ref: testbesu
+    path: platforms/hyperledger-besu/charts/node_orion 
+  values:
+    replicaCount: 1
+
+    healthcheck:
+      readinessthreshold: 100
+      readinesscheckinterval: 5
+
+    staticnodes:
+      - "enode://b26d1b439e4d70567b946e1d4bc3c3a5074912b3b39ee8bb02dc25b25aa1e2c41cb6c45bc4e037325721541ee730746feaf4defc62cd940751e83d9ec3e5082a@54.229.122.144:15050"
+      - "enode://059dbb45146eeb882df7446aa5a3b4af6c8e440e128eb99009442aeb53bc22e4feb05f7e7e73de07e0d3bf3635baf0d375ab8ab11b60720634fd2bcdac6fe8eb@54.229.122.144:15060"
+      - "enode://9e1ce10a9a73f9c92d50815e553370925e8bb30a9257a054d2a45aa83ca64770c50baf476e50a35f40575afdc3cc8d7f0cdde52b7eab7cec2761dfc4e912ccb5@54.229.122.144:15070"
+      - "enode://6721e22250e256941625f7a852363ab5499a7db8eb27e27a5ed296784b89271ca0bccafb72706054adc5fcdb0d06ed887466d89a5a40e45661801c416f02c357@54.229.122.144:15080"
+      - "enode://e636788ca3c0e891e5728a1fdbcf02f6e76104c680d8ac2216b60ac626258164e59b06dc98c6d37ea23fcebe324c21357c4e19ab5d33c01ed47853a63c6c0791@54.229.122.144:15010"
+      - "enode://20632e14b2a3f7af175564418618b7c24d193608dbe409ce7d07963825a24bedddddc394495b5b6d9f3ae4dad35cbec5229fadc9334c1f945025d97ce17ad89f@54.229.122.144:15020"
+      - "enode://c2ee5685ceb537baa9c46a9f2d09514a2f02a26db9067601b5a25b1c1260516bcddf742b088b66c43bd73bda1c0be09dea94b8389edfe3bea549a5dd182d0494@54.229.122.144:15030"
+      - "enode://15ff61ba3cd6b666ef114d8c2e5dd6906920877992630325ad52cec959a17ca6d27cd4c747a643d56d76b6979b4dcb140ecbb1e7fcdd69d8628adf4b3b53844e@54.229.122.144:15040"
+
+    metadata:
+      namespace: storealv-bes
+      labels:
+
+    liveliness_check:
+      enabled: false
+
+    proxy:
+      provider: ambassador
+      external_url: storealv.rc.dev2.aws.blockchaincloudpoc-develop.com
+      p2p: 15030
+      rpc: 15031
+      tmport: 15033
+
+    images:
+      node: hyperledger/besu:1.4.4
+      alpineutils: hyperledgerlabs/alpine-utils:1.0
+      orion: pegasyseng/orion:1.5.2
+
+    node:
+      name: storealv
+      consensus: ibft
+      subject: O=Store,OU=Store,L=New York,C=US
+      mountPath: /etc/genesis
+      servicetype: ClusterIP
+      imagePullSecret: regcred
+      ports:
+        p2p: 30303
+        rpc: 8545
+        ws: 8546
+
+    orion:
+      name: orion
+      tls: True
+      confdir: /etc/config
+      url: "https://storealv.rc.dev2.aws.blockchaincloudpoc-develop.com"
+      nodelist: "\"https://carrieralv.rc.dev2.aws.blockchaincloudpoc-develop.com:15013\",\"https://manufactureralv.rc.dev2.aws.blockchaincloudpoc-develop.com:15023\",\"https://warehousealv.rc.dev2.aws.blockchaincloudpoc-develop.com:15043\""
+      trust: ca-or-tofu
+      ports:
+        nodeport: 8888
+        clientport: 8080
+
+    storage:
+      storageclassname: awsstorageclass
+      storagesize: 1Gi
+
+    vault:
+      address: http://vault.internal.dev2.aws.blockchaincloudpoc-develop.com:20001
+      secretprefix: secret/storealv-bes/crypto/storealv
+      serviceaccountname: vault-auth
+      keyname: data
+      oriondir: orion
+      tlsdir: tls
+      role: vault-role
+      authpath: besustorealv
+
+    genesis: ewogICJjb25maWciOiB7CiAgICAiY2hhaW5JZCI6IDIwMTgsCiAgICAiY29uc3RhbnRpbm9wbGVmaXhibG9jayI6IDAsCiAgICAiY29udHJhY3RTaXplTGltaXQiOiAyMTQ3NDgzNjQ3LAogICAgImliZnQyIjogewogICAgICAiYmxvY2twZXJpb2RzZWNvbmRzIjogMiwKICAgICAgImVwb2NobGVuZ3RoIjogMzAwMDAsCiAgICAgICJyZXF1ZXN0dGltZW91dHNlY29uZHMiOiAxMAogICAgfQogIH0sCiAgIm5vbmNlIjogIjB4MCIsCiAgInRpbWVzdGFtcCI6ICIweDU4ZWU0MGJhIiwKICAiZ2FzTGltaXQiOiAiMHgxZmZmZmZmZmZmZmZmZiIsCiAgImRpZmZpY3VsdHkiOiAiMHgxIiwKICAiZXh0cmFEYXRhIjogIjB4Zjg3ZWEwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMGY4NTQ5NGYzYjJkNTgyNzFhNGMyMDg4NDQ3YTg2NzdmMWYxYjA1NzgyZjg5Y2I5NGM5NDAxNDM0MzgzMGQ4ZTA5NmZjMTY5MDRhMWNjNTQwNmU0YWI4YjA5NDQwMzE0Y2MzZDZiNDZhYWM0MTAwZWJjYzY1M2NiNTE1ZTNlZGFmYWM5NDE2Yjk1ZWZkNmVkMThlZTkxMTE1NmYwMzEzM2FhYmI1Y2M4ZmVjMGQ4MDg0MDAwMDAwMDBjMCIKfQ==
