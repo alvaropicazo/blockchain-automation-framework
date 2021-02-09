@@ -61,3 +61,29 @@ data:
         PeerOUIdentifier:
           Certificate: cacerts/ca.crt
           OrganizationalUnitIdentifier: {{ $.Values.peer.mspconfig.nodeOUs.peerOUidentifier.organizationalunitidentifier }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ $.Values.peer.name }}-externalChaincode
+  namespace: {{ $.Values.metadata.namespace }}
+  labels:
+    app.kubernetes.io/name: {{ $.Values.peer.name }}-externalChaincode
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    {{- include "labels.custom" . | nindent 2 }}
+data:
+  mspconfig: |
+    {{if  ($.Values.peer.mspconfig.organizationalunitidentifiers) }}
+      OrganizationalUnitIdentifiers:{{ range $.Values.peer.mspconfig.organizationalunitidentifiers }}
+        - Certificate: cacerts/ca.crt
+          OrganizationalUnitIdentifier: {{ . }}{{ end }}{{end}}
+      NodeOUs:
+        Enable: true
+        ClientOUIdentifier:
+          Certificate: cacerts/ca.crt
+          OrganizationalUnitIdentifier: {{ $.Values.peer.mspconfig.nodeOUs.clientOUidentifier.organizationalunitidentifier }}
+        PeerOUIdentifier:
+          Certificate: cacerts/ca.crt
+          OrganizationalUnitIdentifier: {{ $.Values.peer.mspconfig.nodeOUs.peerOUidentifier.organizationalunitidentifier }}
