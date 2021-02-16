@@ -1,0 +1,48 @@
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  name: anchorpeer-allchannel-malv
+  namespace: malv-net
+  annotations:
+    fluxcd.io/automated: "false"
+spec:
+  releaseName: anchorpeer-allchannel-malv
+  chart:
+    git: https://github.com/alvaropicazo/blockchain-automation-framework.git
+    ref: addchannel-issue
+    path: platforms/hyperledger-fabric/charts/anchorpeer
+  values:
+    metadata:
+      namespace: malv-net
+      images:
+        fabrictools: hyperledger/fabric-tools:1.4.4
+        alpineutils: index.docker.io/hyperledgerlabs/alpine-utils:1.0
+
+    peer:
+      name: peer0
+      address: peer0.malv-net.hf.dev2.aws.blockchaincloudpoc-develop.com:8443
+      localmspid: malvMSP
+      loglevel: debug
+      tlsstatus: true
+
+    vault:
+      role: vault-role
+      address: http://vault.internal.dev2.aws.blockchaincloudpoc-develop.com:20001
+      authpath: malv-net-auth
+      adminsecretprefix: secret/crypto/peerOrganizations/malv-net/users/admin
+      orderersecretprefix: secret/crypto/peerOrganizations/malv-net/orderer
+      serviceaccountname: vault-auth
+      imagesecretname: regcred
+
+    channel:
+      name: allchannel      
+    orderer:
+      address: orderer60.hf.dev2.aws.blockchaincloudpoc-develop.com:8443
+    anchorstx: |-
+      CsACChAKDggCIgphbGxjaGFubmVsEqsCCqgCCgphbGxjaGFubmVsElcSVQoLQXBwbGljYXRpb24S
+      RggBEjoKB21hbHZNU1ASLxoHCgNNU1ASACILCgdSZWFkZXJzEgAiCwoHV3JpdGVycxIAIgoKBkFk
+      bWlucxIAKgZBZG1pbnMawAESvQEKC0FwcGxpY2F0aW9uEq0BCAESoAEKB21hbHZNU1ASlAEIARoH
+      CgNNU1ASABpZCgtBbmNob3JQZWVycxJKEkAKPgo5cGVlcjAubWFsdi1uZXQuaGYuZGV2Mi5hd3Mu
+      YmxvY2tjaGFpbmNsb3VkcG9jLWRldmVsb3AuY29tEPtBGgZBZG1pbnMiCwoHUmVhZGVycxIAIgsK
+      B1dyaXRlcnMSACIKCgZBZG1pbnMSACoGQWRtaW5zKgZBZG1pbnM=
+
