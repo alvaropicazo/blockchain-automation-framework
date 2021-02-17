@@ -1,0 +1,38 @@
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  name: peer0-walv-cli
+  namespace: walv-net
+  annotations:
+    fluxcd.io/automated: "false"
+spec:
+  releaseName: peer0-walv-cli
+  chart:
+    git: https://github.com/alvaropicazo/blockchain-automation-framework.git
+    ref: addchannel-issue
+    path: platforms/hyperledger-fabric/charts/fabric_cli    
+  values:
+    metadata:
+      namespace: walv-net
+      images:
+        fabrictools: hyperledger/fabric-tools:2.2.0
+        alpineutils: index.docker.io/hyperledgerlabs/alpine-utils:1.0
+    storage:
+      class: walvsc
+      size: 256Mi
+    vault:
+      role: vault-role
+      address: http://vault.internal.dev2.aws.blockchaincloudpoc-develop.com:20001
+      authpath: walv-net-auth
+      adminsecretprefix: secret/crypto/peerOrganizations/walv-net/users/admin
+      orderersecretprefix: secret/crypto/peerOrganizations/walv-net/orderer
+      serviceaccountname: vault-auth
+      imagesecretname: regcred
+      tls: false
+    peer:
+      name: peer0
+      localmspid: walvMSP
+      tlsstatus: true
+      address: peer0.walv-net.hf.dev2.aws.blockchaincloudpoc-develop.com:8443
+    orderer:
+      address: orderer60.hf.dev2.aws.blockchaincloudpoc-develop.com:8443
