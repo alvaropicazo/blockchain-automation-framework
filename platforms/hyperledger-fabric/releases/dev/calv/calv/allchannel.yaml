@@ -1,0 +1,51 @@
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  name: channel-calv-allchannel
+  namespace: calv-net
+  annotations:
+    fluxcd.io/automated: "false"
+spec:
+  releaseName: channel-calv-allchannel
+  chart:
+    git: https://github.com/alvaropicazo/blockchain-automation-framework.git
+    ref: addchannel-issue
+    path: platforms/hyperledger-fabric/charts/create_channel   
+  values:
+    metadata:
+      namespace: calv-net
+      network:
+        version 2.2.0
+      images:
+        fabrictools: hyperledger/fabric-tools:2.2.0
+        alpineutils: index.docker.io/hyperledgerlabs/alpine-utils:1.0
+    peer:
+      name: peer0
+      address: peer0.calv-net:7051
+      localmspid: calvMSP
+      loglevel: debug
+      tlsstatus: true
+
+    vault:
+      role: vault-role
+      address: http://vault.internal.dev2.aws.blockchaincloudpoc-develop.com:20001
+      authpath: calv-net-auth
+      adminsecretprefix: secret/crypto/peerOrganizations/calv-net/users/admin
+      orderersecretprefix: secret/crypto/peerOrganizations/calv-net/orderer 
+      serviceaccountname: vault-auth
+      imagesecretname: regcred
+
+    channel:
+      name: allchannel
+    orderer:
+      address: orderer60.hf.dev2.aws.blockchaincloudpoc-develop.com:8443
+    channeltx: |-
+      Ct0DChgKFggCGgYIv8O9gQYiCmFsbGNoYW5uZWwSwAMKvQMKCmFsbGNoYW5uZWwSSBI2CgtBcHBs
+      aWNhdGlvbhInEgsKB2NhbHZNU1ASABILCgd3YWx2TVNQEgASCwoHbWFsdk1TUBIAGg4KCkNvbnNv
+      cnRpdW0SABrkAhK4AgoLQXBwbGljYXRpb24SqAIIARILCgdjYWx2TVNQEgASCwoHd2Fsdk1TUBIA
+      EgsKB21hbHZNU1ASABokCgxDYXBhYmlsaXRpZXMSFBIKCggKBFYyXzASABoGQWRtaW5zIiIKB1Jl
+      YWRlcnMSFxINCAMSCQoHUmVhZGVycxoGQWRtaW5zIiIKB1dyaXRlcnMSFxINCAMSCQoHV3JpdGVy
+      cxoGQWRtaW5zIiIKBkFkbWlucxIYEg4IAxIKCgZBZG1pbnMQAhoGQWRtaW5zIiwKC0VuZG9yc2Vt
+      ZW50Eh0SEwgDEg8KC0VuZG9yc2VtZW50EAIaBkFkbWlucyI1ChRMaWZlY3ljbGVFbmRvcnNlbWVu
+      dBIdEhMIAxIPCgtFbmRvcnNlbWVudBACGgZBZG1pbnMqBkFkbWlucxonCgpDb25zb3J0aXVtEhkS
+      FwoVU3VwcGx5Q2hhaW5Db25zb3J0aXVt
