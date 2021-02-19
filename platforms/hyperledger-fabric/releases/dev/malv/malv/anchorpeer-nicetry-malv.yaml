@@ -1,0 +1,49 @@
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  name: anchorpeer-nicetry-malv
+  namespace: malv-net
+  annotations:
+    fluxcd.io/automated: "false"
+spec:
+  releaseName: anchorpeer-nicetry-malv
+  chart:
+    git: https://github.com/alvaropicazo/blockchain-automation-framework.git
+    ref: addchannel-issue
+    path: platforms/hyperledger-fabric/charts/anchorpeer
+  values:
+    metadata:
+      namespace: malv-net
+      images:
+        fabrictools: hyperledger/fabric-tools:2.2.0
+        alpineutils: index.docker.io/hyperledgerlabs/alpine-utils:1.0
+
+    peer:
+      name: peer0
+      address: peer0.malv-net.hf.dev2.aws.blockchaincloudpoc-develop.com:8443
+      localmspid: malvMSP
+      loglevel: debug
+      tlsstatus: true
+
+    vault:
+      role: vault-role
+      address: http://vault.internal.dev2.aws.blockchaincloudpoc-develop.com:20001
+      authpath: malv-net-auth
+      adminsecretprefix: secret/crypto/peerOrganizations/malv-net/users/admin
+      orderersecretprefix: secret/crypto/peerOrganizations/malv-net/orderer
+      serviceaccountname: vault-auth
+      imagesecretname: regcred
+
+    channel:
+      name: nicetry      
+    orderer:
+      address: orderer60.hf.dev2.aws.blockchaincloudpoc-develop.com:8443
+    anchorstx: |-
+      CtQCChUKEwgCGgYIiYG/gQYiB25pY2V0cnkSugIKtwIKB25pY2V0cnkSYBJeCgtBcHBsaWNhdGlv
+      bhJPCAESSwoHbWFsdk1TUBJAGgcKA01TUBIAIgsKB1JlYWRlcnMSACILCgdXcml0ZXJzEgAiCgoG
+      QWRtaW5zEgAiDwoLRW5kb3JzZW1lbnQSABrJARLGAQoLQXBwbGljYXRpb24StgEIARKxAQoHbWFs
+      dk1TUBKlAQgBGlkKC0FuY2hvclBlZXJzEkoSQAo+CjlwZWVyMC5tYWx2LW5ldC5oZi5kZXYyLmF3
+      cy5ibG9ja2NoYWluY2xvdWRwb2MtZGV2ZWxvcC5jb20Q+0EaBkFkbWlucxoHCgNNU1ASACIPCgtF
+      bmRvcnNlbWVudBIAIgsKB1JlYWRlcnMSACILCgdXcml0ZXJzEgAiCgoGQWRtaW5zEgAqBkFkbWlu
+      cw==
+
