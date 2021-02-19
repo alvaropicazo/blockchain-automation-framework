@@ -1,0 +1,50 @@
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  name: channel-calv-nicetry
+  namespace: calv-net
+  annotations:
+    fluxcd.io/automated: "false"
+spec:
+  releaseName: channel-calv-nicetry
+  chart:
+    git: https://github.com/alvaropicazo/blockchain-automation-framework.git
+    ref: addchannel-issue
+    path: platforms/hyperledger-fabric/charts/create_channel   
+  values:
+    metadata:
+      namespace: calv-net
+      network:
+        version 2.2.0
+      images:
+        fabrictools: hyperledger/fabric-tools:2.2.0
+        alpineutils: index.docker.io/hyperledgerlabs/alpine-utils:1.0
+    peer:
+      name: peer0
+      address: peer0.calv-net:7051
+      localmspid: calvMSP
+      loglevel: debug
+      tlsstatus: true
+
+    vault:
+      role: vault-role
+      address: http://vault.internal.dev2.aws.blockchaincloudpoc-develop.com:20001
+      authpath: calv-net-auth
+      adminsecretprefix: secret/crypto/peerOrganizations/calv-net/users/admin
+      orderersecretprefix: secret/crypto/peerOrganizations/calv-net/orderer 
+      serviceaccountname: vault-auth
+      imagesecretname: regcred
+
+    channel:
+      name: nicetry
+    orderer:
+      address: orderer60.hf.dev2.aws.blockchaincloudpoc-develop.com:8443
+    channeltx: |-
+      Cr0DChUKEwgCGgYIiYG/gQYiB25pY2V0cnkSowMKoAMKB25pY2V0cnkSOxIpCgtBcHBsaWNhdGlv
+      bhIaEgsKB2NhbHZNU1ASABILCgdtYWx2TVNQEgAaDgoKQ29uc29ydGl1bRIAGtcCEqsCCgtBcHBs
+      aWNhdGlvbhKbAggBEgsKB2NhbHZNU1ASABILCgdtYWx2TVNQEgAaJAoMQ2FwYWJpbGl0aWVzEhQS
+      CgoICgRWMl8wEgAaBkFkbWlucyIiCgZBZG1pbnMSGBIOCAMSCgoGQWRtaW5zEAIaBkFkbWlucyIs
+      CgtFbmRvcnNlbWVudBIdEhMIAxIPCgtFbmRvcnNlbWVudBACGgZBZG1pbnMiNQoUTGlmZWN5Y2xl
+      RW5kb3JzZW1lbnQSHRITCAMSDwoLRW5kb3JzZW1lbnQQAhoGQWRtaW5zIiIKB1JlYWRlcnMSFxIN
+      CAMSCQoHUmVhZGVycxoGQWRtaW5zIiIKB1dyaXRlcnMSFxINCAMSCQoHV3JpdGVycxoGQWRtaW5z
+      KgZBZG1pbnMaJwoKQ29uc29ydGl1bRIZEhcKFVN1cHBseUNoYWluQ29uc29ydGl1bQ==
