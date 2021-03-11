@@ -1,24 +1,24 @@
 metadata:
-  namespace: salv-net
+  namespace: calv-net
   images:
     fabrictools: hyperledger/fabric-tools:2.2.0
     alpineutils: index.docker.io/hyperledgerlabs/alpine-utils:1.0
 storage:
-  class: salvsc
+  class: calvsc
   size: 256Mi
 vault:
   role: vault-role
   address: http://vault.internal.dev2.aws.blockchaincloudpoc-develop.com:20001
-  authpath: salv-net-auth
-  adminsecretprefix: secret/crypto/ordererOrganizations/salv-net/users/admin
-  orderersecretprefix: secret/crypto/ordererOrganizations/salv-net/orderers/orderer60.salv-net
+  authpath: calv-net-auth
+  adminsecretprefix: secret/crypto/peerOrganizations/calv-net/users/admin
+  orderersecretprefix: secret/crypto/peerOrganizations/calv-net/orderer
   serviceaccountname: vault-auth
   imagesecretname: regcred
   tls: false
 peer:
-  name: orderer60
-  localmspid: salvMSP
+  name: peer0
+  localmspid: calvMSP
   tlsstatus: true
-  address: orderer60.hf.dev2.aws.blockchaincloudpoc-develop.com:8443
+  address: peer0.calv-net.hf.dev2.aws.blockchaincloudpoc-develop.com:8443
 orderer:
   address: orderer60.hf.dev2.aws.blockchaincloudpoc-develop.com:8443
