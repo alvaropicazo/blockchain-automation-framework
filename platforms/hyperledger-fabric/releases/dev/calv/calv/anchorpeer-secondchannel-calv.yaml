@@ -1,0 +1,49 @@
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  name: anchorpeer-secondchannel-calv
+  namespace: calv-net
+  annotations:
+    fluxcd.io/automated: "false"
+spec:
+  releaseName: anchorpeer-secondchannel-calv
+  chart:
+    git: https://github.com/alvaropicazo/blockchain-automation-framework.git
+    ref: testing-dev
+    path: platforms/hyperledger-fabric/charts/anchorpeer
+  values:
+    metadata:
+      namespace: calv-net
+      images:
+        fabrictools: hyperledger/fabric-tools:2.2.0
+        alpineutils: index.docker.io/hyperledgerlabs/alpine-utils:1.0
+
+    peer:
+      name: peer0
+      address: peer0.calv-net.hf.dev2.aws.blockchaincloudpoc-develop.com:8443
+      localmspid: calvMSP
+      loglevel: debug
+      tlsstatus: true
+
+    vault:
+      role: vault-role
+      address: http://vault.internal.dev2.aws.blockchaincloudpoc-develop.com:20001
+      authpath: alvcalv-net-auth
+      adminsecretprefix: secret/crypto/peerOrganizations/calv-net/users/admin
+      orderersecretprefix: secret/crypto/peerOrganizations/calv-net/orderer
+      serviceaccountname: vault-auth
+      imagesecretname: regcred
+
+    channel:
+      name: secondchannel      
+    orderer:
+      address: orderer60.hf.dev2.aws.blockchaincloudpoc-develop.com:8443
+    anchorstx: |-
+      CuACChsKGQgCGgYI8Yf7gwYiDXNlY29uZGNoYW5uZWwSwAIKvQIKDXNlY29uZGNoYW5uZWwSYBJe
+      CgtBcHBsaWNhdGlvbhJPCAESSwoHY2Fsdk1TUBJAGgcKA01TUBIAIgsKB1dyaXRlcnMSACIKCgZB
+      ZG1pbnMSACIPCgtFbmRvcnNlbWVudBIAIgsKB1JlYWRlcnMSABrJARLGAQoLQXBwbGljYXRpb24S
+      tgEIARKxAQoHY2Fsdk1TUBKlAQgBGlkKC0FuY2hvclBlZXJzEkoSQAo+CjlwZWVyMC5jYWx2LW5l
+      dC5oZi5kZXYyLmF3cy5ibG9ja2NoYWluY2xvdWRwb2MtZGV2ZWxvcC5jb20Q+0EaBkFkbWlucxoH
+      CgNNU1ASACIPCgtFbmRvcnNlbWVudBIAIgsKB1JlYWRlcnMSACILCgdXcml0ZXJzEgAiCgoGQWRt
+      aW5zEgAqBkFkbWlucw==
+
