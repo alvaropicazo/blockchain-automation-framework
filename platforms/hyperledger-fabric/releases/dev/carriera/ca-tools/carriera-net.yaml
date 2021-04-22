@@ -1,0 +1,28 @@
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  name: carriera-net-ca-tools
+  namespace: carriera-net
+  annotations:
+    fluxcd.io/automated: "false"
+spec:
+  releaseName: carriera-net-ca-tools
+  chart:
+    git: https://github.com/alvaropicazo/blockchain-automation-framework.git
+    ref: testing-dev
+    path: platforms/hyperledger-fabric/charts/catools
+  values:
+    metadata:
+      namespace: carriera-net
+      name: ca-tools
+
+    replicaCount: 1
+
+    image:
+      repository: hyperledger/fabric-ca-tools
+      tag: 1.2.1
+      pullPolicy: IfNotPresent
+      
+    storage:
+      storageclassname: carrierasc
+      storagesize: 512Mi
