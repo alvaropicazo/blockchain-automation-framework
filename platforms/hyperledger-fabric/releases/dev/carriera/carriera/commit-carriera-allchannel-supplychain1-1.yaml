@@ -1,0 +1,49 @@
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  name: commit-carriera-allchannel-supplychain1-1
+  namespace: carriera-net
+  annotations:
+    fluxcd.io/automated: "false"
+spec:
+  releaseName: commit-carriera-allchannel-supplychain1-1
+  chart:
+    git: https://github.com/alvaropicazo/blockchain-automation-framework.git
+    ref: testing-dev
+    path: platforms/hyperledger-fabric/charts/commit_chaincode
+  values:
+    metadata:
+      namespace: carriera-net
+      images:
+        fabrictools: hyperledger/fabric-tools:2.2.0
+        alpineutils: index.docker.io/hyperledgerlabs/alpine-utils:1.0
+    peer:
+      name: peer0
+      address: peer0.carriera-net:7051
+      localmspid: carrieraMSP
+      loglevel: debug
+      tlsstatus: true
+    vault:
+      role: vault-role
+      address: http://vault.internal.demo.aws.blockchaincloudpoc.com:9001
+      authpath: alvcarriera-net-auth
+      adminsecretprefix: secret/crypto/peerOrganizations/carriera-net/users/admin
+      orderersecretprefix: secret/crypto/peerOrganizations/carriera-net/orderer
+      serviceaccountname: vault-auth
+      imagesecretname: regcred
+      tls: false
+    orderer:
+      address: orderer60.hf.dev2.aws.blockchaincloudpoc-develop.com:8443
+    chaincode:
+      builder: hyperledger/fabric-ccenv:2.2.0
+      name: supplychain
+      version: 1
+      sequence: 1
+      commitarguments: '\"init\",\"\"'
+      endorsementpolicies:  ''
+    channel:
+      name: allchannel
+    endorsers:
+      creator: carriera-net
+      name:  carriera  manufacta  warehousa  
+      corepeeraddress:  peer0.carriera-net.hf.dev2.aws.blockchaincloudpoc-develop.com:8443  peer0.manufacta-net.hf.dev2.aws.blockchaincloudpoc-develop.com:8443  peer0.warehousea-net.hf.dev2.aws.blockchaincloudpoc-develop.com:8443 
