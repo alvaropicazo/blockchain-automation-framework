@@ -1,0 +1,44 @@
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  name: supplychaina-net-ca
+  namespace: supplychaina-net
+  annotations:
+    fluxcd.io/automated: "false"
+spec:
+  releaseName: supplychaina-net-ca
+  chart:
+    git: https://github.com/alvaropicazo/blockchain-automation-framework.git
+    ref: testing-dev
+    path: platforms/hyperledger-fabric/charts/ca    
+  values:
+    metadata:
+      namespace: supplychaina-net
+      images:
+        alpineutils: index.docker.io/hyperledgerlabs/alpine-utils:1.0
+        ca: hyperledger/fabric-ca:1.4.8
+    server:
+      name: ca
+      tlsstatus: true
+      admin: supplychaina-admin
+    storage:
+      storageclassname: supplychainasc
+      storagesize: 512Mi 
+    vault:
+      role: vault-role
+      address: http://vault.internal.demo.aws.blockchaincloudpoc.com:9001
+      authpath: alvsupplychaina-net-auth
+      secretcert: secret/crypto/ordererOrganizations/supplychaina-net/ca?ca.supplychaina-net-cert.pem
+      secretkey: secret/crypto/ordererOrganizations/supplychaina-net/ca?supplychaina-net-CA.key
+      secretadminpass: secret/credentials/supplychaina-net/ca/supplychaina?user
+      serviceaccountname: vault-auth
+      imagesecretname: regcred
+    service:
+      servicetype: ClusterIP
+      ports:
+        tcp:
+          port: 7054
+    proxy:
+      provider: haproxy
+      type: orderer
+      external_url_suffix: hf.dev2.aws.blockchaincloudpoc-develop.com
