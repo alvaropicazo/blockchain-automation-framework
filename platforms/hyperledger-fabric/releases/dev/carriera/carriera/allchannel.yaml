@@ -1,0 +1,51 @@
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  name: channel-carriera-allchannel
+  namespace: carriera-net
+  annotations:
+    fluxcd.io/automated: "false"
+spec:
+  releaseName: channel-carriera-allchannel
+  chart:
+    git: https://github.com/alvaropicazo/blockchain-automation-framework.git
+    ref: testing-dev
+    path: platforms/hyperledger-fabric/charts/create_channel   
+  values:
+    metadata:
+      namespace: carriera-net
+      network:
+        version 2.2.0
+      images:
+        fabrictools: hyperledger/fabric-tools:2.2.0
+        alpineutils: index.docker.io/hyperledgerlabs/alpine-utils:1.0
+    peer:
+      name: peer0
+      address: peer0.carriera-net:7051
+      localmspid: carrieraMSP
+      loglevel: debug
+      tlsstatus: true
+
+    vault:
+      role: vault-role
+      address: http://vault.internal.demo.aws.blockchaincloudpoc.com:9001
+      authpath: alvcarriera-net-auth
+      adminsecretprefix: secret/crypto/peerOrganizations/carriera-net/users/admin
+      orderersecretprefix: secret/crypto/peerOrganizations/carriera-net/orderer 
+      serviceaccountname: vault-auth
+      imagesecretname: regcred
+
+    channel:
+      name: allchannel
+    orderer:
+      address: orderer60.hf.dev2.aws.blockchaincloudpoc-develop.com:8443
+    channeltx: |-
+      CvsDChgKFggCGgYIk8aEhAYiCmFsbGNoYW5uZWwS3gMK2wMKCmFsbGNoYW5uZWwSVxJFCgtBcHBs
+      aWNhdGlvbhI2Eg8KC2NhcnJpZXJhTVNQEgASEAoMbWFudWZhY3RhTVNQEgASEQoNd2FyZWhvdXNl
+      YU1TUBIAGg4KCkNvbnNvcnRpdW0SABrzAhLHAgoLQXBwbGljYXRpb24StwIIARIPCgtjYXJyaWVy
+      YU1TUBIAEhAKDG1hbnVmYWN0YU1TUBIAEhEKDXdhcmVob3VzZWFNU1ASABokCgxDYXBhYmlsaXRp
+      ZXMSFBIKCggKBFYyXzASABoGQWRtaW5zIiwKC0VuZG9yc2VtZW50Eh0SEwgDEg8KC0VuZG9yc2Vt
+      ZW50EAIaBkFkbWlucyI1ChRMaWZlY3ljbGVFbmRvcnNlbWVudBIdEhMIAxIPCgtFbmRvcnNlbWVu
+      dBACGgZBZG1pbnMiIgoHUmVhZGVycxIXEg0IAxIJCgdSZWFkZXJzGgZBZG1pbnMiIgoHV3JpdGVy
+      cxIXEg0IAxIJCgdXcml0ZXJzGgZBZG1pbnMiIgoGQWRtaW5zEhgSDggDEgoKBkFkbWlucxACGgZB
+      ZG1pbnMqBkFkbWlucxonCgpDb25zb3J0aXVtEhkSFwoVU3VwcGx5Q2hhaW5Db25zb3J0aXVt
