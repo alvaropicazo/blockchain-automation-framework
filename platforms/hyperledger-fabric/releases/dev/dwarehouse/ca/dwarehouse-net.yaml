@@ -1,0 +1,44 @@
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  name: dwarehouse-net-ca
+  namespace: dwarehouse-net
+  annotations:
+    fluxcd.io/automated: "false"
+spec:
+  releaseName: dwarehouse-net-ca
+  chart:
+    git: https://github.com/alvaropicazo/blockchain-automation-framework.git
+    ref: testing-dev
+    path: platforms/hyperledger-fabric/charts/ca    
+  values:
+    metadata:
+      namespace: dwarehouse-net
+      images:
+        alpineutils: index.docker.io/hyperledgerlabs/alpine-utils:1.0
+        ca: hyperledger/fabric-ca:1.4.8
+    server:
+      name: ca
+      tlsstatus: true
+      admin: dwarehouse-admin
+    storage:
+      storageclassname: dwarehousesc
+      storagesize: 512Mi
+    vault:
+      role: vault-role
+      address: http://vault.internal.demo.aws.blockchaincloudpoc.com:9001
+      authpath: alvdwarehouse-net-auth
+      secretcert: secret/crypto/peerOrganizations/dwarehouse-net/ca?ca.dwarehouse-net-cert.pem
+      secretkey: secret/crypto/peerOrganizations/dwarehouse-net/ca?dwarehouse-net-CA.key
+      secretadminpass: secret/credentials/dwarehouse-net/ca/dwarehouse?user
+      serviceaccountname: vault-auth
+      imagesecretname: regcred
+    service:
+      servicetype: ClusterIP
+      ports:
+        tcp:
+          port: 7054
+    proxy:
+      provider: haproxy
+      type: peer
+      external_url_suffix: hf.demo.aws.blockchaincloudpoc-develop.com
