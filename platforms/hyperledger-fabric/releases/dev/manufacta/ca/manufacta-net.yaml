@@ -1,0 +1,44 @@
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  name: manufacta-net-ca
+  namespace: manufacta-net
+  annotations:
+    fluxcd.io/automated: "false"
+spec:
+  releaseName: manufacta-net-ca
+  chart:
+    git: https://github.com/alvaropicazo/blockchain-automation-framework.git
+    ref: testing-dev
+    path: platforms/hyperledger-fabric/charts/ca    
+  values:
+    metadata:
+      namespace: manufacta-net
+      images:
+        alpineutils: index.docker.io/hyperledgerlabs/alpine-utils:1.0
+        ca: hyperledger/fabric-ca:1.4.8
+    server:
+      name: ca
+      tlsstatus: true
+      admin: manufacta-admin
+    storage:
+      storageclassname: manufactasc
+      storagesize: 512Mi
+    vault:
+      role: vault-role
+      address: http://vault.internal.demo.aws.blockchaincloudpoc.com:9001
+      authpath: alvmanufacta-net-auth
+      secretcert: secret/crypto/peerOrganizations/manufacta-net/ca?ca.manufacta-net-cert.pem
+      secretkey: secret/crypto/peerOrganizations/manufacta-net/ca?manufacta-net-CA.key
+      secretadminpass: secret/credentials/manufacta-net/ca/manufacta?user
+      serviceaccountname: vault-auth
+      imagesecretname: regcred
+    service:
+      servicetype: ClusterIP
+      ports:
+        tcp:
+          port: 7054
+    proxy:
+      provider: haproxy
+      type: peer
+      external_url_suffix: hf.dev2.aws.blockchaincloudpoc-develop.com
