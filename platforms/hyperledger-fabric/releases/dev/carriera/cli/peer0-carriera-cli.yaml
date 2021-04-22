@@ -1,0 +1,38 @@
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  name: peer0-carriera-cli
+  namespace: carriera-net
+  annotations:
+    fluxcd.io/automated: "false"
+spec:
+  releaseName: peer0-carriera-cli
+  chart:
+    git: https://github.com/alvaropicazo/blockchain-automation-framework.git
+    ref: testing-dev
+    path: platforms/hyperledger-fabric/charts/fabric_cli    
+  values:
+    metadata:
+      namespace: carriera-net
+      images:
+        fabrictools: hyperledger/fabric-tools:2.2.0
+        alpineutils: index.docker.io/hyperledgerlabs/alpine-utils:1.0
+    storage:
+      class: carrierasc
+      size: 256Mi
+    vault:
+      role: vault-role
+      address: http://vault.internal.demo.aws.blockchaincloudpoc.com:9001
+      authpath: alvcarriera-net-auth
+      adminsecretprefix: secret/crypto/peerOrganizations/carriera-net/users/admin
+      orderersecretprefix: secret/crypto/peerOrganizations/carriera-net/orderer
+      serviceaccountname: vault-auth
+      imagesecretname: regcred
+      tls: false
+    peer:
+      name: peer0
+      localmspid: carrieraMSP
+      tlsstatus: true
+      address: peer0.carriera-net.hf.dev2.aws.blockchaincloudpoc-develop.com:8443
+    orderer:
+      address: orderer60.hf.dev2.aws.blockchaincloudpoc-develop.com:8443
