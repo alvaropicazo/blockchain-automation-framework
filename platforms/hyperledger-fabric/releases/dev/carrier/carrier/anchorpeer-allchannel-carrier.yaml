@@ -1,0 +1,49 @@
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  name: anchorpeer-allchannel-carrier
+  namespace: carrier-net
+  annotations:
+    fluxcd.io/automated: "false"
+spec:
+  releaseName: anchorpeer-allchannel-carrier
+  chart:
+    git: https://github.com/alvaropicazo/blockchain-automation-framework.git
+    ref: demo-testing
+    path: platforms/hyperledger-fabric/charts/anchorpeer
+  values:
+    metadata:
+      namespace: carrier-net
+      images:
+        fabrictools: hyperledger/fabric-tools:2.2.2
+        alpineutils: index.docker.io/hyperledgerlabs/alpine-utils:1.0
+
+    peer:
+      name: peer0
+      address: peer0.carrier-net.hf.dev2.aws.blockchaincloudpoc-develop.com:8443
+      localmspid: carrierMSP
+      loglevel: debug
+      tlsstatus: true
+
+    vault:
+      role: vault-role
+      address: http://vault.dev2.aws.blockchaincloudpoc-develop.com:20002
+      authpath: demo-testcarrier-net-auth
+      adminsecretprefix: secret/crypto/peerOrganizations/carrier-net/users/admin
+      orderersecretprefix: secret/crypto/peerOrganizations/carrier-net/orderer
+      serviceaccountname: vault-auth
+      imagesecretname: regcred
+
+    channel:
+      name: allchannel      
+    orderer:
+      address: orderer60.hf.dev2.aws.blockchaincloudpoc-develop.com:8443
+    anchorstx: |-
+      CuMCChgKFggCGgYI+5umhAYiCmFsbGNoYW5uZWwSxgIKwwIKCmFsbGNoYW5uZWwSYxJhCgtBcHBs
+      aWNhdGlvbhJSCAESTgoKY2Fycmllck1TUBJAGgcKA01TUBIAIgsKB1dyaXRlcnMSACIKCgZBZG1p
+      bnMSACIPCgtFbmRvcnNlbWVudBIAIgsKB1JlYWRlcnMSABrPARLMAQoLQXBwbGljYXRpb24SvAEI
+      ARK3AQoKY2Fycmllck1TUBKoAQgBGlwKC0FuY2hvclBlZXJzEk0SQwpBCjxwZWVyMC5jYXJyaWVy
+      LW5ldC5oZi5kZXYyLmF3cy5ibG9ja2NoYWluY2xvdWRwb2MtZGV2ZWxvcC5jb20Q+0EaBkFkbWlu
+      cxoHCgNNU1ASACILCgdSZWFkZXJzEgAiCwoHV3JpdGVycxIAIgoKBkFkbWlucxIAIg8KC0VuZG9y
+      c2VtZW50EgAqBkFkbWlucw==
+
