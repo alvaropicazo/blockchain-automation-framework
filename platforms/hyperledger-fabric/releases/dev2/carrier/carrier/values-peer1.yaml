@@ -1,0 +1,63 @@
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  name: carrier-peer1
+  namespace: carrier-net
+  annotations:
+    fluxcd.io/automated: "false"
+spec:
+  releaseName: carrier-peer1
+  chart:
+    git: https://github.com/alvaropicazo/blockchain-automation-framework.git
+    ref: demo-testing
+    path: platforms/hyperledger-fabric/charts/peernode    
+  values:
+    metadata:
+      namespace: carrier-net
+      images:
+        couchdb: couchdb:3.1
+        peer: hyperledger/fabric-peer:2.2.2
+        alpineutils: index.docker.io/hyperledgerlabs/alpine-utils:1.0
+        
+    peer:
+      name: peer1
+      gossippeeraddress: peer0.carrier-net.hf.dev2.aws.blockchaincloudpoc-develop.com:8443
+      gossipexternalendpoint: peer1.carrier-net.hf.demo.aws.blockchaincloudpoc-develop.com:8443
+      localmspid: carrierMSP
+      loglevel: info
+      tlsstatus: true
+      builder: hyperledger/fabric-ccenv:2.2.2
+      couchdb:
+        username: carrier-user
+
+    storage:
+      peer:
+        storageclassname: carriersc
+        storagesize: 512Mi
+      couchdb:
+        storageclassname: carriersc
+        storagesize: 1Gi
+
+    vault:
+      role: vault-role
+      address: http://vault.dev2.aws.blockchaincloudpoc-develop.com:20002
+      authpath: demo-test2carrier-net-auth
+      secretprefix: secret/crypto/peerOrganizations/carrier-net/peers/peer1.carrier-net
+      secretambassador: secret/crypto/peerOrganizations/carrier-net/ambassador
+      serviceaccountname: vault-auth
+      imagesecretname: regcred
+      secretcouchdbpass: secret/credentials/carrier-net/couchdb/carrier?user
+
+    service:
+      servicetype: ClusterIP
+      ports:
+        grpc:
+          clusteripport: 7051
+        events:
+          clusteripport: 7053
+        couchdb:
+          clusteripport: 5984
+          
+    proxy:
+      provider: "haproxy"
+      external_url_suffix: hf.demo.aws.blockchaincloudpoc-develop.com
