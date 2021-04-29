@@ -1,0 +1,49 @@
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  name: commit-carrier-allchannel-supplychain1-1
+  namespace: carrier-net
+  annotations:
+    fluxcd.io/automated: "false"
+spec:
+  releaseName: commit-carrier-allchannel-supplychain1-1
+  chart:
+    git: https://github.com/alvaropicazo/blockchain-automation-framework.git
+    ref: demo-testing
+    path: platforms/hyperledger-fabric/charts/commit_chaincode
+  values:
+    metadata:
+      namespace: carrier-net
+      images:
+        fabrictools: hyperledger/fabric-tools:2.2.2
+        alpineutils: index.docker.io/hyperledgerlabs/alpine-utils:1.0
+    peer:
+      name: peer0
+      address: peer0.carrier-net:7051
+      localmspid: carrierMSP
+      loglevel: debug
+      tlsstatus: true
+    vault:
+      role: vault-role
+      address: http://vault.dev2.aws.blockchaincloudpoc-develop.com:20002
+      authpath: demo-testcarrier-net-auth
+      adminsecretprefix: secret/crypto/peerOrganizations/carrier-net/users/admin
+      orderersecretprefix: secret/crypto/peerOrganizations/carrier-net/orderer
+      serviceaccountname: vault-auth
+      imagesecretname: regcred
+      tls: false
+    orderer:
+      address: orderer60.hf.dev2.aws.blockchaincloudpoc-develop.com:8443
+    chaincode:
+      builder: hyperledger/fabric-ccenv:2.2.2
+      name: supplychain
+      version: 1
+      sequence: 1
+      commitarguments: '\"init\",\"\"'
+      endorsementpolicies:  ''
+    channel:
+      name: allchannel
+    endorsers:
+      creator: carrier-net
+      name:  carrier  manufacturer  warehouse  
+      corepeeraddress:  peer0.carrier-net.hf.dev2.aws.blockchaincloudpoc-develop.com:8443  peer0.manufacturer-net.hf.dev2.aws.blockchaincloudpoc-develop.com:8443  peer0.warehouse-net.hf.dev2.aws.blockchaincloudpoc-develop.com:8443 
