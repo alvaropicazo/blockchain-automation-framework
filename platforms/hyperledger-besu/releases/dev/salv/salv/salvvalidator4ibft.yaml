@@ -23,7 +23,7 @@ spec:
       - "enode://af78ca90f85f0c5210b94082e1add3933a3cc9b99d6a2d4eee394cf11724e23ddb80328afd7ce5000f52cbc15a9947234fda83f5eb8209d4376e882cc0f57fd7@validator2.rc.dev2.aws.blockchaincloudpoc-develop.com:15032"
       - "enode://a56b67b6104f7f4f2c544a2d935f7315ed7fc96ef6dcd82f633477be2c13dcccaf8ff30ad5a3b5acf505661f3c7e6e6c31c1f9335650062a006221d23a115324@validator3.rc.dev2.aws.blockchaincloudpoc-develop.com:15034"
       - "enode://8d319e04f1a2d2713a4e66d76e5a71bb453bae53e9c0608bf09bd35e9bd56b9bf11f395c3e32779facb85c96b45b37b7cfbf376a04946c862c8a69317b0b7600@validator4.rc.dev2.aws.blockchaincloudpoc-develop.com:15036"
-      - "enode://4ff0b95fc74e86ee436399eea8c45aef8038ff37c045ed17c5a62bd20b549afd4642212fe2165ecba797c59ab6360f75b22f7521d52175d5a1a45abcc2bc233c@calv.rc.dev2.aws.blockchaincloudpoc-develop.com:15010"
+      - "enode://@validator5.rc.dev2.aws.blockchaincloudpoc-develop.com:15038"
 
     metadata:
       namespace: salv-bes
