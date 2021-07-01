@@ -1,0 +1,63 @@
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  name: stalv-peer0
+  namespace: stalv-net
+  annotations:
+    fluxcd.io/automated: "false"
+spec:
+  releaseName: stalv-peer0
+  chart:
+    git: https://github.com/alvaropicazo/blockchain-automation-framework.git
+    ref: marketplace
+    path: platforms/hyperledger-fabric/charts/peernode    
+  values:
+    metadata:
+      namespace: stalv-net
+      images:
+        couchdb: couchdb:3.1
+        peer: hyperledger/fabric-peer:2.2.0
+        alpineutils: index.docker.io/hyperledgerlabs/alpine-utils:1.0
+        
+    peer:
+      name: peer0
+      gossippeeraddress: peer0.stalv-net:7051
+      gossipexternalendpoint: peer0.stalv-net.hf.dev2.aws.blockchaincloudpoc-develop.com:8443
+      localmspid: stalvMSP
+      loglevel: info
+      tlsstatus: true
+      builder: hyperledger/fabric-ccenv:2.2.0
+      couchdb:
+        username: stalv-user
+
+    storage:
+      peer:
+        storageclassname: stalvsc
+        storagesize: 512Mi
+      couchdb:
+        storageclassname: stalvsc
+        storagesize: 1Gi
+
+    vault:
+      role: vault-role
+      address: http://vault.internal.dev2.aws.blockchaincloudpoc-develop.com:20001
+      authpath: devstalv-net-auth
+      secretprefix: secret/crypto/peerOrganizations/stalv-net/peers/peer0.stalv-net
+      secretambassador: secret/crypto/peerOrganizations/stalv-net/ambassador
+      serviceaccountname: vault-auth
+      imagesecretname: regcred
+      secretcouchdbpass: secret/credentials/stalv-net/couchdb/stalv?user
+
+    service:
+      servicetype: ClusterIP
+      ports:
+        grpc:
+          clusteripport: 7051
+        events:
+          clusteripport: 7053
+        couchdb:
+          clusteripport: 5984
+          
+    proxy:
+      provider: "haproxy"
+      external_url_suffix: hf.dev2.aws.blockchaincloudpoc-develop.com
