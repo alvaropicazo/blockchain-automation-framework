@@ -1,0 +1,45 @@
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  name: stalv-net-ca
+  namespace: stalv-net
+  annotations:
+    fluxcd.io/automated: "false"
+spec:
+  releaseName: stalv-net-ca
+  chart:
+    git: https://github.com/alvaropicazo/blockchain-automation-framework.git
+    ref: marketplace
+    path: platforms/hyperledger-fabric/charts/ca    
+  values:
+    metadata:
+      namespace: stalv-net
+      images:
+        alpineutils: index.docker.io/hyperledgerlabs/alpine-utils:1.0
+        ca: hyperledger/fabric-ca:1.4.8
+       
+    server:
+      name: ca
+      tlsstatus: true
+      admin: stalv-admin
+    storage:
+      storageclassname: stalvsc
+      storagesize: 512Mi
+    vault:
+      role: vault-role
+      address: http://vault.internal.dev2.aws.blockchaincloudpoc-develop.com:20001
+      authpath: devstalv-net-auth
+      secretcert: secret/crypto/peerOrganizations/stalv-net/ca?ca.stalv-net-cert.pem
+      secretkey: secret/crypto/peerOrganizations/stalv-net/ca?stalv-net-CA.key
+      secretadminpass: secret/credentials/stalv-net/ca/stalv?user
+      serviceaccountname: vault-auth
+      imagesecretname: regcred
+    service:
+      servicetype: ClusterIP
+      ports:
+        tcp:
+          port: 7054
+    proxy:
+      provider: haproxy
+      type: peer
+      external_url_suffix: hf.dev2.aws.blockchaincloudpoc-develop.com
