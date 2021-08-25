@@ -1,0 +1,193 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: cryptomanterial-ibft-{{ $.Values.peer.name }}
+  namespace: {{ $.Values.metadata.namespace }}
+  labels:
+    app: cryptomanterial-ibft-{{ $.Values.peer.name }}
+    app.kubernetes.io/name: cryptomanterial-ibft-{{ $.Values.peer.name }}
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+spec:
+  backoffLimit: 6
+  template:
+    metadata:
+      labels:
+        app: cryptomanterial-ibft-{{ $.Values.peer.name }}
+        app.kubernetes.io/name: cryptomanterial-ibft-{{ $.Values.peer.name }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+      restartPolicy: OnFailure
+      serviceAccountName: {{ $.Values.vault.serviceaccountname }}
+      imagePullSecrets:
+        - name: {{ $.Values.vault.imagesecretname }}
+      securityContext:
+        fsGroup: 1000        
+      initContainers:
+      - name: crypto-init
+        image: {{ $.Values.image.initContainerName }}
+        imagePullPolicy: Always
+        env:
+        - name: VAULT_ADDR
+          value: {{ $.Values.vault.address }}
+        - name: KUBERNETES_AUTH_PATH
+          value: {{ $.Values.vault.authpath }}
+        - name: VAULT_APP_ROLE
+          value: {{ $.Values.vault.role }}
+        - name: CERTS_SECRET_PREFIX
+          value: {{ .Values.vault.certsecretprefix }}          
+        - name: MOUNT_PATH
+          value: "/certcheck"
+        - name: PEER_NAME
+          value: "{{ $.Values.peer.name }}"                                          
+        volumeMounts:
+        - name: certcheck
+          mountPath: /certcheck  
+        command: ["sh", "-c"]
+        args:
+        - |-
+          #!/usr/bin/env sh
+          validateVaultResponse () {
+            if echo ${2} | grep "errors"; then
+              echo "ERROR: unable to retrieve ${1}: ${2}"
+              exit 1
+            fi
+            if  [ "$3" == "LOOKUPSECRETRESPONSE" ]
+            then
+              http_code=$(curl -sS -o /dev/null -w "%{http_code}" \
+              --header "X-Vault-Token: ${VAULT_CLIENT_TOKEN}" \
+              ${VAULT_ADDR}/v1/${vault_secret_key})
+              curl_response=$?
+              if test "$http_code" != "200" ; then
+                  echo "Http response code from Vault - $http_code"
+                  if test "$curl_response" != "0"; then
+                     echo "Error: curl command failed with error code - $curl_response"
+                     exit 1
+                  fi
+              fi
+            fi
+          }
+
+          KUBE_SA_TOKEN=$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)
+          echo "Getting secrets from Vault Server: ${VAULT_ADDR}"
+
+          # Login to Vault and so I can get an approle token
+          VAULT_CLIENT_TOKEN=$(curl -sS --request POST ${VAULT_ADDR}/v1/auth/${KUBERNETES_AUTH_PATH}/login \
+            -H "Content-Type: application/json" \
+            -d '{"role":"'"${VAULT_APP_ROLE}"'","jwt":"'"${KUBE_SA_TOKEN}"'"}' | \
+            jq -r 'if .errors then . else .auth.client_token end')
+          validateVaultResponse 'vault login token' "${VAULT_CLIENT_TOKEN}"
+
+          mkdir -p ${MOUNT_PATH}
+
+          LOOKUP_SECRET_RESPONSE=$(curl -sS --header "X-Vault-Token: ${VAULT_TOKEN}" ${VAULT_ADDR}/v1/${CERTS_SECRET_PREFIX}/crypto/${PEER_NAME}/quorum | jq -r 'if .errors then . else . end')
+          if echo ${LOOKUP_SECRET_RESPONSE} | grep "errors"
+          then
+            echo "Certificates absent in vault. Ignore error warning"
+            touch ${MOUNT_PATH}/absent.txt
+          else
+            validateVaultResponse "${CERTS_SECRET_PREFIX}/root/certs" "${LOOKUP_SECRET_RESPONSE}" "LOOKUPSECRETRESPONSE"
+            echo "Certificates present in vault"
+            touch ${MOUNT_PATH}/present.txt
+          fi 
+
+          echo "Done checking for certificates in vault"
+      containers:
+      - name: generate-cryptomaterials
+        image: {{ $.Values.metadata.images.alpineutils }}
+        imagePullPolicy: Always
+        env:
+        - name: VAULT_ADDR
+          value: {{ $.Values.vault.address }}
+        - name: KUBERNETES_AUTH_PATH
+          value: {{ $.Values.vault.authpath }}
+        - name: VAULT_APP_ROLE
+          value: {{ $.Values.vault.role }}
+        - name: VAULT_PEER_SECRET_PREFIX
+          value: "{{ $.Values.vault.adminsecretprefix }}"
+        - name: VAULT_ORDERER_SECRET_PREFIX
+          value: "{{ $.Values.vault.orderersecretprefix }}"
+        - name: MOUNT_PATH
+          value: "/certcheck"
+        - name: GO_VERSION
+          value: "{{ $.Values.go.version }}"
+        - name: INSTALL_OS
+          value: "{{ $.Values.installOs }}"  
+        - name: INSTALL_ARCH
+          value: "{{ $.Values.installArch }}"  
+        - name: GO_ROOT_DIR
+          value: "{{ $.Values.vault.orderersecretprefix }}"          
+        - name: GETH_PASSFRASE
+          value: "{{ $.Values.metadata.network.version }}"
+        - name: PEER_NAME
+          value: "{{ $.Values.metadata.network.version }}"
+        - name: DB_USER
+          value: "demouser"
+        - name: DB_PASSWORD
+          value: "password"                                    
+        command: ["sh", "-c"]
+        args:
+        - |-
+          #!/usr/bin/env sh
+          validateVaultResponse () {
+            if echo ${2} | grep "errors"; then
+              echo "ERROR: unable to retrieve ${1}: ${2}"
+              exit 1
+            fi
+            if  [ "$3" == "LOOKUPSECRETRESPONSE" ]
+            then
+              http_code=$(curl -sS -o /dev/null -w "%{http_code}" \
+              --header "X-Vault-Token: ${VAULT_CLIENT_TOKEN}" \
+              ${VAULT_ADDR}/v1/${vault_secret_key})
+              curl_response=$?
+              if test "$http_code" != "200" ; then
+                  echo "Http response code from Vault - $http_code"
+                  if test "$curl_response" != "0"; then
+                     echo "Error: curl command failed with error code - $curl_response"
+                     exit 1
+                  fi
+              fi
+            fi
+          }
+
+          if [ -e /certcheck/present.txt ]
+              then
+                echo "Certificates already present in the vault. Skipping.."
+                exit 0
+          fi
+
+            echo "Go installation"
+
+          curl https://storage.googleapis.com/golang/go${GO_VERSION}.${INSTALL_OS}-${INSTALL_ARCH}.tar.gz
+          tar -zxf go${GO_VERSION}.${INSTALL_OS}-${INSTALL_ARCH}.tar.gz --directory "${GO_ROOT_DIR}"
+          cp -R "${GO_ROOT_DIR}/go/bin/go /bin"
+          export GOROOT="${GO_ROOT_DIR}"
+
+          echo "Geth installation"
+          mkdir -p /bin/quorum
+          curl -L -o /bin https://github.com/ConsenSys/quorum.git
+          make /bin/quorum geth
+          cp -R /bin/quorum/build/bin/geth /bin
+
+          echo "Bootnode installation"
+          make /bin/quorum bootnode
+          cp -R /bin/quorum/build/bin/bootnode /bin
+            
+          echo "Creating files and certs"
+          /bin/bootnode --nodekey nodekey --writeaddress > enode
+          echo ${GETH_PASSFRASE} >> /password
+          /bin/geth account new --datadir ${PEER_NAME} --password password
+          cp keystore/* keystore.json
+
+          #encode to base64 to update to vault otherwise json format is creating problems with vault api
+          nodekey_base64=$(cat nodeKey.key | base64 -w 0)
+
+          echo "Saving files in vault"
+          curl -sS --request POST ${VAULT_ADDR}/v1/auth/${KUBERNETES_AUTH_PATH}/quorum \
+                -H "Content-Type: application/json" \
+                -d '{"nodekey":"'"$nodekey_base64"'","keystore":"'"$(cat keystore.json)"'","db_user":"'"${DB_USER}"'","db_password":"'"${DB_PASSWORD}"'","geth_password":"'"$(cat password)"'"}'
+      volumes:
+        - name: certcheck
+          emptyDir:
+            medium: Memory

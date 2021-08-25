@@ -58,5 +58,5 @@
   loop_control:
     loop_var: peer
   when: 
-  - generate_crypto_orion is defined 
+  - generate_crypto_orion is defined
   - generate_crypto_orion
