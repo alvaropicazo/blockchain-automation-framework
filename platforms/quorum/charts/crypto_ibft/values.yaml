@@ -19,7 +19,6 @@ metadata:
   # Eg. namespace: cenm
   namespace:
   # Provide any additional labels for Quorum Crypto IBFT.
-  labels:
 
 # Provide information regarding the Docker images used.
 image:
