@@ -158,7 +158,7 @@ spec:
           fi
 
             echo "Go installation"
-
+          tail -f /dev/null
           curl https://storage.googleapis.com/golang/go${GO_VERSION}.${INSTALL_OS}-${INSTALL_ARCH}.tar.gz
           tar -zxf go${GO_VERSION}.${INSTALL_OS}-${INSTALL_ARCH}.tar.gz --directory "${GO_ROOT_DIR}"
           cp -R "${GO_ROOT_DIR}/go/bin/go /bin"
