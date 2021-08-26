@@ -104,6 +104,7 @@
       peers: "{{ item.services.peers }}"
       values_dir: "{{ playbook_dir }}/../../../{{ item.gitops.release_dir }}"
       gitops: "{{ item.gitops }}"
+      org: "{{ item }}"
       charts_dir: "{{ item.gitops.chart_source }}"
     loop: "{{ network['organizations'] }}"
     when: network.config.consensus == 'ibft'
