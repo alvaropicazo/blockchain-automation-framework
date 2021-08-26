@@ -119,9 +119,9 @@ spec:
         - name: GO_ROOT_DIR
           value: "{{ $.Values.vault.orderersecretprefix }}"          
         - name: GETH_PASSFRASE
-          value: "{{ $.Values.metadata.network.version }}"
+          value: "{{ $.Values.peer.gethPassphrase }}"
         - name: PEER_NAME
-          value: "{{ $.Values.metadata.network.version }}"
+          value: "{{ $.Values.peer.name }}"
         - name: DB_USER
           value: "demouser"
         - name: DB_PASSWORD
