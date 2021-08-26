@@ -58,7 +58,7 @@
     name: helm_component
   vars:    
     component_type: "crypto"    
-    type: "crypto_ibft"
+    type: "crypto_ibft_job"
     name: "{{ org.name | lower }}"
     component_name: "{{ peer.name }}-ibft-job"    
   tags: 
