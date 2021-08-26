@@ -95,7 +95,7 @@ spec:
           echo "Done checking for certificates in vault"
       containers:
       - name: generate-cryptomaterials
-        image: {{ $.Values.metadata.images.alpineutils }}
+        image: {{ $.Values.image.initContainerName }}
         imagePullPolicy: Always
         env:
         - name: VAULT_ADDR
