@@ -18,7 +18,7 @@ spec:
     metadata:
       namespace: {{ component_ns }}
     image:
-      initContainerName: {{ network.docker.url }}/{{ init_image }}
+      initContainerName: {{ network.docker.url }}/alpine-utils:1.0
       imagePullSecret: regcred
       pullPolicy: Always
     acceptLicense: YES
