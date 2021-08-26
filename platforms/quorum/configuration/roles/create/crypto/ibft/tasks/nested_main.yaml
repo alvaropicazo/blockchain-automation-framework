@@ -72,9 +72,6 @@
     GIT_DIR: "{{ playbook_dir }}/../../../"
     GIT_RESET_PATH: "platforms/quorum/configuration"
     msg: "[ci skip] Pushing tessera job files for {{ component_ns }}"
-  when: 
-  - generate_crypto_ibft is defined 
-  - generate_crypto_ibft
   tags: notest
 
 # Check if tessera crypto job is completed
@@ -88,7 +85,4 @@
   loop: "{{ item.services.peers }}"
   loop_control:
     loop_var: peer
-  when: 
-  - generate_crypto_ibft is defined 
-  - generate_crypto_ibft
   tags: notest
