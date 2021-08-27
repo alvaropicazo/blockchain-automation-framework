@@ -24,7 +24,7 @@ spec:
         - name: {{ $.Values.vault.imagesecretname }}
       securityContext:
         fsGroup: 1000        
-      initContainers:
+      containers:
       - name: crypto-init
         image: {{ $.Values.image.initContainerName }}
         imagePullPolicy: Always
