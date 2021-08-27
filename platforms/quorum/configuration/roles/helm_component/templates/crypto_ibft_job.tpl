@@ -24,7 +24,7 @@ spec:
     vault:
       address: {{ vault.url }}
       role: vault-role
-      authpath: {{ org.name | lower }}-quo
+      authpath: quorum{{ peer.name }}
       serviceaccountname: vault-auth
       certsecretprefix: {{ vault.secret_path | default('secret') }}/{{ org.name | lower }}
     go:
