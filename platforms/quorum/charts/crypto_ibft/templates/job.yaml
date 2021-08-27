@@ -71,7 +71,9 @@ spec:
 
           KUBE_SA_TOKEN=$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)
           echo "Getting secrets from Vault Server: ${VAULT_ADDR}"
-
+          echo $KUBE_SA_TOKEN
+          echo $VAULT_APP_ROLE
+          echo $KUBERNETES_AUTH_PATH
           # Login to Vault and so I can get an approle token
           VAULT_CLIENT_TOKEN=$(curl -sS --request POST ${VAULT_ADDR}/v1/auth/${KUBERNETES_AUTH_PATH}/login \
             -H "Content-Type: application/json" \
