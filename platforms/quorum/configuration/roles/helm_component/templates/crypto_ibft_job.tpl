@@ -10,7 +10,7 @@ spec:
   chart:
     git: {{ org.gitops.git_url }}
     ref: {{ org.gitops.branch }}
-    path: {{ charts_dir }}/generate-pki
+    path: {{ charts_dir }}/crypto_ibft
   values:
     peer:
       name: {{ peer.name }}
