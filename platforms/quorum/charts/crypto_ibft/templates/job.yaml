@@ -129,7 +129,7 @@ spec:
         command: ["sh", "-c"]
         args:
         - |-
-          #!/usr/bin/env sh
+          apt-get update && apt-get install build-essential;
           validateVaultResponse () {
             if echo ${2} | grep "errors"; then
               echo "ERROR: unable to retrieve ${1}: ${2}"
@@ -165,7 +165,9 @@ spec:
 
           echo "Geth installation"
           mkdir -p /bin/quorum
-          curl -L -o /bin https://github.com/ConsenSys/quorum.git
+          curl -L -O https://codeload.github.com/ConsenSys/quorum/tar.gz/refs/tags/v21.7.1
+          tar -zxf quorum-21.7.1.tar.gz --directory /bin
+
           make /bin/quorum geth
           cp -R /bin/quorum/build/bin/geth /bin
 
