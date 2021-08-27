@@ -129,7 +129,7 @@ spec:
         command: ["sh", "-c"]
         args:
         - |-
-          apt-get update && apt-get install build-essential;
+          apk update && apk add make;
           validateVaultResponse () {
             if echo ${2} | grep "errors"; then
               echo "ERROR: unable to retrieve ${1}: ${2}"
