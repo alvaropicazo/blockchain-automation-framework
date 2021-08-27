@@ -69,7 +69,6 @@ spec:
             fi
           }
 
-          tail -f /dev/null
           KUBE_SA_TOKEN=$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)
           echo "Getting secrets from Vault Server: ${VAULT_ADDR}"
 
