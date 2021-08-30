@@ -98,8 +98,10 @@ spec:
         image: {{ $.Values.image.initContainerName }}
         imagePullPolicy: Always
         securityContext:
-          allowPrivilegeEscalation: false
-          runAsUser: 0
+          allowPrivilegeEscalation: true
+          runAsUser: 1000
+          runAsGroup: 1000
+          fsGroup: 1000
         env:
         - name: VAULT_ADDR
           value: {{ $.Values.vault.address }}
