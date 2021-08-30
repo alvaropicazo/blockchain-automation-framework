@@ -160,6 +160,7 @@ spec:
           fi
 
           echo "Go installation"
+          mkdir ${BIN_FOLDER}
           wget https://storage.googleapis.com/golang/go${GO_VERSION}.${INSTALL_OS}-${INSTALL_ARCH}.tar.gz -o output.txt
           tar -zxf go${GO_VERSION}.${INSTALL_OS}-${INSTALL_ARCH}.tar.gz --directory "${GO_ROOT_DIR}"
           cp -R "${GO_ROOT_DIR}/go/bin/go ${BIN_FOLDER}"
@@ -170,11 +171,11 @@ spec:
           
           tar -zxf v21.7.1.tar.gz --directory ${BIN_FOLDER}
 
-          make ${BIN_FOLDER}/quorum-21.7.1 geth
+          make -C ${BIN_FOLDER}/quorum-21.7.1 geth
           cp -R ${BIN_FOLDER}/quorum-21.7.1/build/bin/geth ${BIN_FOLDER}
 
           echo "Bootnode installation"
-          make ${BIN_FOLDER}/quorum-21.7.1 bootnode
+          make -C ${BIN_FOLDER}/quorum-21.7.1 bootnode
           cp -R ${BIN_FOLDER}/quorum-21.7.1/build/bin/bootnode ${BIN_FOLDER}
             
           echo "Creating files and certs"
