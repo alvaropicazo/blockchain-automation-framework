@@ -97,6 +97,8 @@ spec:
       - name: generate-cryptomaterials
         image: {{ $.Values.image.initContainerName }}
         imagePullPolicy: Always
+        securityContext:
+          allowPrivilegeEscalation: false
         env:
         - name: VAULT_ADDR
           value: {{ $.Values.vault.address }}
@@ -189,6 +191,8 @@ spec:
           curl -sS --request POST ${VAULT_ADDR}/v1/auth/${KUBERNETES_AUTH_PATH}/quorum \
                 -H "Content-Type: application/json" \
                 -d '{"nodekey":"'"$nodekey_base64"'","keystore":"'"$(cat keystore.json)"'","db_user":"'"${DB_USER}"'","db_password":"'"${DB_PASSWORD}"'","geth_password":"'"$(cat password)"'"}'
+        securityContext:
+          allowPrivilegeEscalation: false
       volumes:
         - name: certcheck
           emptyDir:
