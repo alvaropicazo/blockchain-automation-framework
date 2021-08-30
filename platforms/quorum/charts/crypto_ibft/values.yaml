@@ -64,7 +64,12 @@ go:
   # Provide the version of golang that will be installed.
   # Eg. authpath: 1.13.5
   version:
+  # Provide GO_ROOT_DIR path for go.
+  # Eg. /usr/local
+  rootDir:
 
 installOs:
 
 installArch:
+
+bin_install_dir:

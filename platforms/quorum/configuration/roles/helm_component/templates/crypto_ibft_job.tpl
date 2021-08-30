@@ -29,5 +29,7 @@ spec:
       certsecretprefix: {{ vault.secret_path | default('secret') }}/{{ org.name | lower }}
     go:
       version: 1.13.5
+      rootDir: {{ go_root_folder | default('/usr/local') }}
     installOs: {{ install_os }}
     installArch: {{ install_arch }}
+    bin_install_dir: {{ bin_install_dir }}

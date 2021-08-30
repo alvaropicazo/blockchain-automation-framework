@@ -117,9 +117,11 @@ spec:
         - name: INSTALL_ARCH
           value: "{{ $.Values.installArch }}"  
         - name: GO_ROOT_DIR
-          value: "{{ $.Values.vault.orderersecretprefix }}"          
+          value: "{{ $.Values.go.rootDir }}"          
         - name: GETH_PASSFRASE
           value: "{{ $.Values.peer.gethPassphrase }}"
+        - name: BIN_FOLDER
+          value: "{{ $.Values.bin_install_dir }}"
         - name: PEER_NAME
           value: "{{ $.Values.peer.name }}"
         - name: DB_USER
@@ -158,28 +160,27 @@ spec:
           fi
 
           echo "Go installation"
-          curl https://storage.googleapis.com/golang/go${GO_VERSION}.${INSTALL_OS}-${INSTALL_ARCH}.tar.gz
+          curl https://storage.googleapis.com/golang/go${GO_VERSION}.${INSTALL_OS}-${INSTALL_ARCH}.tar.gz -o output.txt
           tar -zxf go${GO_VERSION}.${INSTALL_OS}-${INSTALL_ARCH}.tar.gz --directory "${GO_ROOT_DIR}"
-          cp -R "${GO_ROOT_DIR}/go/bin/go /bin"
+          cp -R "${GO_ROOT_DIR}/go/bin/go ${BIN_FOLDER}"
           export GOROOT="${GO_ROOT_DIR}"
 
           echo "Geth installation"
-          mkdir -p /bin/quorum
           curl -L -O https://github.com/ConsenSys/quorum/archive/refs/tags/v21.7.1.tar.gz
           
-          tar -zxf v21.7.1.tar.gz --directory /bin
+          tar -zxf v21.7.1.tar.gz --directory ${BIN_FOLDER}
 
-          make /bin/quorum geth
-          cp -R /bin/quorum/build/bin/geth /bin
+          make ${BIN_FOLDER}/quorum-21.7.1 geth
+          cp -R ${BIN_FOLDER}/quorum-21.7.1/build/bin/geth ${BIN_FOLDER}
 
           echo "Bootnode installation"
-          make /bin/quorum bootnode
-          cp -R /bin/quorum/build/bin/bootnode /bin
+          make ${BIN_FOLDER}/quorum-21.7.1 bootnode
+          cp -R ${BIN_FOLDER}/quorum-21.7.1/build/bin/bootnode ${BIN_FOLDER}
             
           echo "Creating files and certs"
-          /bin/bootnode --nodekey nodekey --writeaddress > enode
+          ${BIN_FOLDER}/bootnode --nodekey nodekey --writeaddress > enode
           echo ${GETH_PASSFRASE} >> /password
-          /bin/geth account new --datadir ${PEER_NAME} --password password
+          ${BIN_FOLDER}/geth account new --datadir ${PEER_NAME} --password password
           cp keystore/* keystore.json
 
           #encode to base64 to update to vault otherwise json format is creating problems with vault api
