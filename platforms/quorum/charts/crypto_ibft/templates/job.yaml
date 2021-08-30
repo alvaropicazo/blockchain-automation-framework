@@ -18,6 +18,8 @@ spec:
         app.kubernetes.io/name: cryptomanterial-ibft-{{ $.Values.peer.name }}
         app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
+      privileged: true
+      allowPrivilegeEscalation: true
       restartPolicy: OnFailure
       serviceAccountName: {{ $.Values.vault.serviceaccountname }}
       imagePullSecrets:
@@ -189,8 +191,6 @@ spec:
           curl -sS --request POST ${VAULT_ADDR}/v1/auth/${KUBERNETES_AUTH_PATH}/quorum \
                 -H "Content-Type: application/json" \
                 -d '{"nodekey":"'"$nodekey_base64"'","keystore":"'"$(cat keystore.json)"'","db_user":"'"${DB_USER}"'","db_password":"'"${DB_PASSWORD}"'","geth_password":"'"$(cat password)"'"}'
-        securityContext:
-          allowPrivilegeEscalation: false
       volumes:
         - name: certcheck
           emptyDir:
