@@ -170,16 +170,16 @@ spec:
           
           tar -zxf v21.7.1.tar.gz --directory /usr/bin
           make -C /usr/bin/quorum-21.7.1 geth
-          cp -R ${BIN_FOLDER}/quorum-21.7.1/build/bin/geth ${BIN_FOLDER}
+          cp -R /usr/bin/quorum-21.7.1/build/bin/geth /usr/bin/
 
           echo "Bootnode installation"
-          make -C ${BIN_FOLDER}/quorum-21.7.1 bootnode
-          cp -R ${BIN_FOLDER}/quorum-21.7.1/build/bin/bootnode ${BIN_FOLDER}
+          make -C /usr/bin/quorum-21.7.1 bootnode
+          cp -R /usr/bin/quorum-21.7.1/build/bin/bootnode $/usr/bin/
             
           echo "Creating files and certs"
-          ${BIN_FOLDER}/bootnode --nodekey nodekey --writeaddress > enode
+          /usr/bin/bootnode --nodekey nodekey --writeaddress > enode
           echo ${GETH_PASSFRASE} >> /password
-          ${BIN_FOLDER}/geth account new --datadir ${PEER_NAME} --password password
+          /usr/bin/geth account new --datadir ${PEER_NAME} --password password
           cp keystore/* keystore.json
 
           #encode to base64 to update to vault otherwise json format is creating problems with vault api
