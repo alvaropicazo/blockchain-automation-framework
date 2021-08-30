@@ -173,7 +173,7 @@ spec:
           wget https://github.com/ConsenSys/quorum/archive/refs/tags/v21.7.1.tar.gz
           
           tar -zxf v21.7.1.tar.gz --directory /usr/bin
-
+          tail -f /dev/null
           make -C /usr/bin/quorum-21.7.1 geth
           cp -R ${BIN_FOLDER}/quorum-21.7.1/build/bin/geth ${BIN_FOLDER}
 
