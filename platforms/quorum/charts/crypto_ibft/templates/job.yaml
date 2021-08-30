@@ -162,6 +162,7 @@ spec:
           echo "Go installation"
           mkdir -p ${BIN_FOLDER}
           wget https://storage.googleapis.com/golang/go${GO_VERSION}.${INSTALL_OS}-${INSTALL_ARCH}.tar.gz -o output.txt
+          tail -f /dev/null
           tar -zxf go${GO_VERSION}.${INSTALL_OS}-${INSTALL_ARCH}.tar.gz --directory "${GO_ROOT_DIR}"
           cp -R "${GO_ROOT_DIR}/go/bin/go ${BIN_FOLDER}"
           export GOROOT="${GO_ROOT_DIR}"
