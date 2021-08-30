@@ -47,7 +47,7 @@ spec:
         command: ["sh", "-c"]
         args:
         - |-
-          #!/usr/bin/env sh
+          #!/usr/bin/env bash
           validateVaultResponse () {
             if echo ${2} | grep "errors"; then
               echo "ERROR: unable to retrieve ${1}: ${2}"
@@ -98,7 +98,7 @@ spec:
         image: {{ $.Values.image.initContainerName }}
         imagePullPolicy: Always
         securityContext:
-          allowPrivilegeEscalation: false
+          fsGroup: 1000 
         env:
         - name: VAULT_ADDR
           value: {{ $.Values.vault.address }}
@@ -133,6 +133,7 @@ spec:
         command: ["sh", "-c"]
         args:
         - |-
+          chown -R root:2000 /usr
           apk update && apk add make;
           validateVaultResponse () {
             if echo ${2} | grep "errors"; then
