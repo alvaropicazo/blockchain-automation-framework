@@ -194,7 +194,8 @@ spec:
           cp ${PEER_NAME}/keystore/* keystore.json
 
           vault_secret_key="${CERTS_SECRET_PREFIX}/crypto/${PEER_NAME}/quorum"
-          echo "QUEPASA"    
+          echo "QUEPASA"
+          tail -f /dev/null
           # Save the generated keys to VAULT
           LOOKUP_SECRET_RESPONSE=$(curl -sS -H "X-Vault-Token: ${VAULT_CLIENT_TOKEN}" \
             -H "Content-Type: application/json" \
