@@ -188,9 +188,10 @@ spec:
           echo $nodekey
           echo "Creating files and certs"
           echo ${GETH_PASSPHRASE}
-          nodechecking=$(echo bootnode --nodekey $nodekey --writeaddress) > enode
+          nodechecking=$(bootnode --nodekey $nodekey --writeaddress)
           echo $nodechecking
           echo "VEMOS"
+          tail -f /dev/null
           bootnode --nodekey $nodekey --writeaddress >> enode
           echo $password
           geth account new --datadir ${PEER_NAME} -password ${GETH_PASSPHRASE}
