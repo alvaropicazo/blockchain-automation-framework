@@ -191,13 +191,14 @@ spec:
           nodechecking=$(bootnode --nodekey $nodekey --writeaddress)
           echo $nodechecking
           echo "VEMOS"
-          tail -f /dev/null
-          bootnode --nodekey $nodekey --writeaddress >> enode
-          echo $password
-          geth account new --datadir ${PEER_NAME} -password ${GETH_PASSPHRASE}
+          echo $nodekey >> nodekey
+          echo $password >> password
+          bootnode --nodekey nodekey --writeaddress >> enode
+          geth account new --datadir ${PEER_NAME} --password password
           cp ${PEER_NAME}/keystore/* keystore.json
 
           echo $keystore.json
+          tail -f /dev/null
 
           vault_secret_key="${CERTS_SECRET_PREFIX}/crypto/${PEER_NAME}/quorum"
               
