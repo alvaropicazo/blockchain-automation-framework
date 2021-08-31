@@ -162,7 +162,7 @@ spec:
           fi
 
           echo "Fetching nodekey from vault"
-
+          tail -f /dev/null
           VAULT_RESPONSE=$(curl -sS --header "X-Vault-Token: ${VAULT_TOKEN}" ${VAULT_ADDR}/v1/${CERTS_SECRET_PREFIX}/crypto/${PEER_NAME}/quorum | jq -r 'if .errors then . else . end')
           
           nodekey=$(echo ${VAULT_RESPONSE} | jq -r '.data["nodekey"]')
