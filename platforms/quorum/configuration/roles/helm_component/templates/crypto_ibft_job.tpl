@@ -27,7 +27,7 @@ spec:
       role: vault-role
       authpath: quorum{{ peer.name }}
       serviceaccountname: vault-auth
-      certsecretprefix: {{ vault.secret_path | default('secret') }}/{{ org.name | lower }}
+      certsecretprefix: {{ vault.secret_path | default('secret') }}/{{ org.name | lower }}-quo
     go:
       version: 1.13.5
       rootDir: {{ go_root_folder | default('/usr/local') }}
