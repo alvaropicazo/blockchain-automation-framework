@@ -175,6 +175,7 @@ spec:
           nodekey=$(echo jq -r '.data["nodekey"]' $VAULT_RESPONSE)
           echo $nodekey
           echo "Creating files and certs"
+          tail -f /dev/null
           bootnode --nodekey nodekey --writeaddress > enode
           echo ${GETH_PASSFRASE} >> password
           geth account new --datadir ${PEER_NAME} --password password
