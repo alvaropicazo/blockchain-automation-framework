@@ -86,12 +86,17 @@ spec:
           if echo ${LOOKUP_SECRET_RESPONSE} | grep "errors"
           then
             jq -r '.data["nodekey"]' $LOOKUP_SECRET_RESPONSE >> checknodekey
+            echo $checknodekey
             if [ ! -z "$checknodekey" ]
             then
               jq -r '.data["nodekey"]' $LOOKUP_SECRET_RESPONSE >> checknodekey
               echo "Certificates absent in vault. Ignore error warning"
               touch ${MOUNT_PATH}/absent.txt
-            end  
+            else
+              validateVaultResponse "${CERTS_SECRET_PREFIX}/crypto/${PEER_NAME}/quorum" "${LOOKUP_SECRET_RESPONSE}" "LOOKUPSECRETRESPONSE"
+              echo "Certificates present in vault"
+              touch ${MOUNT_PATH}/present.txt
+            fi    
           else
             validateVaultResponse "${CERTS_SECRET_PREFIX}/crypto/${PEER_NAME}/quorum" "${LOOKUP_SECRET_RESPONSE}" "LOOKUPSECRETRESPONSE"
             echo "Certificates present in vault"
