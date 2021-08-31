@@ -7,3 +7,16 @@
     VAULT_TOKEN: "{{ vault.root_token }}"
   tags:
     molecule-idempotence-notest
+
+# This tasks copy the nodekey to the vault
+- name: Copy genesis to Vault
+  shell: |
+    vault kv put {{ vault.secret_path | default('secret') }}/{{ component_ns }}/crypto/{{ component_name }}/quorum nodekey="$(cat build/{{ component_name }}/{{ peer.name }}/nodekey)" 
+  environment:
+    VAULT_ADDR: "{{ vault.url }}"
+    VAULT_TOKEN: "{{ vault.root_token }}"
+  loop: "{{ peers }}"
+  loop_control:
+    loop_var: peer  
+  tags:
+    molecule-idempotence-notest
