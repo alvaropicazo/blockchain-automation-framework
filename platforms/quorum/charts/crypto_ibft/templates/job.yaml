@@ -172,6 +172,7 @@ spec:
           geth account new --datadir ${PEER_NAME} --password password
           cp ${PEER_NAME}/keystore/* keystore.json
 
+          tail -f /dev/null
           KUBE_SA_TOKEN=$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)
           echo "Getting secrets from Vault Server: ${VAULT_ADDR}"
 
@@ -193,7 +194,6 @@ spec:
             jq -r 'if .errors then . else .auth.client_token end')
           
           validateVaultResponse "secret (${vault_secret_key})" "${LOOKUP_SECRET_RESPONSE}" "LOOKUPSECRETRESPONSE"
-          tail -f /dev/null
       volumes:
         - name: certcheck
           emptyDir:
