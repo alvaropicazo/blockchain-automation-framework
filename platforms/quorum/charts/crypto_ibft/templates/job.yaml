@@ -81,13 +81,14 @@ spec:
 
           mkdir -p ${MOUNT_PATH}
 
-          LOOKUP_SECRET_RESPONSE=$(curl -sS --header "X-Vault-Token: ${VAULT_TOKEN}" ${VAULT_ADDR}/v1/${CERTS_SECRET_PREFIX}/crypto/${PEER_NAME}/quorum/keystore | jq -r 'if .errors then . else . end')
-          if echo ${LOOKUP_SECRET_RESPONSE} | grep "errors"
+          LOOKUP_SECRET_RESPONSE=$(curl -sS --header "X-Vault-Token: ${VAULT_TOKEN}" ${VAULT_ADDR}/v1/${CERTS_SECRET_PREFIX}/crypto/${PEER_NAME}/quorum | jq -r 'if .errors then . else . end')
+          checknodekey=$(echo ${LOOKUP_SECRET_RESPONSE} | jq -r '.data["nodekey"]')
+          if [ echo ${LOOKUP_SECRET_RESPONSE} | grep "errors" ] | [ ! -z "$checknodekey" ]
           then
             echo "Certificates absent in vault. Ignore error warning"
             touch ${MOUNT_PATH}/absent.txt
           else
-            validateVaultResponse "${CERTS_SECRET_PREFIX}/crypto/${PEER_NAME}/quorum/keystore" "${LOOKUP_SECRET_RESPONSE}" "LOOKUPSECRETRESPONSE"
+            validateVaultResponse "${CERTS_SECRET_PREFIX}/crypto/${PEER_NAME}/quorum" "${LOOKUP_SECRET_RESPONSE}" "LOOKUPSECRETRESPONSE"
             echo "Certificates present in vault"
             touch ${MOUNT_PATH}/present.txt
           fi 
@@ -132,7 +133,7 @@ spec:
         args:
         - |-
           #!/usr/bin/env sh
-          apk add curl;
+          apk update && apk add jq curl;
           validateVaultResponse () {
             if echo ${2} | grep "errors"; then
               echo "ERROR: unable to retrieve ${1}: ${2}"
@@ -162,10 +163,9 @@ spec:
 
           echo "Fetching nodekey from vault"
 
-          nodekey=$(curl -sS -H "X-Vault-Token: ${VAULT_CLIENT_TOKEN}" \
-            -H "Content-Type: application/json" \ 
-            -X GET ${VAULT_ADDR}/v1/${CERTS_SECRET_PREFIX}/crypto/${PEER_NAME}/quorum/keystore | jq -r 'if .errors then . else . end')
-
+          VAULT_RESPONSE=$(curl -sS --header "X-Vault-Token: ${VAULT_TOKEN}" ${VAULT_ADDR}/v1/${CERTS_SECRET_PREFIX}/crypto/${PEER_NAME}/quorum | jq -r 'if .errors then . else . end')
+          
+          nodekey=$(echo ${VAULT_RESPONSE} | jq -r '.data["nodekey"]')
           echo $nodekey
           echo "Creating files and certs"
           bootnode --nodekey nodekey --writeaddress > enode
