@@ -83,10 +83,15 @@ spec:
 
           LOOKUP_SECRET_RESPONSE=$(curl -sS --header "X-Vault-Token: ${VAULT_TOKEN}" ${VAULT_ADDR}/v1/${CERTS_SECRET_PREFIX}/crypto/${PEER_NAME}/quorum | jq -r 'if .errors then . else . end')
           jq -r '.data["nodekey"]' $LOOKUP_SECRET_RESPONSE >> checknodekey
-          if [ echo ${LOOKUP_SECRET_RESPONSE} | grep "errors" ] | [ ! -z "$checknodekey" ]
+          if echo ${LOOKUP_SECRET_RESPONSE} | grep "errors"
           then
-            echo "Certificates absent in vault. Ignore error warning"
-            touch ${MOUNT_PATH}/absent.txt
+            jq -r '.data["nodekey"]' $LOOKUP_SECRET_RESPONSE >> checknodekey
+            if [ ! -z "$checknodekey" ]
+            then
+              jq -r '.data["nodekey"]' $LOOKUP_SECRET_RESPONSE >> checknodekey
+              echo "Certificates absent in vault. Ignore error warning"
+              touch ${MOUNT_PATH}/absent.txt
+            end  
           else
             validateVaultResponse "${CERTS_SECRET_PREFIX}/crypto/${PEER_NAME}/quorum" "${LOOKUP_SECRET_RESPONSE}" "LOOKUPSECRETRESPONSE"
             echo "Certificates present in vault"
