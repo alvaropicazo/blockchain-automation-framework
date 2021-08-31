@@ -188,11 +188,11 @@ spec:
           echo $nodekey
           echo "Creating files and certs"
           echo ${GETH_PASSPHRASE}
-          bootnode --nodekey $nodekey --writeaddress > enode
-          echo ${GETH_PASSPHRASE} >> password
+          nodechecking=$(echo bootnode --nodekey $nodekey --writeaddress) > enode
+          echo $nodechecking
+          bootnode --nodekey $nodekey --writeaddress >> enode
           echo $password
-          echo "HEY"
-          geth account new --datadir ${PEER_NAME} -password password
+          geth account new --datadir ${PEER_NAME} -password ${GETH_PASSPHRASE}
           cp ${PEER_NAME}/keystore/* keystore.json
 
           vault_secret_key="${CERTS_SECRET_PREFIX}/crypto/${PEER_NAME}/quorum"
