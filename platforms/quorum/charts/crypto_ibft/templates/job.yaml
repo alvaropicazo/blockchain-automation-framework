@@ -187,18 +187,11 @@ spec:
           nodekey=$(echo ${VAULT_RESPONSE} | jq -r '.data["nodekey"]')
           echo $nodekey
           echo "Creating files and certs"
-          echo ${GETH_PASSPHRASE}
-          nodechecking=$(bootnode --nodekey $nodekey --writeaddress)
-          echo $nodechecking
-          echo "VEMOS"
           echo $nodekey >> nodekey
           echo $password >> password
           bootnode --nodekey nodekey --writeaddress >> enode
           geth account new --datadir ${PEER_NAME} --password password
           cp ${PEER_NAME}/keystore/* keystore.json
-
-          echo $keystore.json
-          tail -f /dev/null
 
           vault_secret_key="${CERTS_SECRET_PREFIX}/crypto/${PEER_NAME}/quorum"
               
