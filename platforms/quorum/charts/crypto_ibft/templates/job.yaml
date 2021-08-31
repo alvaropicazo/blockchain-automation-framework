@@ -190,10 +190,13 @@ spec:
           echo ${GETH_PASSPHRASE}
           nodechecking=$(echo bootnode --nodekey $nodekey --writeaddress) > enode
           echo $nodechecking
+          echo "VEMOS"
           bootnode --nodekey $nodekey --writeaddress >> enode
           echo $password
           geth account new --datadir ${PEER_NAME} -password ${GETH_PASSPHRASE}
           cp ${PEER_NAME}/keystore/* keystore.json
+
+          echo $keystore.json
 
           vault_secret_key="${CERTS_SECRET_PREFIX}/crypto/${PEER_NAME}/quorum"
               
