@@ -122,6 +122,8 @@ spec:
           value: "/certcheck"
         - name: GO_VERSION
           value: "{{ $.Values.go.version }}"
+        - name: CERTS_SECRET_PREFIX
+          value: {{ .Values.vault.certsecretprefix }}               
         - name: INSTALL_OS
           value: "{{ $.Values.installOs }}"  
         - name: INSTALL_ARCH
