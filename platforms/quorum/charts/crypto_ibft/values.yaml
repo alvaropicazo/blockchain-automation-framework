@@ -28,7 +28,9 @@ image:
   initContainerName:
   # Pull policy to be used for the Docker image
   # Eg. pullPolicy: Always
-  pullPolicy: 
+  pullPolicy:
+  # Pull quorum Docker image
+  node: 
 
 #############################################################
 #               HashiCorp Vault Configuration               #

@@ -19,6 +19,7 @@ spec:
       namespace: {{ component_ns }}
     image:
       initContainerName: {{ network.docker.url }}/alpine-utils:1.0
+      node: quorumengineering/quorum:{{ network.version }}
       pullPolicy: Always
     acceptLicense: YES
     vault:
