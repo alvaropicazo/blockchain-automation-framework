@@ -5,6 +5,7 @@
   environment:
     VAULT_ADDR: "{{ vault.url }}"
     VAULT_TOKEN: "{{ vault.root_token }}"
+  when: copyNodekey == false
   tags:
     molecule-idempotence-notest
 
@@ -17,6 +18,7 @@
     VAULT_TOKEN: "{{ vault.root_token }}"
   loop: "{{ peers }}"
   loop_control:
-    loop_var: peer  
+    loop_var: peer
+  when: copyNodekey == true   
   tags:
     molecule-idempotence-notest

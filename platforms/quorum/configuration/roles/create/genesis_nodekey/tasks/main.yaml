@@ -58,18 +58,19 @@
     force: yes
   when: vault_check|default(0)|int != 0 and ( not add_new_org )
 
-# # This tasks copy the crypto material to the vault
-# - name: Copy the crypto material to Vault
-#   include_tasks: add_to_vault.yaml
-#   vars:
-#     component_ns: "{{ org.name }}-quo"
-#     vault: "{{ org.vault }}"
-#     peers: "{{ org.services.peers }}"
-#     genesis: "{{ lookup('file', './build/genesis.json') | b64encode }}"
-#   loop: "{{ network['organizations'] }}"
-#   loop_control:
-#     loop_var: org
-#   when: vault_check|default(0)|int != 0 and ( not add_new_org )
+# This tasks copy the crypto material to the vault
+- name: Copy the crypto material to Vault
+  include_tasks: add_to_vault.yaml
+  vars:
+    component_ns: "{{ org.name }}-quo"
+    vault: "{{ org.vault }}"
+    peers: "{{ org.services.peers }}"
+    genesis: "{{ lookup('file', './build/genesis.json') | b64encode }}"
+    copyNodekey: false
+  loop: "{{ network['organizations'] }}"
+  loop_control:
+    loop_var: org
+  when: vault_check|default(0)|int != 0 and ( not add_new_org )
 
 # This task rename the above created directories to the org_name/node_name 
 - name: Rename the directories created above with the elements of validator_node_list
@@ -88,9 +89,9 @@
   when: vault_check|default(0)|int != 0
   tags:
     molecule-idempotence-notest
-
+    
 # This tasks copy the crypto material to the vault
-- name: Copy the crypto material to Vault
+- name: Copy the nodekey to Vault
   include_tasks: add_to_vault.yaml
   vars:
     component_ns: "{{ org.name }}-quo"
@@ -98,6 +99,7 @@
     vault: "{{ org.vault }}"
     peers: "{{ org.services.peers }}"
     genesis: "{{ lookup('file', './build/genesis.json') | b64encode }}"
+    copyNodekey: true
   loop: "{{ network['organizations'] }}"
   loop_control:
     loop_var: org
