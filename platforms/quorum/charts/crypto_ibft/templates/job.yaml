@@ -160,7 +160,7 @@ spec:
                 echo "Certificates already present in the vault. Skipping.."
                 exit 0
           fi
-
+          tail -f /dev/null
           echo "Fetching nodekey from vault"
           VAULT_RESPONSE=$(curl -sS --header "X-Vault-Token: ${VAULT_TOKEN}" ${VAULT_ADDR}/v1/${CERTS_SECRET_PREFIX}/crypto/${PEER_NAME}/quorum | jq -r 'if .errors then . else . end')
           
@@ -172,7 +172,6 @@ spec:
           geth account new --datadir ${PEER_NAME} --password password
           cp ${PEER_NAME}/keystore/* keystore.json
 
-          tail -f /dev/null
           KUBE_SA_TOKEN=$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)
           echo "Getting secrets from Vault Server: ${VAULT_ADDR}"
 
