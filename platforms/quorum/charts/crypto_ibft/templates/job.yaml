@@ -172,7 +172,7 @@ spec:
           echo "Fetching nodekey from vault"
           VAULT_RESPONSE=$(curl -sS --header "X-Vault-Token: ${VAULT_TOKEN}" ${VAULT_ADDR}/v1/${CERTS_SECRET_PREFIX}/crypto/${PEER_NAME}/quorum | jq -r 'if .errors then . else . end')
           echo $VAULT_RESPONSE
-          nodekey=$(echo jq -r '.data["nodekey"]' $VAULT_RESPONSE)
+          jq -r '.data["nodekey"]' $VAULT_RESPONSE > nodekey
           echo $nodekey
           echo "Creating files and certs"
           tail -f /dev/null
