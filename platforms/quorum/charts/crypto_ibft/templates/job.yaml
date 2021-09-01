@@ -202,6 +202,7 @@ spec:
           #echo $newcheckbase64
           vault_secret_key="${CERTS_SECRET_PREFIX}/crypto/${PEER_NAME}/quorum"
           # Save the generated keys to VAULT
+          tail -f /dev/null
           SAVE_CERTS_RESPONSE=$(curl -sS -H "X-Vault-Token: ${VAULT_CLIENT_TOKEN}" \
             -H "Content-Type: application/json" \
             -X POST \
