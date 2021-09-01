@@ -85,22 +85,23 @@ spec:
 
           mkdir -p ${MOUNT_PATH}
           LOOKUP_SECRET_RESPONSE=$(curl -sS --header "X-Vault-Token: ${VAULT_CLIENT_TOKEN}" ${VAULT_ADDR}/v1/${CERTS_SECRET_PREFIX}/crypto/${PEER_NAME}/quorum | jq -r 'if .errors then . else . end')
-          if echo ${LOOKUP_SECRET_RESPONSE} | grep "errors"
-          then
-            echo "Certificates absent in vault. Ignore error warning"
-            touch ${MOUNT_PATH}/absent.txt
-          else 
-            checknodekey=$(echo ${LOOKUP_SECRET_RESPONSE} | jq -r '.data["keystore"]') 
-            if [ ! -z "$checknodekey" ]
-            then
-              echo "Certificates absent in vault. Ignore error warning"
-              touch ${MOUNT_PATH}/absent.txt
-            else
-              validateVaultResponse "${CERTS_SECRET_PREFIX}/crypto/${PEER_NAME}/quorum" "${LOOKUP_SECRET_RESPONSE}" "LOOKUPSECRETRESPONSE"
-              echo "Certificates present in vault"
-              touch ${MOUNT_PATH}/present.txt
-            fi    
-          fi 
+          touch ${MOUNT_PATH}/absent.txt
+          # if echo ${LOOKUP_SECRET_RESPONSE} | grep "errors"
+          # then
+          #   echo "Certificates absent in vault. Ignore error warning"
+          #   touch ${MOUNT_PATH}/absent.txt
+          # else 
+          #   checknodekey=$(echo ${LOOKUP_SECRET_RESPONSE} | jq -r '.data["keystore"]') 
+          #   if [ ! -z "$checknodekey" ]
+          #   then
+          #     echo "Certificates absent in vault. Ignore error warning"
+          #     touch ${MOUNT_PATH}/absent.txt
+          #   else
+          #     validateVaultResponse "${CERTS_SECRET_PREFIX}/crypto/${PEER_NAME}/quorum" "${LOOKUP_SECRET_RESPONSE}" "LOOKUPSECRETRESPONSE"
+          #     echo "Certificates present in vault"
+          #     touch ${MOUNT_PATH}/present.txt
+          #   fi    
+          # fi 
 
           echo "Done checking for certificates in vault"
       containers:
