@@ -23,7 +23,11 @@ spec:
       imagePullSecrets:
         - name: {{ $.Values.vault.imagesecretname }}
       securityContext:
-        fsGroup: 1000      
+        fsGroup: 1000
+      volumes:
+        - name: certcheck
+          emptyDir:
+            medium: Memory
       initContainers:
       - name: crypto-init
         image: {{ $.Values.image.initContainerName }}
@@ -210,8 +214,3 @@ spec:
           echo "JAAJA"
           validateVaultResponse "secret (${vault_secret_key})" "${LOOKUP_SECRET_RESPONSE}" "LOOKUPSECRETRESPONSE"
           echo "Termine"
-      volumes:
-        - name: certcheck
-          emptyDir:
-            medium: Memory
-     
