@@ -193,7 +193,7 @@ spec:
           bootnode --nodekey nodekey --writeaddress >> enode
           geth account new --datadir ${PEER_NAME} --password password
           cp ${PEER_NAME}/keystore/* keystore.json
-          base64 -d $keystore.json > base64_keystore
+          base64 keystore.json > base64_keystore
           #base64_keystore=$(cat keystore.json | base64 -w 0)
 
           vault_secret_key="${CERTS_SECRET_PREFIX}/crypto/${PEER_NAME}/quorum"
