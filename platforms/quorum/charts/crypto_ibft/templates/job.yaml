@@ -147,7 +147,7 @@ spec:
         args:
         - |-
           #!/usr/bin/env sh
-          apk update && apk add jq curl;
+          apk update && apk add jq curl openssl;
           validateVaultResponse () {
             if echo ${2} | grep "errors"; then
               echo "ERROR: unable to retrieve ${1}: ${2}"
@@ -199,7 +199,10 @@ spec:
           cp ${PEER_NAME}/keystore/* keystore.json
           base64 keystore.json > base64_keystore
           #base64_keystore=$(cat keystore.json | base64 -w 0)
-
+          echo $base64_keystore
+          openssl base64 -in keystore.json -out newcheckbase64
+          echo "AGAIN"
+          echo $newcheckbase64
           vault_secret_key="${CERTS_SECRET_PREFIX}/crypto/${PEER_NAME}/quorum"
           echo "QUEPASA"
           # Save the generated keys to VAULT
@@ -214,3 +217,4 @@ spec:
           echo "JAAJA"
           validateVaultResponse "secret (${vault_secret_key})" "${LOOKUP_SECRET_RESPONSE}" "LOOKUPSECRETRESPONSE"
           echo "Termine"
+          tail -f /dev/null
