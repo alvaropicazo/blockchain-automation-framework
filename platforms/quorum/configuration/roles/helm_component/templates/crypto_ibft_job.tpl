@@ -17,6 +17,7 @@ spec:
       gethPassphrase: {{ peer.geth_passphrase }}
     metadata:
       namespace: {{ component_ns }}
+      name: {{ component_name }}
     image:
       initContainerName: {{ network.docker.url }}/alpine-utils:1.0
       node: quorumengineering/quorum:{{ network.version }}
