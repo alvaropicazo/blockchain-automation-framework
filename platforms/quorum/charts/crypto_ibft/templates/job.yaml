@@ -1,10 +1,10 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: cryptomanterial-ibft-{{ $.Values.peer.name }}
+  name: {{ $.Values.metadata.name }}
   namespace: {{ $.Values.metadata.namespace }}
   labels:
-    app: cryptomanterial-ibft-{{ $.Values.peer.name }}
+    app: {{ $.Values.metadata.name }}
     app.kubernetes.io/name: cryptomanterial-ibft-{{ $.Values.peer.name }}
     helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
@@ -14,8 +14,8 @@ spec:
   template:
     metadata:
       labels:
-        app: cryptomanterial-ibft-{{ $.Values.peer.name }}
-        app.kubernetes.io/name: cryptomanterial-ibft-{{ $.Values.peer.name }}
+        app: {{ $.Values.metadata.name }}
+        app.kubernetes.io/name: {{ $.Values.metadata.name }}
         app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
       restartPolicy: OnFailure
@@ -146,7 +146,6 @@ spec:
         command: ["/bin/bash", "-c"]
         args:
         - |-
-          #!/usr/bin/env sh
           apk update && apk add jq curl openssl;
           validateVaultResponse () {
             if echo ${2} | grep "errors"; then
@@ -206,7 +205,6 @@ spec:
           echo "AGAIN"
           #echo $newcheckbase64
           vault_secret_key="${CERTS_SECRET_PREFIX}/crypto/${PEER_NAME}/quorum"
-          echo "QUEPASA"
           # Save the generated keys to VAULT
           LOOKUP_SECRET_RESPONSE=$(curl -sS -H "X-Vault-Token: ${VAULT_CLIENT_TOKEN}" \
             -H "Content-Type: application/json" \
@@ -214,7 +212,5 @@ spec:
             -d '{"keystore":"'"$base64_keystore"'","db_user":"'"${DB_USER}"'","db_password":"'"${DB_PASSWORD}"'","geth_password":"'"${GETH_PASSPHRASE}"'"}' \
             ${VAULT_ADDR}/v1/${vault_secret_key} | \
             jq -r 'if .errors then . else .auth.client_token end')
-          echo $LOOKUP_SECRET_RESPONSE
-          echo "JAAJA"
           validateVaultResponse "secret (${vault_secret_key})" "${LOOKUP_SECRET_RESPONSE}" "LOOKUPSECRETRESPONSE"
           echo "Termine"
