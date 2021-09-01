@@ -83,7 +83,4 @@
     component_name: "{{ peer.name }}-ibft-job"
     component_type: Job
     namespace: "{{ component_ns }}"
-  loop: "{{ item.services.peers }}"
-  loop_control:
-    loop_var: peer
   tags: notest
