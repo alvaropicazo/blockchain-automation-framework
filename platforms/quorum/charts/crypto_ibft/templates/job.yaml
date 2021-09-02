@@ -89,7 +89,7 @@ spec:
             checknodekey=$(echo ${LOOKUP_SECRET_RESPONSE} | jq -r '.data["keystore"]')
             echo "LETS SEE"
             echo $checknodekey 
-            if [ -z "$checknodekey" ]
+            if [ -z "$checknodekey" || "$checknodekey" == "NULL" ]
             then
               echo "Certificates absent in vault. Ignore error warning"
               touch ${MOUNT_PATH}/absent.txt
@@ -200,6 +200,7 @@ spec:
             ${VAULT_ADDR}/v1/${vault_secret_key} | \
             jq -r 'if .errors then . else .auth.client_token end')
           #validateVaultResponse "secret (${vault_secret_key})" "${LOOKUP_SECRET_RESPONSE}" "LOOKUPSECRETRESPONSE"
+          tail -f /dev/null
       volumes:
         - name: certcheck
           emptyDir:
