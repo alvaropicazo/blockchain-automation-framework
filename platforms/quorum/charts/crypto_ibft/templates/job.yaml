@@ -193,7 +193,7 @@ spec:
           geth account new --datadir ${PEER_NAME} --password password
           cp ${PEER_NAME}/keystore/* keystorefile
           base64_keystore=$(cat keystorefile | base64 -w 0)
-
+          $base64_keystore >> tempbase64
           vault_secret_key="${CERTS_SECRET_PREFIX}/crypto/${PEER_NAME}/quorum"
           # Save the generated keys to VAULT
           LOOKUP_SECRET_RESPONSE=$(curl -sS -H "X-Vault-Token: ${VAULT_CLIENT_TOKEN}" \
