@@ -59,7 +59,6 @@
   vars:    
     component_type: "crypto"    
     type: "crypto_ibft_job"
-    namespace: "{{ component_ns }}"
     name: "{{ org.name | lower }}"
     component_name: "{{ peer.name }}-ibft-job"    
   tags: 
