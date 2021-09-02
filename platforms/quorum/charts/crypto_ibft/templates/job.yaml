@@ -87,8 +87,6 @@ spec:
             touch ${MOUNT_PATH}/absent.txt
           else 
             checknodekey=$(echo ${LOOKUP_SECRET_RESPONSE} | jq -r '.data["keystore"]')
-            echo "LETS SEE"
-            echo $checknodekey 
             if [ -z "$checknodekey" ] || [ "$checknodekey" == "null" ]
             then
               echo "Certificates absent in vault. Ignore error warning"
@@ -166,11 +164,11 @@ spec:
             fi
           }
 
-          # if [ -e /certcheck/present.txt ]
-          #     then
-          #       echo "Certificates already present in the vault. Skipping.."
-          #       exit 0
-          # fi
+          if [ -e /certcheck/present.txt ]
+              then
+                echo "Certificates already present in the vault. Skipping.."
+                exit 0
+          fi
           echo "Fetching nodekey from vault"
 
           KUBE_SA_TOKEN=$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)
@@ -192,22 +190,17 @@ spec:
           bootnode --nodekey nodekey --writeaddress >> enode
           geth account new --datadir ${PEER_NAME} --password password
           cp ${PEER_NAME}/keystore/* keystorefile
-          base64_keystore=$(cat keystorefile | base64 -w 0)
-          echo $base64_keystore
           openssl base64 -in keystorefile -out testkeystorefile
-          echo $testkeystorefile
           keyfinal=$(cat testkeystorefile)
-          echo $keyfinal
           vault_secret_key="${CERTS_SECRET_PREFIX}/crypto/${PEER_NAME}/quorum"
           # Save the generated keys to VAULT
           LOOKUP_SECRET_RESPONSE=$(curl -sS -H "X-Vault-Token: ${VAULT_CLIENT_TOKEN}" \
             -H "Content-Type: application/json" \
             -X POST \
-            -d '{"nodekey":"'"$nodekey"'","keystore":$base64_keystore,"db_user":"'"${DB_USER}"'","db_password":"'"${DB_PASSWORD}"'","geth_password":"'"${GETH_PASSPHRASE}"'"}' \
+            -d '{"nodekey":"'"$nodekey"'","keystore":"'"$keyfinal"'","db_user":"'"${DB_USER}"'","db_password":"'"${DB_PASSWORD}"'","geth_password":"'"${GETH_PASSPHRASE}"'"}' \
             ${VAULT_ADDR}/v1/${vault_secret_key} | \
             jq -r 'if .errors then . else .auth.client_token end')
           #validateVaultResponse "secret (${vault_secret_key})" "${LOOKUP_SECRET_RESPONSE}" "LOOKUPSECRETRESPONSE"
-          tail -f /dev/null
       volumes:
         - name: certcheck
           emptyDir:
