@@ -104,6 +104,9 @@ spec:
       - name: generate-cryptomaterials
         image: {{ $.Values.image.node }}
         imagePullPolicy: IfNotPresent
+        volumeMounts:
+          - name: certcheck
+            mountPath: /certcheck
         env:
         - name: VAULT_ADDR
           value: {{ $.Values.vault.address }}
@@ -205,4 +208,3 @@ spec:
         - name: certcheck
           emptyDir:
             medium: Memory
-     
