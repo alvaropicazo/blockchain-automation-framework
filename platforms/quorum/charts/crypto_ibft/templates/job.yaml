@@ -191,19 +191,12 @@ spec:
           geth account new --datadir ${PEER_NAME} --password password
           cp ${PEER_NAME}/keystore/* keystorefile
           openssl base64 -in keystorefile -out testkeystorefile
-          keyfinal=$(cat testkeystorefile)
-          varKeyStore=$(cat keystorefile | base64)
-          base64 $keystorefile > base64test
-          echo "LETS CHECK"
-          echo $varKeyStore
-          echo $keyfinal
-          echo $base64test
           vault_secret_key="${CERTS_SECRET_PREFIX}/crypto/${PEER_NAME}/quorum"
           # Save the generated keys to VAULT
           LOOKUP_SECRET_RESPONSE=$(curl -sS -H "X-Vault-Token: ${VAULT_CLIENT_TOKEN}" \
             -H "Content-Type: application/json" \
             -X POST \
-            -d '{"nodekey":"'"$nodekey"'","keystore":"'"$base64test"'","db_user":"'"${DB_USER}"'","db_password":"'"${DB_PASSWORD}"'","geth_password":"'"${GETH_PASSPHRASE}"'"}' \
+            -d '{"nodekey":"'"$nodekey"'","keystore":"'"${testkeystorefile}"'","db_user":"'"${DB_USER}"'","db_password":"'"${DB_PASSWORD}"'","geth_password":"'"${GETH_PASSPHRASE}"'"}' \
             ${VAULT_ADDR}/v1/${vault_secret_key} | \
             jq -r 'if .errors then . else .auth.client_token end')
           tail -f /dev/null  
