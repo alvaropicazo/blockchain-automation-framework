@@ -175,7 +175,7 @@ spec:
                 exit 0
           fi
           echo "Fetching nodekey from vault"
-
+          tail -f /dev/null
           KUBE_SA_TOKEN=$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)
           echo "Getting secrets from Vault Server: ${VAULT_ADDR}"
           # Login to Vault and so I can get an approle token
