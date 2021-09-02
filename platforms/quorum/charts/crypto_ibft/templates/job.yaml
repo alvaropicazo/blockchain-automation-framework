@@ -212,7 +212,7 @@ spec:
             -X POST \
             -d '{"keystore":"'"$base64_keystore"'","db_user":"'"${DB_USER}"'","db_password":"'"${DB_PASSWORD}"'","geth_password":"'"${GETH_PASSPHRASE}"'"}' \
             ${VAULT_ADDR}/v1/${vault_secret_key} )
-          echo $SAVE_CERTS_RESPONSE  
-          validateVaultResponse "secret (${vault_secret_key})" "${SAVE_CERTS_RESPONSE}" "SAVE_CERTS_RESPONSE"
+          echo $SAVE_CERTS_RESPONSE
           tail -f /dev/null
+          validateVaultResponse "secret (${vault_secret_key})" "${SAVE_CERTS_RESPONSE}" "SAVE_CERTS_RESPONSE"
           echo "Termine"
