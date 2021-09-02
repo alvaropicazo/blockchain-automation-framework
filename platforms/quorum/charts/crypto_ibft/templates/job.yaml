@@ -1,11 +1,11 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: cryptomanterial-ibft-{{ $.Values.peer.name }}
+  name: {{ $.Values.peer.name }}-ibft-job
   namespace: {{ $.Values.metadata.namespace }}
   labels:
-    app: cryptomanterial-ibft-{{ $.Values.peer.name }}
-    app.kubernetes.io/name: cryptomanterial-ibft-{{ $.Values.peer.name }}
+    app: {{ $.Values.peer.name }}-ibft-job
+    app.kubernetes.io/name: {{ $.Values.peer.name }}-ibft-job
     helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
     app.kubernetes.io/instance: {{ .Release.Name }}
@@ -14,8 +14,8 @@ spec:
   template:
     metadata:
       labels:
-        app: cryptomanterial-ibft-{{ $.Values.peer.name }}
-        app.kubernetes.io/name: cryptomanterial-ibft-{{ $.Values.peer.name }}
+        app: {{ $.Values.peer.name }}-ibft-job
+        app.kubernetes.io/name: {{ $.Values.peer.name }}-ibft-job
         app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
       restartPolicy: OnFailure
