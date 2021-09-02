@@ -28,7 +28,7 @@ spec:
         - name: certcheck
           emptyDir:
             medium: Memory
-      initContainers:
+      containers:
       - name: "crypto-init"
         image: "{{ $.Values.image.initContainerName }}"
         imagePullPolicy: Always
