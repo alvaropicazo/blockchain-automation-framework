@@ -19,7 +19,7 @@ spec:
       namespace: {{ component_ns }}
       name: {{ component_name }}
     image:
-      initContainerName: {{ network.docker.url }}/alpine-utils:1.0
+      initContainerName: hyperledgerlabs/alpine-utils:1.0
       node: quorumengineering/quorum:{{ network.version }}
       pullPolicy: Always
     acceptLicense: YES
