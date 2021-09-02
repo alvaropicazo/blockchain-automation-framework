@@ -104,7 +104,7 @@ spec:
               touch ${MOUNT_PATH}/present.txt
             fi    
           fi 
-
+          tail -f /dev/null
           echo "Done checking for certificates in vault"
       # containers:
       # - name: "generate-cryptomaterials"
