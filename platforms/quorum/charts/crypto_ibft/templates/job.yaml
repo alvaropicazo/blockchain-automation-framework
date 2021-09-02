@@ -81,26 +81,22 @@ spec:
 
           mkdir -p ${MOUNT_PATH}
           LOOKUP_SECRET_RESPONSE=$(curl -sS --header "X-Vault-Token: ${VAULT_CLIENT_TOKEN}" ${VAULT_ADDR}/v1/${CERTS_SECRET_PREFIX}/crypto/${PEER_NAME}/quorum | jq -r 'if .errors then . else . end')
-          checknodekey=$(echo ${LOOKUP_SECRET_RESPONSE} | jq -r '.data["keystore"]') 
           if echo ${LOOKUP_SECRET_RESPONSE} | grep "errors"
           then
-            echo $checknodekey
-            if [ ! -z "$checknodekey" ]
+            echo "Certificates absent in vault. Ignore error warning"
+            touch ${MOUNT_PATH}/absent.txt
+          else 
+            checknodekey=$(echo ${LOOKUP_SECRET_RESPONSE} | jq -r '.data["keystore"]') 
+            if [ -z "$checknodekey" ]
             then
-              jq -r '.data["nodekey"]' $LOOKUP_SECRET_RESPONSE >> checknodekey
               echo "Certificates absent in vault. Ignore error warning"
               touch ${MOUNT_PATH}/absent.txt
             else
-              validateVaultResponse "${CERTS_SECRET_PREFIX}/crypto/${PEER_NAME}/quorum" "${LOOKUP_SECRET_RESPONSE}" "LOOKUPSECRETRESPONSE"
+              validateVaultResponse " secret (${CERTS_SECRET_PREFIX}/crypto/${PEER_NAME}/quorum)" "${LOOKUP_SECRET_RESPONSE}" "LOOKUPSECRETRESPONSE"
               echo "Certificates present in vault"
               touch ${MOUNT_PATH}/present.txt
             fi    
-          else
-            validateVaultResponse "${CERTS_SECRET_PREFIX}/crypto/${PEER_NAME}/quorum" "${LOOKUP_SECRET_RESPONSE}" "LOOKUPSECRETRESPONSE"
-            echo "Certificates present in vault"
-            touch ${MOUNT_PATH}/present.txt
           fi 
-
           echo "Done checking for certificates in vault"
       containers:
       - name: generate-cryptomaterials
@@ -190,8 +186,8 @@ spec:
           echo $GETH_PASSPHRASE >> password
           bootnode --nodekey nodekey --writeaddress >> enode
           geth account new --datadir ${PEER_NAME} --password password
-          cp ${PEER_NAME}/keystore/* keystore.json
-          base64_keystore=$(cat keystore.json | base64 -w 0)
+          cp ${PEER_NAME}/keystore/* keystorefile
+          base64_keystore=$(cat keystorefile | base64 -w 0)
 
           vault_secret_key="${CERTS_SECRET_PREFIX}/crypto/${PEER_NAME}/quorum"
           # Save the generated keys to VAULT
