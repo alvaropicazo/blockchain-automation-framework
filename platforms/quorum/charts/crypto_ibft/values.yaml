@@ -56,7 +56,7 @@ vault:
   serviceAccountName:
   # Provide the vault path where the certificates are stored
   # Eg. certsecretprefix: secret/cenm-org-name
-  certSecretPrefix:
+  certsecretprefix:
 
 
 #############################################################
