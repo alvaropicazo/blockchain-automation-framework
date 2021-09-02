@@ -136,8 +136,6 @@ spec:
           value: "{{ $.Values.go.rootDir }}"          
         - name: GETH_PASSPHRASE
           value: "{{ $.Values.peer.gethPassphrase }}"
-        - name: BIN_FOLDER
-          value: "{{ $.Values.bin_install_dir }}"
         - name: PEER_NAME
           value: "{{ $.Values.peer.name }}"
         - name: DB_USER
