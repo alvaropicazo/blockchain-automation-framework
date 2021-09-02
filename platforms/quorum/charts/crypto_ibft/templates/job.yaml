@@ -90,14 +90,11 @@ spec:
             touch ${MOUNT_PATH}/absent.txt
           else 
             checknodekey=$(echo ${LOOKUP_SECRET_RESPONSE} | jq -r '.data["keystore"]') 
-            echo $checknodekey
             if [ -z "$checknodekey" ]
             then
-              echo "HOLA"
               echo "Certificates absent in vault. Ignore error warning"
               touch ${MOUNT_PATH}/absent.txt
             else
-              echo "HMM"
               validateVaultResponse " secret (${CERTS_SECRET_PREFIX}/crypto/${PEER_NAME}/quorum)" "${LOOKUP_SECRET_RESPONSE}" "LOOKUPSECRETRESPONSE"
               echo "Certificates present in vault"
               touch ${MOUNT_PATH}/present.txt
