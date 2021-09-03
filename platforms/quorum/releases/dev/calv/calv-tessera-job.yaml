@@ -1,0 +1,26 @@
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  name: calv-tessera-job
+  namespace: calv-quo
+  annotations:
+    flux.weave.works/automated: "false"
+spec:
+  releaseName: calv-tessera-job
+  chart:
+    path: platforms/quorum/charts/tessera_key_mgmt
+    git: https://github.com/alvaropicazo/blockchain-automation-framework.git
+    ref: fix1625
+  values:
+    metadata:
+      name: calv-tessera-job
+      namespace: calv-quo    
+    image:      
+      repository: quorumengineering/tessera:21.4.0
+      pullSecret: regcred
+    vault:
+      address: http://vault.internal.dev2.aws.blockchaincloudpoc-develop.com:20001
+      authpath: quorumcalv
+      role: vault-role
+      serviceaccountname: vault-auth
+      tmprefix: secret/calv-quo/crypto/calv/transaction
