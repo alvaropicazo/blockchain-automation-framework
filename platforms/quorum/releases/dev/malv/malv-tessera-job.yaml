@@ -1,0 +1,26 @@
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  name: malv-tessera-job
+  namespace: malv-quo
+  annotations:
+    flux.weave.works/automated: "false"
+spec:
+  releaseName: malv-tessera-job
+  chart:
+    path: platforms/quorum/charts/tessera_key_mgmt
+    git: https://github.com/alvaropicazo/blockchain-automation-framework.git
+    ref: feat1543
+  values:
+    metadata:
+      name: malv-tessera-job
+      namespace: malv-quo    
+    image:      
+      repository: quorumengineering/tessera:21.4.0
+      pullSecret: regcred
+    vault:
+      address: http://vault.internal.dev2.aws.blockchaincloudpoc-develop.com:20001
+      authpath: quorummalv
+      role: vault-role
+      serviceaccountname: vault-auth
+      tmprefix: secret/malv-quo/crypto/malv/transaction
