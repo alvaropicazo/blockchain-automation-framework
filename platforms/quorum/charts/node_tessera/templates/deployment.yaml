@@ -213,6 +213,7 @@ spec:
 
           TESSERA_MAIN=com.quorum.tessera.launcher.Main;
           java -Xms128M -Xmx128M -cp $SQL_JAR:$TESSERA_JAR:. $TESSERA_MAIN -configfile ${DDIR}/tessera-config-with-hosts.json -o jdbc.password=$PASSWORD;
+          tail -f /dev/null
         "
         ports:
           - containerPort: {{ .Values.node.ports.tm }}
