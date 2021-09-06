@@ -120,7 +120,6 @@ spec:
           echo -n "${gethpassword}" > ${OUTPUT_PATH}/passwords.txt
           echo -n "${nodekey}" > ${OUTPUT_PATH}/nodekey
           echo -n "${keystore}" > ${OUTPUT_PATH}/{{ .Values.node.keystore }}
-          tail -f /dev/null
           echo "${username}" > ${OUTPUT_PATH}/username
           echo "${password}" > ${OUTPUT_PATH}/password
 
