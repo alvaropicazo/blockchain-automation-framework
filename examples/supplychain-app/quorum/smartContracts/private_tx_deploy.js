@@ -49,7 +49,7 @@ const createContract = async () => {
 const SetValueAtAddress = (host, value, deployedContractAbi, deployedContractAddress, fromAddress, toPublicKey) => {
   const web3 = new Web3(host)
   const contractInstance = new web3.eth.Contract(deployedContractAbi, deployedContractAddress);
-  const res = await contractInstance.methods.set(value).send({from: fromAddress, privateFor: [toPublicKey], gasLimit: "0x24A22"});
+  const res = contractInstance.methods.set(value).send({from: fromAddress, privateFor: [toPublicKey], gasLimit: "0x24A22"});
   //return res
 }
   
