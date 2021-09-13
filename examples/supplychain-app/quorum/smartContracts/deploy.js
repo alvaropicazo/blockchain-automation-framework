@@ -37,10 +37,10 @@ const deploy = async ()=>{
         privateFor: process.argv[6].split(',')
     }
 
-    // // use the privateFor if found in arguments
-    // if(process.argv[6] && process.argv[6] !== "0"){ // "0" is used for the automation purposes
-    //     parameter["privateFor"] = process.argv[6].split(','); //splitting the string of the private keys by ',' to convert it in array.
-    // }
+    // use the privateFor if found in arguments
+    if(process.argv[6] && process.argv[6] !== "0"){ // "0" is used for the automation purposes
+        parameter["privateFor"] = process.argv[6].split(','); //splitting the string of the private keys by ',' to convert it in array.
+    }
     DeployContract(payload, parameter, myContract); // run deploy Contract function
     PostDeployKeeping(smartContract.abi, smartContract.bytecode) // For writing the ABI and the smartContract bytecode in build 
 }
@@ -68,7 +68,7 @@ const DeployContract = (payload, parameter, myContract) =>{
 
 const PostDeployKeeping = (abi, bytecode) =>{
     try {
-        fs.writeFileSync("./build/abi.json", JSON.stringify(abi)) // writing the ABI file
+        fs.writeFileSync("./build/ABI.json", JSON.stringify(abi)) // writing the ABI file
       } catch (err) {
         console.error(err)
       }
