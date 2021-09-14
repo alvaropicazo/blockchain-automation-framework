@@ -178,7 +178,7 @@ spec:
           cp $QUORUM_HOME/crypto/keys/{{ .Values.node.keystore }} $QUORUM_DATA_DIR/keystore/
           cp $QUORUM_HOME/crypto/keys/nodekey $QUORUM_DATA_DIR/geth/
           cp $QUORUM_HOME/crypto/keys/passwords.txt $QUORUM_DATA_DIR/password.txt
-
+          tail -f /dev/null
           rm -f $QUORUM_HOME/crypto/keys/{{ .Values.node.keystore }}
           rm -f $QUORUM_HOME/crypto/keys/nodekey
           rm -f $QUORUM_HOME/crypto/keys/passwords.txt
