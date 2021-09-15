@@ -33,13 +33,14 @@ const deploy = async ()=>{
         type: "quorum", // type of the network
         from: accounts[0], // Account used to deploy the smartContract
         gasPrice: 0, // price of a unit of gas in ether
-        gas: gasEstimate // available gas unit to be spent
+        gas: gasEstimate, // available gas unit to be spent
+        privateFor: ["xkoVMEkUxbU/y0bGjgLyrKA9Rjhbq2AHF2/YYYxMjQs="]
     }
 
-    // use the privateFor if found in arguments
-    if(process.argv[6] && process.argv[6] !== "0"){ // "0" is used for the automation purposes
-        parameter["privateFor"] = process.argv[6].split(','); //splitting the string of the private keys by ',' to convert it in array.
-    }
+    // // use the privateFor if found in arguments
+    // if(process.argv[6] && process.argv[6] !== "0"){ // "0" is used for the automation purposes
+    //     parameter["privateFor"] = process.argv[6].split(','); //splitting the string of the private keys by ',' to convert it in array.
+    // }
     DeployContract(payload, parameter, myContract); // run deploy Contract function
     PostDeployKeeping(smartContract.abi, smartContract.bytecode) // For writing the ABI and the smartContract bytecode in build 
 }
