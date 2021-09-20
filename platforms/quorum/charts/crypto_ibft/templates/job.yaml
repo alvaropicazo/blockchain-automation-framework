@@ -27,7 +27,7 @@ spec:
       initContainers:
       - name: crypto-init
         image: {{ $.Values.image.initContainerName }}
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         env:
         - name: VAULT_ADDR
           value: {{ $.Values.vault.address }}
