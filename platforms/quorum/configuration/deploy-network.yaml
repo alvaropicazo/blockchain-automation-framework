@@ -119,6 +119,7 @@
       kubernetes: "{{ org.k8s }}"
       vault: "{{ org.vault }}"
       gitops: "{{ org.gitops }}"
+      peers: "{{ org.services.peers }}"
       charts_dir: "{{ org.gitops.chart_source }}"
       values_dir: "{{ playbook_dir }}/../../../{{ org.gitops.release_dir }}"    
     loop: "{{ network['organizations'] }}"
