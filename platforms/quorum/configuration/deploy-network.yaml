@@ -158,6 +158,7 @@
       git_url: "{{ item.gitops.git_url }}"
       git_branch: "{{ item.gitops.branch }}"
       docker_url: "{{ network.docker.url }}"
+      org: "{{ item }}"
       charts_dir: "{{ item.gitops.chart_source }}"
       values_dir: "{{playbook_dir}}/../../../{{item.gitops.release_dir}}/{{ item.name | lower }}"
       geth_data: "{{ network.config.bootnode }}"
