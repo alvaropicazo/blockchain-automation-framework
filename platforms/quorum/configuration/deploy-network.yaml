@@ -201,6 +201,7 @@
       storageclass_name: "{{ item.cloud_provider }}storageclass"
       external_url: "{{ item.external_url_suffix }}"
       vault: "{{ item.vault }}"
+      org: "{{ item }}"
       git_url: "{{ item.gitops.git_url }}"
       git_branch: "{{ item.gitops.branch }}"
       docker_url: "{{ network.docker.url }}"
