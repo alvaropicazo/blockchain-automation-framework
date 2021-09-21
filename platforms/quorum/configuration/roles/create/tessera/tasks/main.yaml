@@ -1,13 +1,15 @@
 # Create helm release files for validator nodes
-- name: Get enode data for each node of all organization
+- name: Create helm release files for validator nodes
   include_tasks: validator_main.yaml
-  peer_query: "peers[?type=='validator']"
-  validator_node: "{{ org.services | json_query(peer_query) | first | default() }}"
+  vars:
+    peer_query: "peers[?type=='validator']"
+    validator_node: "{{ org.services | json_query(peer_query) | first | default() }}"
   when: validator_node is defined
     
 # Create helm release files for member nodes
-- name: Get enode data for each node of all organization
+- name: Create helm release files for member nodes
   include_tasks: member_main.yaml
-  peer_query: "peers[?type=='member']"
-  member_node: "{{ org.services | json_query(peer_query) | first | default() }}"
+  vars:
+    peer_query: "peers[?type=='member']"
+    member_node: "{{ org.services | json_query(peer_query) | first | default() }}"
   when: member_node is defined
