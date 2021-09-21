@@ -26,6 +26,7 @@ charts:
   nodenode: node
   tessera: node_tessera
   validatorquorum: node_quorum_validator
+  memberquorum: node_quorum_member
   constellation: node_constellation
   pki-generator: generate-pki
   pki-generator-node: generate-pki-node
