@@ -170,14 +170,9 @@ spec:
           nodekey=$(echo ${VAULT_RESPONSE} | jq -r '.data["nodekey"]')
           
           echo "If nodekey does not exist, we generate one and will be saved in vault"
-          if [ -z "$nodekey" ] || [ "$nodekey" == "null" ]
-            then
-              bootnode -genkey nodekey
-              echo "Entro"
-            else
-              echo "Nodekey already exists"
-          fi
-
+          bootnode -genkey nodevalue
+          nodekey=$(cat nodevalue)
+          
           echo "Creating files and certs"
           echo $nodekey
           echo $nodekey >> nodekey
@@ -203,13 +198,7 @@ spec:
             -d @finalJSON.json \
             ${VAULT_ADDR}/v1/${vault_secret_key} | \
             jq -r 'if .errors then . else .auth.client_token end')
-          if [ -z "$nodekey" ] || [ "$nodekey" == "null" ]
-            then
-              echo "Entro2"
-              tail -f /dev/null  
-            else
-              echo "Nodekey already exists2"
-          fi  
+          tail -f /dev/null    
       volumes:
         - name: certcheck
           emptyDir:
