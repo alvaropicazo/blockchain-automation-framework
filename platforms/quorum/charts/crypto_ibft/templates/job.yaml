@@ -152,11 +152,7 @@ spec:
               fi
             fi
           }
-          if [ -e /certcheck/present.txt ]
-              then
-                echo "Certificates already present in the vault. Skipping.."
-                exit 0
-          fi
+        
           echo "Fetching nodekey from vault"
           KUBE_SA_TOKEN=$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)
           echo "Getting secrets from Vault Server: ${VAULT_ADDR}"
