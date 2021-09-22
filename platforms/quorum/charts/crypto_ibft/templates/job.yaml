@@ -152,7 +152,11 @@ spec:
               fi
             fi
           }
-        
+          if [ -e /certcheck/present.txt ]
+              then
+                echo "Certificates already present in the vault. Skipping.."
+                exit 0
+          fi
           echo "Fetching nodekey from vault"
           KUBE_SA_TOKEN=$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)
           echo "Getting secrets from Vault Server: ${VAULT_ADDR}"
@@ -166,9 +170,14 @@ spec:
           nodekey=$(echo ${VAULT_RESPONSE} | jq -r '.data["nodekey"]')
           
           echo "If nodekey does not exist, we generate one and will be saved in vault"
-          bootnode -genkey nodevalue
-          nodekey=$(cat nodevalue)
-          
+          if [ -z "$nodekey" ] || [ "$nodekey" == "null" ]
+            then
+              bootnode -genkey nodevalue
+              nodekey=$(cat nodevalue)
+            else
+              echo "Nodekey already exists"
+          fi
+
           echo "Creating files and certs"
           echo $nodekey
           echo $nodekey >> nodekey
@@ -178,7 +187,6 @@ spec:
           cp ${PEER_NAME}/keystore/* keystorefile
           tr -d "\n\r" < keystorefile > newchange
           openssl base64 -in newchange -out base64_keystore
-          echo "LOL"
           echo "
             {
               \"nodekey\": \"$nodekey\",
@@ -195,7 +203,6 @@ spec:
             -d @finalJSON.json \
             ${VAULT_ADDR}/v1/${vault_secret_key} | \
             jq -r 'if .errors then . else .auth.client_token end')
-          tail -f /dev/null    
       volumes:
         - name: certcheck
           emptyDir:
