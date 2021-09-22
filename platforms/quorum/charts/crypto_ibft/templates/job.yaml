@@ -179,6 +179,7 @@ spec:
           fi
 
           echo "Creating files and certs"
+          echo $nodekey
           echo $nodekey >> nodekey
           echo $GETH_PASSPHRASE >> password
           bootnode --nodekey nodekey --writeaddress >> enode
