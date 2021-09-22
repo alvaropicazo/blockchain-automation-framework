@@ -122,19 +122,6 @@ spec:
           echo -n "${keystore}" > ${OUTPUT_PATH}/{{ .Values.node.keystore }}
           echo "${username}" > ${OUTPUT_PATH}/username
           echo "${password}" > ${OUTPUT_PATH}/password
-
-          vault_secret_key="${VAULT_SECRET_PREFIX}/{{ .Values.vault.tm_keyname }}"
-          echo "Getting 2 keys from $vault_secret_key"          
-          LOOKUP_SECRET_RESPONSE=$(curl -sS \
-            --header "X-Vault-Token:${VAULT_CLIENT_TOKEN}" \
-            ${VAULT_ADDR}/v1/${vault_secret_key} | \
-            jq -r 'if .errors then . else . end')
-          validateVaultResponse "secret (${vault_secret_key})" "${LOOKUP_SECRET_RESPONSE}" "LOOKUPSECRETRESPONSE" 
-
-          tmpub=$(echo ${LOOKUP_SECRET_RESPONSE} | jq -r '.data["key_pub"]')
-          tmkey=$(echo ${LOOKUP_SECRET_RESPONSE} | jq -r '.data["key"]' | base64 -d )
-          echo -n "${tmpub}" > ${OUTPUT_PATH}/tm.pub
-          echo -n "${tmkey}" > ${OUTPUT_PATH}/tm.key
          
         volumeMounts:
         - name: certificates
@@ -182,9 +169,6 @@ spec:
           rm -f $QUORUM_HOME/crypto/keys/nodekey
           rm -f $QUORUM_HOME/crypto/keys/passwords.txt
 
-          until $(curl -k --output /dev/null --silent --head --fail {{ .Values.tessera.url }}/upcheck); do echo 'waiting for transaction manager to start...'; sleep 5; done;
-          echo transaction manager is up;
-
           args=""
           NODE_STATUS=""
           if [ $CONSENSUS == 'raft' ]; then
@@ -224,7 +208,6 @@ spec:
            --rpcvhosts=* \
            --allow-insecure-unlock \
            --port {{ .Values.node.ports.quorum }} \
-           --ptm.url {{ .Values.tessera.clienturl | quote }} \
            --password $QUORUM_DATA_DIR/password.txt 2>&1 | tee -a $QUORUM_HOME/logs/quorum.log;
         ports:
           - containerPort: {{ .Values.node.ports.rpc }}
