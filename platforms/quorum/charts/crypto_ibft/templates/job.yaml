@@ -182,6 +182,7 @@ spec:
           cp ${PEER_NAME}/keystore/* keystorefile
           tr -d "\n\r" < keystorefile > newchange
           openssl base64 -in newchange -out base64_keystore
+          echo "LOL"
           echo "
             {
               \"nodekey\": \"$nodekey\",
