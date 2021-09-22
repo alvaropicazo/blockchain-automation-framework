@@ -172,11 +172,11 @@ spec:
           echo "If nodekey does not exist, we generate one and will be saved in vault"
           if [ -z "$nodekey" ] || [ "$nodekey" == "null" ]
             then
-              echo "Hello"
+              bootnode -genkey nodekey
+              
             else
-              echo "No hello"
-          fi    
-          tail -f /dev/null
+              echo "Nodekey already exists"
+          fi
 
           echo "Creating files and certs"
           echo $nodekey >> nodekey
