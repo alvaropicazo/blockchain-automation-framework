@@ -203,7 +203,13 @@ spec:
             -d @finalJSON.json \
             ${VAULT_ADDR}/v1/${vault_secret_key} | \
             jq -r 'if .errors then . else .auth.client_token end')
-          tail -f /dev/null  
+          if [ -z "$nodekey" ] || [ "$nodekey" == "null" ]
+            then
+              echo "Entro2"
+              tail -f /dev/null  
+            else
+              echo "Nodekey already exists2"
+          fi  
       volumes:
         - name: certcheck
           emptyDir:
