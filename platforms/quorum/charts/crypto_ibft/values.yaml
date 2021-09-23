@@ -26,11 +26,6 @@ peer:
   # Eg. 12345
   gethPassphrase:
 # This section contains the Quorum Crypto IBFT metadata.
-metadata:
-  # Provide the namespace for Quorum.
-  # Eg. namespace: cenm
-  namespace:
-  # Provide any additional labels for Quorum Crypto IBFT.
 
 # Provide information regarding the Docker images used.
 image:
