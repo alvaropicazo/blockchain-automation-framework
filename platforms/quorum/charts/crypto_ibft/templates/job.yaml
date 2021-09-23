@@ -157,6 +157,7 @@ spec:
                 echo "Certificates already present in the vault. Skipping.."
                 exit 0
           fi
+          
           echo "Fetching nodekey from vault"
           KUBE_SA_TOKEN=$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)
           echo "Getting secrets from Vault Server: ${VAULT_ADDR}"
@@ -168,6 +169,17 @@ spec:
           validateVaultResponse 'vault login token' "${VAULT_CLIENT_TOKEN}"
           VAULT_RESPONSE=$(curl -sS --header "X-Vault-Token: ${VAULT_CLIENT_TOKEN}" ${VAULT_ADDR}/v1/${CERTS_SECRET_PREFIX}/crypto/${PEER_NAME}/quorum | jq -r 'if .errors then . else . end')
           nodekey=$(echo ${VAULT_RESPONSE} | jq -r '.data.data["nodekey"]')
+          
+                    
+          echo "If nodekey does not exist, we generate one and will be saved in vault"
+          if [ -z "$nodekey" ] || [ "$nodekey" == "null" ]
+            then
+              bootnode -genkey nodevalue
+              nodekey=$(cat nodevalue)
+            else
+              echo "Nodekey already exists"
+          fi
+
           echo "Creating files and certs"
           echo $nodekey >> nodekey
           echo $GETH_PASSPHRASE >> password
