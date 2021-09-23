@@ -2,7 +2,7 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: "{{ $.Values.metadata.name }}"
-  namespace: {{ $.Values.metadata.namespace }}
+  namespace: "{{ $.Values.metadata.namespace }}"
   labels:
     app.kubernetes.io/name: "{{ $.Values.metadata.name }}"
     helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
