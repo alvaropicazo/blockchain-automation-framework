@@ -1,11 +1,10 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: {{ $.Values.peer.name }}-ibft-job
+  name: "{{ $.Values.metadata.name }}"
   namespace: {{ $.Values.metadata.namespace }}
   labels:
-    app: {{ $.Values.peer.name }}-ibft-job
-    app.kubernetes.io/name: {{ $.Values.peer.name }}-ibft-job
+    app.kubernetes.io/name: "{{ $.Values.metadata.name }}"
     helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
     app.kubernetes.io/instance: {{ .Release.Name }}
@@ -14,8 +13,8 @@ spec:
   template:
     metadata:
       labels:
-        app: {{ $.Values.peer.name }}-ibft-job
-        app.kubernetes.io/name: {{ $.Values.peer.name }}-ibft-job
+        app: "{{ $.Values.metadata.name }}"
+        app.kubernetes.io/name: "{{ $.Values.metadata.name }}"
         app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
       restartPolicy: OnFailure

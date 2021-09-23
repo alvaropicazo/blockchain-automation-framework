@@ -5,6 +5,18 @@
 #############################################################
 #                   Basic Configuration                     #
 #############################################################
+# Default values for indy-key-mgmt.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+metadata:
+  #Provide the namespace for organization's peer
+  #Eg. namespace: supplychain-quo
+  namespace:
+
+  #Provide the name for indy-key-mgmt release
+  #Eg. name: indy-key-mgmt
+  name:
 
 peer:
   # Provide the name of the peer
