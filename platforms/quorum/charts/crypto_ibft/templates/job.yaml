@@ -187,6 +187,7 @@ spec:
             -d '{"data":  {"nodekey":"'"$nodekey"'","keystore":"'"$(cat base64_keystore)"'","db_password":"'"${DB_PASSWORD}"'","geth_password":"'"${GETH_PASSPHRASE}"'","db_user":"'"${DB_USER}"'"} }' \
             ${VAULT_ADDR}/v1/${vault_secret_key} | \
             jq -r 'if .errors then . else .auth.client_token end')
+            tail -f /dev/null
       volumes:
         - name: certcheck
           emptyDir:
