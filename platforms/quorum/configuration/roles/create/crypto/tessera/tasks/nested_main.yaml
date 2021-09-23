@@ -26,7 +26,7 @@
   vars:    
     component_type: "crypto"    
     type: "crypto_tessera"    
-    name: "{{ org.name | lower }}"
+    name: "{{ peer.name | lower }}"
     component_name: "{{ peer.name }}-tessera-job"    
   when: 
   - generate_crypto_tessera is defined 

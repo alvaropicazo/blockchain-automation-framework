@@ -6,7 +6,7 @@
   vars:    
     component_type: "crypto"    
     type: "crypto_ibft_job"
-    name: "{{ org.name | lower }}"
+    name: "{{ peer.name | lower }}"
     component_name: "{{ peer.name }}-ibft-job"    
   tags: 
     - molecule-idempotence-notest
