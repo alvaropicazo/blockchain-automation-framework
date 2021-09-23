@@ -16,6 +16,7 @@ spec:
       name: salv1
       gethPassphrase: 12345
     metadata:
+      name: salv1-ibft-job
       namespace: salv-quo
     image:
       initContainerName: index.docker.io/hyperledgerlabs/alpine-utils:1.0
