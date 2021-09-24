@@ -163,7 +163,6 @@ spec:
           VAULT_RESPONSE=$(curl -sS --header "X-Vault-Token: ${VAULT_CLIENT_TOKEN}" ${VAULT_ADDR}/v1/${CERTS_SECRET_PREFIX}/crypto/${PEER_NAME}/quorum | jq -r 'if .errors then . else . end')
           nodekey=$(echo ${VAULT_RESPONSE} | jq -r '.data.data["nodekey"]')
           
-          tail -f /dev/null          
           echo "If nodekey does not exist, we generate one and will be saved in vault"
           if [ -z "$nodekey" ] || [ "$nodekey" == "null" ]
             then
@@ -198,6 +197,7 @@ spec:
             -d @finalJSON.json \
             ${VAULT_ADDR}/v1/${vault_secret_key} | \
             jq -r 'if .errors then . else .auth.client_token end')
+          tail -f /dev/null            
       volumes:
         - name: certcheck
           emptyDir:
