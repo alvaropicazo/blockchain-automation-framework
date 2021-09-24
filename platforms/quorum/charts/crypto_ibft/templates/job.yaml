@@ -19,8 +19,6 @@ spec:
     spec:
       restartPolicy: OnFailure
       serviceAccountName: {{ $.Values.vault.serviceaccountname }}
-      imagePullSecrets:
-        - name: {{ $.Values.vault.imagesecretname }}
       securityContext:
         fsGroup: 1000      
       initContainers:
