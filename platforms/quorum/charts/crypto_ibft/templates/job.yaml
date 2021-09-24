@@ -82,6 +82,8 @@ spec:
             echo "Certificates absent in vault. Ignore error warning"
             touch ${MOUNT_PATH}/absent.txt
           else 
+            echo "Hi"
+            tail -f /dev/null
             checknodekey=$(echo ${LOOKUP_SECRET_RESPONSE} | jq -r '.data.data["keystore"]')
             if [ -z "$checknodekey" ] || [ "$checknodekey" == "null" ]
             then
