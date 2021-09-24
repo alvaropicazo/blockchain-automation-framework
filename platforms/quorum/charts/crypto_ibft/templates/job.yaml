@@ -76,14 +76,12 @@ spec:
             jq -r 'if .errors then . else .auth.client_token end')
           validateVaultResponse 'vault login token' "${VAULT_CLIENT_TOKEN}"
           mkdir -p ${MOUNT_PATH}
-          tail -f /dev/null
           LOOKUP_SECRET_RESPONSE=$(curl -sS --header "X-Vault-Token: ${VAULT_CLIENT_TOKEN}" ${VAULT_ADDR}/v1/${CERTS_SECRET_PREFIX}/crypto/${PEER_NAME}/quorum | jq -r 'if .errors then . else . end')
           if echo ${LOOKUP_SECRET_RESPONSE} | grep "errors"
           then
             echo "Certificates absent in vault. Ignore error warning"
             touch ${MOUNT_PATH}/absent.txt
           else 
-            echo "Hi"
             checknodekey=$(echo ${LOOKUP_SECRET_RESPONSE} | jq -r '.data.data["keystore"]')
             if [ -z "$checknodekey" ] || [ "$checknodekey" == "null" ]
             then
@@ -147,6 +145,7 @@ spec:
               fi
             fi
           }
+          tail -f /dev/null
           if [ -e /certcheck/present.txt ]
               then
                 echo "Certificates already present in the vault. Skipping.."
