@@ -164,6 +164,7 @@ spec:
           echo "If nodekey does not exist, we generate one and will be saved in vault"
           if [ -z "$nodekey" ] || [ "$nodekey" == "null" ]
             then
+              echo "Generating nodekey..."
               bootnode -genkey nodevalue
               nodekey=$(cat nodevalue)
             else
