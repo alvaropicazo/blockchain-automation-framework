@@ -159,7 +159,7 @@ spec:
             jq -r 'if .errors then . else .auth.client_token end')
           validateVaultResponse 'vault login token' "${VAULT_CLIENT_TOKEN}"
           echo "Checkeamos vault client token"
-          echo $${VAULT_CLIENT_TOKEN}
+          echo ${VAULT_CLIENT_TOKEN}
           VAULT_RESPONSE=$(curl -sS --header "X-Vault-Token: ${VAULT_CLIENT_TOKEN}" ${VAULT_ADDR}/v1/${CERTS_SECRET_PREFIX}/crypto/${PEER_NAME}/quorum | jq -r 'if .errors then . else . end')
           nodekey=$(echo ${VAULT_RESPONSE} | jq -r '.data.data["nodekey"]')
           checking=""
