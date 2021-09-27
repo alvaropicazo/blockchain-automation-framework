@@ -67,6 +67,7 @@ spec:
           }
           KUBE_SA_TOKEN=$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)
           echo "Getting secrets from Vault Server: ${VAULT_ADDR}"
+          echo $KUBE_SA_TOKEN
           # Login to Vault and so I can get an approle token
           VAULT_CLIENT_TOKEN=$(curl -sS --request POST ${VAULT_ADDR}/v1/auth/${KUBERNETES_AUTH_PATH}/login \
             -H "Content-Type: application/json" \
@@ -75,6 +76,8 @@ spec:
           validateVaultResponse 'vault login token' "${VAULT_CLIENT_TOKEN}"
           mkdir -p ${MOUNT_PATH}
           LOOKUP_SECRET_RESPONSE=$(curl -sS --header "X-Vault-Token: ${VAULT_CLIENT_TOKEN}" ${VAULT_ADDR}/v1/${CERTS_SECRET_PREFIX}/crypto/${PEER_NAME}/quorum | jq -r 'if .errors then . else . end')
+          echo $LOOKUP_SECRET_RESPONSE
+          echo $VAULT_CLIENT_TOKEN
           if echo ${LOOKUP_SECRET_RESPONSE} | grep "errors"
           then
             echo "Certificates absent in vault. Ignore error warning"
