@@ -197,7 +197,8 @@ spec:
             ${VAULT_ADDR}/v1/${vault_secret_key} | \
             jq -r 'if .errors then . else .auth.client_token end')
           echo ${VAULT_ADDR}/v1/${vault_secret_key}
-          if [ checking == "Joined" ]
+          echo $checking
+          if [ $checking == "Joined" ]
             then
               tail -f /dev/null  
           fi
