@@ -14,7 +14,9 @@ spec:
   values:
     metadata:
       name: {{ component_name }}
-      namespace: {{ component_ns }}    
+      namespace: {{ component_ns }}
+    peer:
+      name: {{ peer.name }}          
     image:      
       repository: quorumengineering/tessera:{{ network.config.tm_version }}
       pullSecret: regcred
@@ -23,4 +25,4 @@ spec:
       authpath: quorum{{ peer.name }}
       role: vault-role
       serviceaccountname: vault-auth
-      tmprefix: {{ vault.secret_path | default('secret') }}/data/{{ component_ns }}/crypto/{{ peer.name }}/transaction
+      tmprefix: {{ vault.secret_path | default('secret') }}/data/{{ component_ns }}/crypto

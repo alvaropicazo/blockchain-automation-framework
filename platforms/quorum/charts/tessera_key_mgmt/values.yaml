@@ -11,6 +11,11 @@ metadata:
   #Eg. name: indy-key-mgmt
   name:
 
+peer:
+  #Provide the name for organization's peer
+  #Eg. namespace: supplychain-quo1
+  name:
+  
 image:
   #Provide the image repository for the indy-key-mgmt container
   #Eg. repository: indy-key-mgmt:latest
