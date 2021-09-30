@@ -12,6 +12,8 @@ spec:
     git: {{ gitops.git_url }}
     ref: {{ gitops.branch }}
   values:
+    peer:
+      name: {{ peer.name }}
     metadata:
       name: {{ component_name }}
       namespace: {{ component_ns }}    
@@ -20,7 +22,7 @@ spec:
       pullSecret: regcred
     vault:
       address: {{ vault.url }}
-      authpath: quorum{{ peer.name }}
+      authpath: quorum{{ org_name }}
       role: vault-role
       serviceaccountname: vault-auth
-      tmprefix: {{ vault.secret_path | default('secret') }}/{{ component_ns }}/crypto/{{ peer.name }}/transaction
+      tmprefix: {{ vault.secret_path | default('secret') }}/data/{{ component_ns }}/crypto

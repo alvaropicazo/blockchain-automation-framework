@@ -6,7 +6,7 @@ network:
   # Network level configuration specifies the attributes required for each organization
   # to join an existing network.
   type: quorum
-  version: 21.4.2  #this is the version of Quorum docker image that will be deployed. older version 2.1.1 is not compatible with supplychain contracts
+  version: 21.4.1  #this is the version of Quorum docker image that will be deployed. older version 2.1.1 is not compatible with supplychain contracts
 
   #Environment section for Kubernetes setup
   env:
@@ -84,7 +84,7 @@ network:
       vault:
         url: "vault_addr"
         root_token: "vault_root_token"
-        secret_path: "secret"
+        secret_path: "secretsv2"
       # Git Repo details which will be used by GitOps/Flux.
       # Do not check-in git_access_token
       gitops:
@@ -102,9 +102,9 @@ network:
       services:
         peers:
         - peer:
-          name: carrier
+          name: carrier1
           subject: "O=Carrier,OU=Carrier,L=51.50/-0.13/London,C=GB" # This is the node subject. L=lat/long is mandatory for supplychain sample app
-          type: validator         # value can be validator or non-validator, only applicable if consensus = 'ibft'
+          type: validator         # value can be validator or member, only applicable if consensus = 'ibft'
           geth_passphrase: "12345"  # Passphrase to be used to generate geth account
           lock: false        # true or false: Sets Quorum node to lock or unlock mode
           p2p:
@@ -122,7 +122,69 @@ network:
             ambassador: 15013
           db:                       # Only used if transaction_manager = "tessera"
             port: 3306
-           
+        - peer:
+          name: carrier2
+          subject: "O=Carrier,OU=Carrier,L=51.50/-0.13/London,C=GB" # This is the node subject. L=lat/long is mandatory for supplychain sample app
+          type: validator         # value can be validator or member, only applicable if consensus = 'ibft'
+          geth_passphrase: "12345"  # Passphrase to be used to generate geth account
+          lock: false        # true or false: Sets Quorum node to lock or unlock mode
+          p2p:
+            port: 21000
+            ambassador: 15010       #Port exposed on ambassador service (use one port per org if using single cluster)
+          rpc:
+            port: 8546
+            ambassador: 15011       #Port exposed on ambassador service (use one port per org if using single cluster)
+          transaction_manager:
+            port: 443          # use port: 9001 when transaction_manager = "constellation"
+            ambassador: 443    # use ambassador: 15012 when transaction_manager = "constellation"
+            clientport: 8888
+          raft:                     # Only used if consensus = 'raft'
+            port: 50401
+            ambassador: 15013
+          db:                       # Only used if transaction_manager = "tessera"
+            port: 3306
+        - peer:
+          name: carrier3
+          subject: "O=Carrier,OU=Carrier,L=51.50/-0.13/London,C=GB" # This is the node subject. L=lat/long is mandatory for supplychain sample app
+          type: validator         # value can be validator or member, only applicable if consensus = 'ibft'
+          geth_passphrase: "12345"  # Passphrase to be used to generate geth account
+          lock: false        # true or false: Sets Quorum node to lock or unlock mode
+          p2p:
+            port: 21000
+            ambassador: 15014       #Port exposed on ambassador service (use one port per org if using single cluster)
+          rpc:
+            port: 8546
+            ambassador: 15015       #Port exposed on ambassador service (use one port per org if using single cluster)
+          transaction_manager:
+            port: 443          # use port: 9001 when transaction_manager = "constellation"
+            ambassador: 443    # use ambassador: 15012 when transaction_manager = "constellation"
+            clientport: 8888
+          raft:                     # Only used if consensus = 'raft'
+            port: 50401
+            ambassador: 15016
+          db:                       # Only used if transaction_manager = "tessera"
+            port: 3306
+        - peer:
+          name: carrier4
+          subject: "O=Carrier,OU=Carrier,L=51.50/-0.13/London,C=GB" # This is the node subject. L=lat/long is mandatory for supplychain sample app
+          type: validator         # value can be validator or member, only applicable if consensus = 'ibft'
+          geth_passphrase: "12345"  # Passphrase to be used to generate geth account
+          lock: false        # true or false: Sets Quorum node to lock or unlock mode
+          p2p:
+            port: 21000
+            ambassador: 15017       #Port exposed on ambassador service (use one port per org if using single cluster)
+          rpc:
+            port: 8546
+            ambassador: 15018       #Port exposed on ambassador service (use one port per org if using single cluster)
+          transaction_manager:
+            port: 443          # use port: 9001 when transaction_manager = "constellation"
+            ambassador: 443    # use ambassador: 15012 when transaction_manager = "constellation"
+            clientport: 8888
+          raft:                     # Only used if consensus = 'raft'
+            port: 50401
+            ambassador: 15019
+          db:                       # Only used if transaction_manager = "tessera"
+            port: 3306                                  
 
     # Specification for the 2nd organization. Each organization maps to a VPC and a separate k8s cluster
     - organization:
@@ -143,7 +205,7 @@ network:
       vault:
         url: "vault_addr"
         root_token: "vault_root_token"
-        secret_path: "secret"
+        secret_path: "secretsv2"
       # Git Repo details which will be used by GitOps/Flux.
       # IMPORTANT: Do not check-in your password, the git_access_token!
       gitops:
@@ -162,9 +224,9 @@ network:
       services:
         peers:
         - peer:
-          name: manufacturer
+          name: manufacturer1
           subject: "O=Manufacturer,OU=Manufacturer,L=47.38/8.54/Zurich,C=CH"  # This is the node identity. L=lat/long is mandatory for supplychain sample app
-          type: validator         # value can be validator or non-validator, only applicable if consensus = 'ibft'
+          type: validator         # value can be validator or member, only applicable if consensus = 'ibft'
           geth_passphrase: "12345"  # Passphrase to be used to generate geth account
           lock: false        # true or false: Sets Quorum node to lock or unlock mode
           p2p:
@@ -180,6 +242,69 @@ network:
           raft:                     # Only used if consensus = 'raft'
             port: 50401
             ambassador: 15023
+          db:                       # Only used if transaction_manager = "tessera"
+            port: 3306
+        - peer:
+          name: manufacturer2
+          subject: "O=Manufacturer,OU=Manufacturer,L=47.38/8.54/Zurich,C=CH"  # This is the node identity. L=lat/long is mandatory for supplychain sample app
+          type: validator         # value can be validator or member, only applicable if consensus = 'ibft'
+          geth_passphrase: "12345"  # Passphrase to be used to generate geth account
+          lock: false        # true or false: Sets Quorum node to lock or unlock mode
+          p2p:
+            port: 21000
+            ambassador: 15024       #Port exposed on ambassador service (use one port per org if using single cluster)
+          rpc:
+            port: 8546
+            ambassador: 15025       #Port exposed on ambassador service (use one port per org if using single cluster)
+          transaction_manager:
+            port: 443          # use port: 9001 when transaction_manager = "constellation"
+            ambassador: 443    # use ambassador: 15022 when transaction_manager = "constellation"
+            clientport: 8888
+          raft:                     # Only used if consensus = 'raft'
+            port: 50401
+            ambassador: 15026
+          db:                       # Only used if transaction_manager = "tessera"
+            port: 3306
+        - peer:
+          name: manufacturer3
+          subject: "O=Manufacturer,OU=Manufacturer,L=47.38/8.54/Zurich,C=CH"  # This is the node identity. L=lat/long is mandatory for supplychain sample app
+          type: validator         # value can be validator or member, only applicable if consensus = 'ibft'
+          geth_passphrase: "12345"  # Passphrase to be used to generate geth account
+          lock: false        # true or false: Sets Quorum node to lock or unlock mode
+          p2p:
+            port: 21000
+            ambassador: 15027       #Port exposed on ambassador service (use one port per org if using single cluster)
+          rpc:
+            port: 8546
+            ambassador: 15028       #Port exposed on ambassador service (use one port per org if using single cluster)
+          transaction_manager:
+            port: 443          # use port: 9001 when transaction_manager = "constellation"
+            ambassador: 443    # use ambassador: 15022 when transaction_manager = "constellation"
+            clientport: 8888
+          raft:                     # Only used if consensus = 'raft'
+            port: 50401
+            ambassador: 15029
+          db:                       # Only used if transaction_manager = "tessera"
+            port: 3306
+        - peer:
+          name: manufacturer4
+          subject: "O=Manufacturer,OU=Manufacturer,L=47.38/8.54/Zurich,C=CH"  # This is the node identity. L=lat/long is mandatory for supplychain sample app
+          type: validator         # value can be validator or member, only applicable if consensus = 'ibft'
+          geth_passphrase: "12345"  # Passphrase to be used to generate geth account
+          lock: false        # true or false: Sets Quorum node to lock or unlock mode
+          p2p:
+            port: 21000
+            ambassador: 15030       #Port exposed on ambassador service (use one port per org if using single cluster)
+          rpc:
+            port: 8546
+            ambassador: 15031       #Port exposed on ambassador service (use one port per org if using single cluster)
+          transaction_manager:
+            port: 443          # use port: 9001 when transaction_manager = "constellation"
+            ambassador: 443    # use ambassador: 15022 when transaction_manager = "constellation"
+            clientport: 8888
+          raft:                     # Only used if consensus = 'raft'
+            port: 50401
+            ambassador: 15033
           db:                       # Only used if transaction_manager = "tessera"
             port: 3306
 
@@ -201,7 +326,7 @@ network:
       vault:
         url: "vault_addr"
         root_token: "vault_root_token"
-        secret_path: "secret"
+        secret_path: "secretsv2"
       # Git Repo details which will be used by GitOps/Flux.
       # IMPORTANT: Do not check-in your password, the git_access_token!
       gitops:
@@ -221,22 +346,22 @@ network:
         - peer:
           name: store
           subject: "O=Store,OU=Store,L=40.73/-74/New York,C=US" # This is the node identity. L=lat/long is mandatory for supplychain sample app
-          type: validator         # value can be validator or non-validator, only applicable if consensus = 'ibft'
+          type: member         # value can be validator or member, only applicable if consensus = 'ibft'
           geth_passphrase: "12345"  # Passphrase to be used to generate geth account
           lock: false        # true or false: Sets Quorum node to lock or unlock mode
           p2p:
             port: 21000
-            ambassador: 15030       #Port exposed on ambassador service (use one port per org if using single cluster)
+            ambassador: 15035       #Port exposed on ambassador service (use one port per org if using single cluster)
           rpc:
             port: 8546
-            ambassador: 15031       #Port exposed on ambassador service (use one port per org if using single cluster)
+            ambassador: 15036       #Port exposed on ambassador service (use one port per org if using single cluster)
           transaction_manager:
             port: 443          # use port: 9001 when transaction_manager = "constellation"
             ambassador: 443    # use ambassador: 15032 when transaction_manager = "constellation"
             clientport: 8888
           raft:                     # Only used if consensus = 'raft'
             port: 50401
-            ambassador: 15033
+            ambassador: 15037
           db:                       # Only used if transaction_manager = "tessera"
             port: 3306
 
@@ -258,7 +383,7 @@ network:
       vault:
         url: "vault_addr"
         root_token: "vault_root_token"
-        secret_path: "secret"
+        secret_path: "secretsv2"
       # Git Repo details which will be used by GitOps/Flux.
       # Do not check-in git_access_token
       gitops:
@@ -278,7 +403,7 @@ network:
         - peer:
           name: warehouse
           subject: "O=Warehouse,OU=Warehouse,L=42.36/-71.06/Boston,C=US"  # This is the node identity. L=lat/long is mandatory for supplychain sample app
-          type: validator         # value can be validator or non-validator, only applicable if consensus = 'ibft'
+          type: member         # value can be validator or member, only applicable if consensus = 'ibft'
           geth_passphrase: "12345"  # Passphrase to be used to generate geth account
           lock: false        # true or false: Sets Quorum node to lock or unlock mode
           p2p:

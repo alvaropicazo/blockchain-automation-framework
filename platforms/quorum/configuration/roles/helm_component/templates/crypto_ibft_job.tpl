@@ -16,6 +16,7 @@ spec:
       name: {{ peer.name }}
       gethPassphrase: {{ peer.geth_passphrase }}
     metadata:
+      name: {{ component_name }}
       namespace: {{ component_ns }}
     image:
       initContainerName: {{ network.docker.url }}/alpine-utils:1.0
@@ -25,6 +26,6 @@ spec:
     vault:
       address: {{ vault.url }}
       role: vault-role
-      authpath: quorum{{ peer.name }}
+      authpath: quorum{{ org_name }}
       serviceaccountname: vault-auth
-      certsecretprefix: {{ vault.secret_path | default('secret') }}/{{ org.name | lower }}-quo
+      certsecretprefix: {{ vault.secret_path | default('secret') }}/data/{{ org.name | lower }}-quo
