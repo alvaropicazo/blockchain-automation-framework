@@ -59,12 +59,14 @@
     vars:
       root_subject: "{{ network.config.subject }}"
       cert_subject: "{{ network.config.subject | regex_replace(',', '/') }}"
-      services: "{{ item.services }}"
-      organisation: "{{ item.name | lower }}"
-      component_ns: "{{ item.name | lower }}-quo"
-      component_name: "{{ item.name | lower }}"
-      kubernetes: "{{ item.k8s }}"
-      vault: "{{ item.vault }}"
+      services: "{{ organizationItem.services }}"
+      organisation: "{{ organizationItem.name | lower }}"
+      component_ns: "{{ organizationItem.name | lower }}-quo"
+      component_name: "{{ organizationItem.name | lower }}"
+      kubernetes: "{{ organizationItem.k8s }}"
+      vault: "{{ organizationItem.vault }}"
+    loop_control:
+      loop_var: organizationItem      
     loop: "{{ network['organizations']}}"
 
   # This role generates the crypto material for quorum network based on RAFT consensus and store it in vault
