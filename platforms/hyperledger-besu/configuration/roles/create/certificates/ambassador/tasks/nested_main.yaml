@@ -21,7 +21,7 @@
 # Checks if certificates for root are already created and stored in vault.
 - name: Check if root certs already created
   shell: |
-    vault kv get -field=rootca_pem {{ vault.secret_path | default('secret') }}/besu-{{ network.env.type }}/rootca
+    vault kv get -field=rootcapem {{ vault.secret_path | default('secret') }}//{{ component_ns }}/crypto/{{ node_name }}/certs
   environment:
     VAULT_ADDR: "{{ vault.url }}"
     VAULT_TOKEN: "{{ vault.root_token }}"
@@ -31,7 +31,7 @@
 # Checks if certificates  are already created and stored in vault.
 - name: Check if ambassador and tls certs already created
   shell: |
-    vault kv get -field=rootca_pem {{ vault.secret_path | default('secret') }}/{{ component_ns }}/crypto/{{ node_name }}/tls
+    vault kv get -field=rootcapem {{ vault.secret_path | default('secret') }}/{{ component_ns }}/crypto/{{ node_name }}/tls
   environment:
     VAULT_ADDR: "{{ vault.url }}"
     VAULT_TOKEN: "{{ vault.root_token }}"
@@ -40,7 +40,7 @@
 
 - name: Get all root certs data from Vault
   shell: |
-    vault kv get -format=yaml {{ vault.secret_path | default('secret') }}/besu-{{ network.env.type }}/rootca
+    vault kv get -format=yaml {{ vault.secret_path | default('secret') }}/quorum-{{ network.env.type }}/rootca
   environment:
     VAULT_ADDR: "{{ vault.url }}"
     VAULT_TOKEN: "{{ vault.root_token }}"
@@ -74,7 +74,7 @@
 # Stores the genrated rootca.pem and rootca.key
 - name: Putting root certs to vault
   shell: |
-    vault kv put {{ vault.secret_path | default('secret') }}/besu-{{ network.env.type }}/rootca rootca_pem="$(cat {{rootca}}/rootca.pem | base64)" rootca_key="$(cat {{ rootca }}/rootca.key | base64)"
+    vault kv put {{ vault.secret_path | default('secret') }}/quorum-{{ network.env.type }}/rootca rootca_pem="$(cat {{rootca}}/rootca.pem | base64)" rootca_key="$(cat {{ rootca }}/rootca.key | base64)"
   environment:
     VAULT_ADDR: "{{ vault.url }}"
     VAULT_TOKEN: "{{ vault.root_token }}"
@@ -141,15 +141,15 @@
     domain_name: "{{ node_name }}.{{ organizationItem.external_url_suffix }}"
   when: certs.failed == True or root_certs.failed == True
 
-# Generate crypto for besu nodes and knownserver file
-- name: create tls credentials for besu
+# Generate crypto for quorum nodes and knownserver file
+- name: create tls credentials for quorum
   shell: |
     cd {{ ambassadortls }}
-    eval "openssl genrsa -out {{ node_name }}-besu-node.key 2048"
-    eval "openssl req -new -key {{ node_name }}-besu-node.key -out {{ node_name }}-besu-node.csr -subj '/CN={{ common_name }}'"
-    eval "openssl x509 -req -in {{ node_name }}-besu-node.csr -CA {{ rootca }}/rootca.pem -CAkey {{ rootca }}/rootca.key -CAcreateserial -out {{ node_name }}-besu-node.pem -days 500 -sha256"
-    eval "cat {{ node_name }}-besu-node.key {{ node_name }}-besu-node.pem > {{ node_name }}_certificates.pem"
-    eval "openssl pkcs12 -export -in {{ node_name }}_certificates.pem -out {{ node_name }}-besu-node.pkcs12 -password pass:changeme -name myAlias -noiter -nomaciter"
+    eval "openssl genrsa -out {{ node_name }}-quorum-node.key 2048"
+    eval "openssl req -new -key {{ node_name }}-quorum-node.key -out {{ node_name }}-quorum-node.csr -subj '/CN={{ common_name }}'"
+    eval "openssl x509 -req -in {{ node_name }}-quorum-node.csr -CA {{ rootca }}/rootca.pem -CAkey {{ rootca }}/rootca.key -CAcreateserial -out {{ node_name }}-quorum-node.pem -days 500 -sha256"
+    eval "cat {{ node_name }}-quorum-node.key {{ node_name }}-quorum-node.pem > {{ node_name }}_certificates.pem"
+    eval "openssl pkcs12 -export -in {{ node_name }}_certificates.pem -out {{ node_name }}-quorum-node.pkcs12 -password pass:changeme -name myAlias -noiter -nomaciter"
     eval "echo "changeme" > {{ node_name }}-password"
     eval "openssl x509 -in {{node_name}}-certchain.pem -noout -fingerprint -sha256 > {{node_name}}-certchain-sha256"
     eval "export DIGEST=$(awk '{print $2}' {{node_name}}-certchain-sha256 | sed -n 's/Fingerprint=\(.*\)/\1/p')"
@@ -174,7 +174,7 @@
 # This task stores the genreated ambassador tls certificates to vault
 - name: Putting tls certs to vault
   shell: |
-    vault kv put {{ vault.secret_path | default('secret') }}/{{component_ns}}/crypto/{{node_name}}/tls rootca_pem="$(cat {{rootca}}/rootca.pem | base64)" rootca_key="$(cat {{ rootca }}/rootca.key | base64)" ambassadorcrt="$(cat {{ambassadortls}}/{{node_name}}-certchain.pem | base64)" ambassadorkey="$(cat {{ambassadortls}}/{{node_name}}.key | base64)" keystore="$(cat {{ambassadortls}}/{{ node_name }}-besu-node.pkcs12 | base64)" password="$(cat {{ambassadortls}}/{{ node_name }}-password | base64)" knownServer="$(cat {{ambassadortls}}/{{ node_name }}-knownServer | base64)"
+    vault kv put {{ vault.secret_path | default('secret') }}/{{component_ns}}/crypto/{{node_name}}/tls rootca_pem="$(cat {{rootca}}/rootca.pem | base64)" rootca_key="$(cat {{ rootca }}/rootca.key | base64)" ambassadorcrt="$(cat {{ambassadortls}}/{{node_name}}-certchain.pem | base64)" ambassadorkey="$(cat {{ambassadortls}}/{{node_name}}.key | base64)" keystore="$(cat {{ambassadortls}}/{{ node_name }}-quorum-node.pkcs12 | base64)" password="$(cat {{ambassadortls}}/{{ node_name }}-password | base64)" knownServer="$(cat {{ambassadortls}}/{{ node_name }}-knownServer | base64)"
   environment:
     VAULT_ADDR: "{{ vault.url }}"
     VAULT_TOKEN: "{{ vault.root_token }}"
