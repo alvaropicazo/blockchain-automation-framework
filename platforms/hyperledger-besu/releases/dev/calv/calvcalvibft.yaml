@@ -1,0 +1,76 @@
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  name: calvcalvibft
+  namespace: calv-bes
+  annotations:
+    flux.weave.works/automated: "false"
+spec:
+  releaseName: calvcalvibft
+  chart:
+    git: https://github.com/alvaropicazo/blockchain-automation-framework.git
+    ref: testfeat1551check
+    path: platforms/hyperledger-besu/charts/node_besu
+  values:
+    metadata:
+      namespace: calv-bes
+      labels:
+    replicaCount: 1
+    staticnodes:
+      - "enode://8661eaeb89cd3410e54250ee74d198a55c1fa91b1523b1070fae418d13f73174e9df12147e0601ddd7311649f5a18855e9f1ddbea14fcfc4666474b3ed562e98@validator1.bes.dev2.aws.blockchaincloudpoc-develop.com:15011"
+      - "enode://9d4183ec7b9a207441342b42376de7eedc999584ffce2cc02f27ccc7354fc89af35e2a308f600c0979f01127af148481752e2adb9c95c8854cf263eae6d2271a@validator2.bes.dev2.aws.blockchaincloudpoc-develop.com:15013"
+      - "enode://011f11cf9d82536becdb548da7a0bb738eaa76fe1ddee54437c03a0cf0428290f009a2c5cd87df6e48a0fff37e14c8f4a822c725e516469c6f3e09fe02cd74d3@validator3.bes.dev2.aws.blockchaincloudpoc-develop.com:15015"
+      - "enode://40911b8dab9cd81d3c9f262a326ad8caaa1f1ec14856d9455a919d499883811e51adc273811e9578cd3a46cd84a49aeac51b06ab7e23c080076f9354a8663ae5@validator4.bes.dev2.aws.blockchaincloudpoc-develop.com:15017"
+      - "enode://eae81007ad96d9afc45fb3c5f43485a45cf2f0bb66dcc864ab7bd6b18416a3309eda12baa069e643f662252f51c28b3a8d188621c6812a39b426342283a18d2c@calv.bes.dev2.aws.blockchaincloudpoc-develop.com:15010"
+      - "enode://4ac965baf5e4b7291b420de33fccbc919e82107c576605c3076faa6febf52711f3396e8a44a3001e0eabdd22659688ff4d2741f76c0380cc9839dfb37910b5a7@malv.bes.dev2.aws.blockchaincloudpoc-develop.com:15013"
+   
+
+    liveliness_check:
+      enabled: false
+    healthcheck:
+      readinessthreshold: 100
+      readinesscheckinterval: 5
+ 
+    proxy:
+      provider: ambassador
+      external_url: calv.bes.dev2.aws.blockchaincloudpoc-develop.com
+      p2p: 15010
+      rpc: 15011
+
+    images:
+      node: hyperledger/besu:1.5.5
+      alpineutils: hyperledgerlabs/alpine-utils:1.0     
+
+    node:
+      name: calv
+      consensus: ibft
+      subject: O=Carrier,OU=Carrier,L=51.50/-0.13/London,C=GB
+      mountPath: /opt/besu/data
+      servicetype: ClusterIP
+      imagePullSecret: regcred
+      ports:
+        p2p: 30303
+        rpc: 8545
+        ws: 8546
+
+    tm:
+      type: tessera
+      tls: True
+      
+      url: "https://calv-tessera.calv-bes:8080"
+      
+    storage:
+      storageclassname: awsstorageclass
+      storagesize: 1Gi
+
+    vault:
+      address: http://vault.internal.dev2.aws.blockchaincloudpoc-develop.com:20001
+      secretprefix: secretsv2/data/calv-bes/crypto/calv
+      serviceaccountname: vault-auth
+      keyname: data
+      tmdir: tm
+      tlsdir: tls
+      role: vault-role
+      authpath: besucalv
+
+    genesis: ewogICJjb25maWciOiB7CiAgICAiY2hhaW5JZCI6IDIwMTgsCiAgICAiY29uc3RhbnRpbm9wbGVmaXhibG9jayI6IDAsCiAgICAiY29udHJhY3RTaXplTGltaXQiOiAyMTQ3NDgzNjQ3LAogICAgImliZnQyIjogewogICAgICAiYmxvY2twZXJpb2RzZWNvbmRzIjogMiwKICAgICAgImVwb2NobGVuZ3RoIjogMzAwMDAsCiAgICAgICJyZXF1ZXN0dGltZW91dHNlY29uZHMiOiAxMAogICAgfQogIH0sCiAgIm5vbmNlIjogIjB4MCIsCiAgInRpbWVzdGFtcCI6ICIweDU4ZWU0MGJhIiwKICAiZ2FzTGltaXQiOiAiMHgxZmZmZmZmZmZmZmZmZiIsCiAgImRpZmZpY3VsdHkiOiAiMHgxIiwKICAiZXh0cmFEYXRhIjogIjB4Zjg3ZWEwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMGY4NTQ5NDIzOWE1NjgzMWJkZDlkZjBlNGJiODc5ZWNhNzIzM2ZiZWY2ZTUwNWU5NDkwNjNjN2Y3MTdiMDJmOTQ2MGU5ZTZhMzVlYWZiMTEwOWY2MTIyYWQ5NGY0ZDkxNzc4ZjZkMDBhNjRlMzYwMmI5MjdlYmU1ZmY4ZjZmYzRlODU5NDU5NjlkZGZkNDcyZmJkNzliMTM4M2QxYjU2MjlmOTVjZDRmZTlhMGQ4MDg0MDAwMDAwMDBjMCIKfQ==
