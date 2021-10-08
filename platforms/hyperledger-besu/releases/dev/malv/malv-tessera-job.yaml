@@ -1,0 +1,28 @@
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  name: malv-tessera-job
+  namespace: malv-bes
+  annotations:
+    flux.weave.works/automated: "false"
+spec:
+  releaseName: malv-tessera-job
+  chart:
+    path: platforms/hyperledger-besu/charts/tessera_key_mgmt
+    git: https://github.com/alvaropicazo/blockchain-automation-framework.git
+    ref: testfeat1551check
+  values:
+    metadata:
+      name: malv-tessera-job
+      namespace: malv-bes
+    peer:
+      name: malv        
+    image:      
+      repository: quorumengineering/tessera:21.1.1
+      pullSecret: regcred
+    vault:
+      address: http://vault.internal.dev2.aws.blockchaincloudpoc-develop.com:20001
+      authpath: besumalv
+      role: vault-role
+      serviceaccountname: vault-auth
+      tmprefix: secretsv2/data/malv-bes/crypto
