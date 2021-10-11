@@ -1,0 +1,76 @@
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  name: scalvscalv1quorum
+  namespace: scalv-quo
+  annotations:
+    fluxcd.io/automated: "false"
+spec:
+  releaseName: scalvscalv1quorum
+  helmVersion: v3
+  chart:
+    git: https://github.com/alvaropicazo/blockchain-automation-framework.git
+    ref: testfeat1551check
+    path: platforms/quorum/charts/node_quorum_validator  
+  values:
+    replicaCount: 1
+    metadata:
+      namespace: scalv-quo
+      labels:
+    images:
+      node: quorumengineering/quorum:21.4.1
+      alpineutils: index.docker.io/hyperledgerlabs/alpine-utils:1.0
+      tessera: quorumengineering/tessera:21.4.0
+      busybox: busybox
+      mysql: mysql/mysql-server:5.7
+    node:
+      name: scalv1
+      status: default
+      consensus: ibft
+      subject: O=Manufacturer,OU=Manufacturer1,L=47.38/8.54/Zurich,C=CH
+      mountPath: /etc/quorum/qdata
+      imagePullSecret: regcred
+      keystore: keystore_1
+      
+      servicetype: ClusterIP
+      lock: false
+      ports:
+        rpc: 8546
+        raft: 50401
+        tm: 443
+        quorum: 21000
+        db: 3306
+      dbname: demodb
+      mysqluser: demouser
+    vault:
+      address: http://vault.internal.dev2.aws.blockchaincloudpoc-develop.com:20001
+      secretprefix: secretsv2/data/scalv-quo/crypto/scalv1
+      serviceaccountname: vault-auth
+      keyname: quorum
+      tm_keyname: transaction
+      role: vault-role
+      authpath: quorumscalv
+    tessera:
+      dburl: "jdbc:mysql://scalv1-tessera:3306/demodb"
+      dbusername: demouser
+      url: "https://scalv1.quo.dev2.aws.blockchaincloudpoc-develop.com:443"
+      clienturl: "http://scalv1-tessera:8888" #TODO: Enable tls strict for q2t
+      tls: "STRICT"
+      trust: "TOFU"
+    genesis: ewogICJjb25maWciOiB7CiAgICAiY2hhaW5JZCI6IDEwLAogICAgImhvbWVzdGVhZEJsb2NrIjogMCwKICAgICJlaXAxNTBCbG9jayI6IDAsCiAgICAiZWlwMTUwSGFzaCI6ICIweDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAiLAogICAgImVpcDE1NUJsb2NrIjogMCwKICAgICJlaXAxNThCbG9jayI6IDAsCiAgICAiYnl6YW50aXVtQmxvY2siOiAwLAogICAgImNvbnN0YW50aW5vcGxlQmxvY2siOiAwLAogICAgInBldGVyc2J1cmdCbG9jayI6IDAsCiAgICAiaXN0YW5idWxCbG9jayI6IDAsCiAgICAiaXN0YW5idWwiOiB7CiAgICAgICJlcG9jaCI6IDMwMDAwLAogICAgICAicG9saWN5IjogMCwKICAgICAgImNlaWwyTmJ5M0Jsb2NrIjogMAogICAgfSwKICAgICJ0eG5TaXplTGltaXQiOiAxMjgsCiAgICAicWlwNzE0QmxvY2siOiAwLAogICAgImlzTVBTIjogZmFsc2UsCiAgICAiaXNRdW9ydW0iOiB0cnVlLAogICAgIm1heENvZGVTaXplQ29uZmlnIjogWwogICAgICB7CiAgICAgICAgImJsb2NrIjogMCwKICAgICAgICAic2l6ZSI6IDEyOAogICAgICB9CiAgICBdCiAgfSwKICAibm9uY2UiOiAiMHgwIiwKICAidGltZXN0YW1wIjogIjB4NjE2NDI2NGIiLAogICJleHRyYURhdGEiOiAiMHgwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwZjg2ZmVhOTQ1Y2Q3MjIwNWNlOGZmMzUwOTFkNDI1YzBjYmY0YTEwMzViMWJmMzA3OTQ5NTBlOGU5YmZhZWU5MTA2ZTA4YTU4NmU4NWI5YTQ1ZTVmYjJiNTFiYjg0MTAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDBjMCIsCiAgImdhc0xpbWl0IjogIjB4ZTAwMDAwMDAiLAogICJkaWZmaWN1bHR5IjogIjB4MSIsCiAgIm1peEhhc2giOiAiMHg2Mzc0Njk2MzYxNmMyMDYyNzk3YTYxNmU3NDY5NmU2NTIwNjY2MTc1NmM3NDIwNzQ2ZjZjNjU3MjYxNmU2MzY1IiwKICAiY29pbmJhc2UiOiAiMHgwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwIiwKICAiYWxsb2MiOiB7CiAgICAiNWNkNzIyMDVjZThmZjM1MDkxZDQyNWMwY2JmNGExMDM1YjFiZjMwNyI6IHsKICAgICAgImJhbGFuY2UiOiAiMHg0NDZjM2IxNWY5OTI2Njg3ZDJjNDA1MzRmZGI1NjQwMDAwMDAwMDAwMDAiCiAgICB9LAogICAgIjk1MGU4ZTliZmFlZTkxMDZlMDhhNTg2ZTg1YjlhNDVlNWZiMmI1MWIiOiB7CiAgICAgICJiYWxhbmNlIjogIjB4NDQ2YzNiMTVmOTkyNjY4N2QyYzQwNTM0ZmRiNTY0MDAwMDAwMDAwMDAwIgogICAgfQogIH0sCiAgIm51bWJlciI6ICIweDAiLAogICJnYXNVc2VkIjogIjB4MCIsCiAgInBhcmVudEhhc2giOiAiMHgwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwIgp9
+    staticnodes: 
+      [
+    "enode://d2c7351238ba5e359bc3284bb3b44a4bff5e6be58b3b9899581801fdb181d16a2e55f6c639acb8a07946934ba5dd64a8e135a638705c6962abc4fe83dcedc2b8@scalv1.quo.dev2.aws.blockchaincloudpoc-develop.com:15010?discport=0",
+    "enode://8e2dc07cb3ce9762c30331c25c99f88696b725b119c21406e705128724950f4e6db2db0c26dfaadae08c2b8bcd322a444f3a5753d56bb36423dccc9c1e7b4c88@scalv2.quo.dev2.aws.blockchaincloudpoc-develop.com:15012?discport=0",
+    "enode://a46f70bd24be60b88863b3747d70a719c5b5d3798683498ac1d0cca0daa8f3d0c5c4f4032fc330f6859cf85adf20b4c094c71373e6b75b58f436328cf92a61ca@calv.quo.dev2.aws.blockchaincloudpoc-develop.com:15018?discport=0"
+]
+    proxy:
+      provider: "ambassador"
+      external_url: scalv.quo.dev2.aws.blockchaincloudpoc-develop.com
+      portTM: 443
+      rpcport: 15011
+      quorumport: 15010
+    storage:
+      storageclassname: awsstorageclass
+      storagesize: 1Gi
+      dbstorage: 1Gi
