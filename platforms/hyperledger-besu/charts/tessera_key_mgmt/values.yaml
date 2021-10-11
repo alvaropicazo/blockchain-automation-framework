@@ -20,6 +20,8 @@ image:
   #Eg. pullSecret: regcred
   pullSecret:
 
+peer:
+  name:
 
 vault:
   #Provide the vault server address
