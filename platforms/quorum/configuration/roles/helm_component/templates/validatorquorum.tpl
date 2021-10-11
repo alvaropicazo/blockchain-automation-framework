@@ -67,10 +67,6 @@ spec:
       url: "http://{{ peer.name }}.{{ external_url }}:{{ peer.transaction_manager.ambassador }}"
 {% endif %}
       clienturl: "http://{{ peer.name }}-tessera:{{ peer.transaction_manager.clientport }}" #TODO: Enable tls strict for q2t
-      othernodes:
-{% for tm_node in network.config.tm_nodes %}
-        - url: {{ tm_node }}
-{% endfor %}
       tls: "{{ network.config.tm_tls | upper }}"
       trust: "{{ network.config.tm_trust | upper }}"
     genesis: {{ genesis }}
