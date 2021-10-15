@@ -78,9 +78,7 @@ data:
               "keyVaultType": "HASHICORP",
               "properties": {
                   "url": {{ .Values.vault.address }},
-                  "tlsKeyStorePath": "/path/to/keystore.jks",
-                  "tlsTrustStorePath": "/path/to/truststore.jks",
-                  "approlePath": "not-default"
+                  "approlePath": {{ .Values.vault.authpath }}
               }
         }
         ],
