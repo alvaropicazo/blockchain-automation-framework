@@ -73,6 +73,17 @@ data:
       "peer": {{ .Values.tessera.othernodes | toPrettyJson | indent 6 }},
       "keys": {
         "passwords": [],
+         "keyVaultConfigs": [
+        {
+              "keyVaultType": "HASHICORP",
+              "properties": {
+                  "url": {{ .Values.vault.address }},
+                  "tlsKeyStorePath": "/path/to/keystore.jks",
+                  "tlsTrustStorePath": "/path/to/truststore.jks",
+                  "approlePath": "not-default"
+              }
+        }
+        ],
         "keyData": [
         {
             "hashicorpVaultSecretEngineName": "kv",
