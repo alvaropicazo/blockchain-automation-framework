@@ -74,11 +74,13 @@ data:
       "keys": {
         "passwords": [],
         "keyData": [
-          {
-            "privateKeyPath": "%THIS_PRIV_KEY%",
-            "publicKeyPath": "%THIS_PUB_KEY%"
-          }
-        ]
-      },
+        {
+            "hashicorpVaultSecretEngineName": "kv",
+            "hashicorpVaultSecretName": "secretsv2",
+            "hashicorpVaultSecretVersion": 2,
+            "hashicorpVaultPrivateKeyId": "%THIS_PRIV_KEY%",
+            "hashicorpVaultPublicKeyId": "%THIS_PUB_KEY%",
+        }
+    ]},
       "alwaysSendTo": []
     }
