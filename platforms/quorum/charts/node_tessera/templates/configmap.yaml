@@ -78,7 +78,7 @@ data:
               "keyVaultType": "HASHICORP",
               "properties": {
                   "url": {{ .Values.vault.address }},
-                  "approlePath": "/v1/auth/{{ .Values.vault.authpath }}/login"
+                  "approlePath": "v1/auth/{{ .Values.vault.authpath }}/login"
               }
         }
         ],
@@ -86,9 +86,7 @@ data:
         {
             "hashicorpVaultSecretEngineName": "kv",
             "hashicorpVaultSecretName": "secretsv2",
-            "hashicorpVaultSecretVersion": 2,
-            "hashicorpVaultPrivateKeyId": "%THIS_PRIV_KEY%",
-            "hashicorpVaultPublicKeyId": "%THIS_PUB_KEY%",
+            "hashicorpVaultSecretVersion": 2
         }
     ]},
       "alwaysSendTo": []
