@@ -78,7 +78,7 @@ data:
               "keyVaultType": "HASHICORP",
               "properties": {
                   "url": {{ .Values.vault.address }},
-                  "approlePath": {{ .Values.vault.authpath }}
+                  "approlePath": "/v1/auth/{{ .Values.vault.authpath }}/login"
               }
         }
         ],
