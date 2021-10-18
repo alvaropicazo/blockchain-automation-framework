@@ -210,7 +210,7 @@ spec:
            
           CONFIG_TMPL=$(cat ${QUORUM_HOME}/tessera-config.json.tmpl);
           CONFIG_FINAL=$(echo $CONFIG_TMPL | sed \"s@%THIS_PRIV_KEY%@${QUORUM_HOME}/crypto/keys/tm.key@g\" |  sed \"s@%THIS_PUB_KEY%@${QUORUM_HOME}/crypto/keys/tm.pub@g\");
-          
+          tail -f /devl/null
           echo $CONFIG_FINAL >  ${DDIR}/tessera-config-with-hosts.json;
           cat  ${DDIR}/tessera-config-with-hosts.json;
           TESSERA_MAIN=com.quorum.tessera.launcher.Main;
