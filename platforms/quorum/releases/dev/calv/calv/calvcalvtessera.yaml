@@ -1,21 +1,21 @@
 apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease
 metadata:
-  name: scalvscalv2quorum
-  namespace: scalv-quo
+  name: calvcalvtessera
+  namespace: calv-quo
   annotations:
     fluxcd.io/automated: "false"
 spec:
-  releaseName: scalvscalv2quorum
+  releaseName: calvcalvtessera
   helmVersion: v3
   chart:
     git: https://github.com/alvaropicazo/blockchain-automation-framework.git
     ref: feat1551-new
-    path: platforms/quorum/charts/node_quorum_validator  
+    path: platforms/quorum/charts/node_tessera  
   values:
     replicaCount: 1
     metadata:
-      namespace: scalv-quo
+      namespace: calv-quo
       labels:
     images:
       node: quorumengineering/quorum:21.4.1
@@ -24,10 +24,10 @@ spec:
       busybox: busybox
       mysql: mysql/mysql-server:5.7
     node:
-      name: scalv2
+      name: calv
       status: default
       consensus: ibft
-      subject: O=Manufacturer,OU=Manufacturer2,L=47.38/8.54/Zurich,C=CH
+      subject: O=Carrier,OU=Carrier,L=51.50/-0.13/London,C=GB
       mountPath: /etc/quorum/qdata
       imagePullSecret: regcred
       keystore: keystore_1
@@ -44,17 +44,17 @@ spec:
       mysqluser: demouser
     vault:
       address: http://vault.internal.dev2.aws.blockchaincloudpoc-develop.com:20001
-      secretprefix: secretsv2/data/scalv-quo/crypto/scalv2
+      secretprefix: secretsv2/data/calv-quo/crypto/calv
       serviceaccountname: vault-auth
       keyname: quorum
       tm_keyname: transaction
       role: vault-role
-      authpath: quorumscalv
+      authpath: quorumcalv
     tessera:
-      dburl: "jdbc:mysql://scalv2-tessera:3306/demodb"
+      dburl: "jdbc:mysql://calv-tessera:3306/demodb"
       dbusername: demouser
-      url: "https://scalv2.quo.dev2.aws.blockchaincloudpoc-develop.com:443"
-      clienturl: "http://scalv2-tessera:8888" #TODO: Enable tls strict for q2t
+      url: "https://calv.quo.dev2.aws.blockchaincloudpoc-develop.com:443"
+      clienturl: "http://calv-tessera:8888" #TODO: Enable tls strict for q2t
       othernodes:
         - url: https://calv.quo.dev2.aws.blockchaincloudpoc-develop.com
         - url: https://stalv.quo.dev2.aws.blockchaincloudpoc-develop.com
@@ -72,10 +72,11 @@ spec:
 ]
     proxy:
       provider: "ambassador"
-      external_url: scalv.quo.dev2.aws.blockchaincloudpoc-develop.com
+      external_url: calv.quo.dev2.aws.blockchaincloudpoc-develop.com
       portTM: 443
-      rpcport: 15013
-      quorumport: 15012
+      rpcport: 15019
+      quorumport: 15018
+      clientport: 8888
     storage:
       storageclassname: awsstorageclass
       storagesize: 1Gi

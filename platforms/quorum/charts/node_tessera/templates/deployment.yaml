@@ -187,7 +187,7 @@ spec:
         image: {{ .Values.images.tessera }}
         command: ["sh","-c"]
         args:
-          - |-
+        - |-
           #!/bin/bash
           chmod 600 $QUORUM_HOME/crypto/keys/tm.key
           mkdir -p $QUORUM_HOME/logs
@@ -226,6 +226,7 @@ spec:
           TESSERA_MAIN=com.quorum.tessera.launcher.Main
           tail -f /dev/null
           java -Xms128M -Xmx128M -cp $SQL_JAR:$TESSERA_JAR:. $TESSERA_MAIN -configfile ${DDIR}/tessera-config-with-hosts.json -o jdbc.password=$PASSWORD
+
         ports:
           - containerPort: {{ .Values.node.ports.tm }}
         env:
