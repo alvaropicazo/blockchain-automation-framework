@@ -193,7 +193,6 @@ spec:
           mkdir -p $QUORUM_HOME/tm;
           DDIR=$QUORUM_HOME/tm;
           PASSWORD=$(cat $QUORUM_HOME/crypto/keys/password);
-
           printenv;
           wget -q http://dev.mysql.com/get/Downloads/Connector-J/mysql-connector-java-8.0.25.tar.gz;
           tar -xf mysql-connector-java-8.0.25.tar.gz;
@@ -211,7 +210,7 @@ spec:
           
           echo $CONFIG_FINAL >  ${DDIR}/tessera-config-with-hosts.json;
           cat  ${DDIR}/tessera-config-with-hosts.json;
-
+          tail -f /dev/null
           TESSERA_MAIN=com.quorum.tessera.launcher.Main;
           java -Xms128M -Xmx128M -cp $SQL_JAR:$TESSERA_JAR:. $TESSERA_MAIN -configfile ${DDIR}/tessera-config-with-hosts.json -o jdbc.password=$PASSWORD;
         "
