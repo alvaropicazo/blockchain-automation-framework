@@ -216,8 +216,9 @@ spec:
           # Extracting version from manifest incase we want to add version specific steps/config
           echo "HI2"
           TESSERA_VERSION=$(unzip -p /tessera/tessera-app.jar META-INF/MANIFEST.MF | grep Tessera-Version | cut -d\" \" -f2)
-          echo \"Tessera version (extracted from manifest file): ${TESSERA_VERSION}\"
-          
+          echo "HI3"
+          echo "Tessera version (extracted from manifest file): ${TESSERA_VERSION}"
+          echo "HI4"
           TESSERA_JAR=/tessera/tessera-app.jar
            
           CONFIG_TMPL=$(cat ${QUORUM_HOME}/tessera-config.json.tmpl)
