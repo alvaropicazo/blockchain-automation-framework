@@ -20,7 +20,7 @@ spec:
     images:
       node: quorumengineering/quorum:21.4.1
       alpineutils: index.docker.io/hyperledgerlabs/alpine-utils:1.0
-      tessera: quorumengineering/tessera:hashicorp-21.7.1
+      tessera: quorumengineering/tessera:21.4.0
       busybox: busybox
       mysql: mysql/mysql-server:5.7
     node:
