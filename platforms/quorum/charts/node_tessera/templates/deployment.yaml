@@ -223,7 +223,8 @@ spec:
           cat  ${DDIR}/tessera-config-with-hosts.json
           
           TESSERA_MAIN=com.quorum.tessera.launcher.Main
-          java -Xms128M -Xmx128M -cp $SQL_JAR:$TESSERA_JAR:. $TESSERA_MAIN -configfile ${DDIR}/tessera-config-with-hosts.json -o jdbc.password=$PASSWORD
+          #java -Xms128M -Xmx128M -cp $SQL_JAR:$TESSERA_JAR:. $TESSERA_MAIN -configfile ${DDIR}/tessera-config-with-hosts.json -o jdbc.password=$PASSWORD
+          ./tessera/bin/tessera -configfile /etc/quorum/qdata/tm/tessera-config-with-hosts.json
           tail -f /dev/null
 
         ports:
