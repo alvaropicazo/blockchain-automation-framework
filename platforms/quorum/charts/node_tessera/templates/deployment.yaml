@@ -123,18 +123,18 @@ spec:
           echo "${username}" > ${OUTPUT_PATH}/username
           echo "${password}" > ${OUTPUT_PATH}/password
 
-          vault_secret_key="${VAULT_SECRET_PREFIX}/data/{{ .Values.vault.tm_keyname }}"
-          echo "Getting 2 keys from $vault_secret_key"          
-          LOOKUP_SECRET_RESPONSE=$(curl -sS \
-            --header "X-Vault-Token:${VAULT_CLIENT_TOKEN}" \
-            ${VAULT_ADDR}/v1/${vault_secret_key} | \
-            jq -r 'if .errors then . else . end')
-          validateVaultResponse "secret (${vault_secret_key})" "${LOOKUP_SECRET_RESPONSE}" "LOOKUPSECRETRESPONSE" 
+          # vault_secret_key="${VAULT_SECRET_PREFIX}/data/{{ .Values.vault.tm_keyname }}"
+          # echo "Getting 2 keys from $vault_secret_key"          
+          # LOOKUP_SECRET_RESPONSE=$(curl -sS \
+          #   --header "X-Vault-Token:${VAULT_CLIENT_TOKEN}" \
+          #   ${VAULT_ADDR}/v1/${vault_secret_key} | \
+          #   jq -r 'if .errors then . else . end')
+          # validateVaultResponse "secret (${vault_secret_key})" "${LOOKUP_SECRET_RESPONSE}" "LOOKUPSECRETRESPONSE" 
 
-          tmpub=$(echo ${LOOKUP_SECRET_RESPONSE} | jq -r '.data.data["publicKey"]')
-          tmkey=$(echo ${LOOKUP_SECRET_RESPONSE} | jq -r '.data.data["privateKey"]')
-          echo -n "${tmpub}" > ${OUTPUT_PATH}/tm.pub
-          echo '{"data":{"bytes":"'"$tmkey"'"},"type":"unlocked"}' > ${OUTPUT_PATH}/tm.key   
+          # tmpub=$(echo ${LOOKUP_SECRET_RESPONSE} | jq -r '.data.data["publicKey"]')
+          # tmkey=$(echo ${LOOKUP_SECRET_RESPONSE} | jq -r '.data.data["privateKey"]')
+          # echo -n "${tmpub}" > ${OUTPUT_PATH}/tm.pub
+          # echo '{"data":{"bytes":"'"$tmkey"'"},"type":"unlocked"}' > ${OUTPUT_PATH}/tm.key   
 
         volumeMounts:
         - name: certificates
@@ -208,17 +208,13 @@ spec:
           wget -q https://oss.sonatype.org/service/local/repositories/releases/content/net/consensys/quorum/tessera/hashicorp-key-vault/21.7.1/hashicorp-key-vault-21.7.1.tar
           tar -xf mysql-connector-java-8.0.25.tar.gz
           tar -xf hashicorp-key-vault-21.7.1.tar
-          echo "HI"
           cp /mysql-connector-java-8.0.25/mysql-connector-java-8.0.25.jar $QUORUM_HOME
-          cp /hashicorp-key-vault-21.7.1/lib/* /lib/
+          cp /hashicorp-key-vault-21.7.1/lib/* /tessera/lib/
           SQL_JAR=$QUORUM_HOME/mysql-connector-java-8.0.25.jar
 
           # Extracting version from manifest incase we want to add version specific steps/config
-          echo "HI2"
           TESSERA_VERSION=$(unzip -p /tessera/tessera-app.jar META-INF/MANIFEST.MF | grep Tessera-Version | cut -d " " -f2)
-          echo "HI3"
           echo "Tessera version (extracted from manifest file): ${TESSERA_VERSION}"
-          echo "HI4"
           TESSERA_JAR=/tessera/tessera-app.jar
            
           CONFIG_TMPL=$(cat ${QUORUM_HOME}/tessera-config.json.tmpl)
