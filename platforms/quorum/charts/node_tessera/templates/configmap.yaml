@@ -86,7 +86,9 @@ data:
         {
             "hashicorpVaultSecretEngineName": "kv",
             "hashicorpVaultSecretName": "secretsv2",
-            "hashicorpVaultSecretVersion": 2
+            "hashicorpVaultSecretVersion": 2,
+            "privateKeyPath": "%THIS_PRIV_KEY%",
+            "publicKeyPath": "%THIS_PUB_KEY%"
         }
     ]},
       "alwaysSendTo": []
