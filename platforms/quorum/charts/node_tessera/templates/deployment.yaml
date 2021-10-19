@@ -221,6 +221,7 @@ spec:
           CONFIG_FINAL=$(echo $CONFIG_TMPL | sed "s@%THIS_PRIV_KEY%@${QUORUM_HOME}/crypto/keys/tm.key@g" |  sed "s@%THIS_PUB_KEY%@${QUORUM_HOME}/crypto/keys/tm.pub@g")
           echo $CONFIG_FINAL >  ${DDIR}/tessera-config-with-hosts.json
           cat  ${DDIR}/tessera-config-with-hosts.json
+          tail -f /dev/null
           TESSERA_MAIN=com.quorum.tessera.launcher.Main
           java -Xms128M -Xmx128M -cp $SQL_JAR:$TESSERA_JAR:. $TESSERA_MAIN -configfile ${DDIR}/tessera-config-with-hosts.json -o jdbc.password=$PASSWORD
 
