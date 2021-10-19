@@ -204,13 +204,13 @@ spec:
           export HASHICORP_TOKEN=${VAULT_CLIENT_TOKEN}
           # Login to Vault and so I can get an approle token
           printenv
-          wget -q http://dev.mysql.com/get/Downloads/Connector-J/mysql-connector-java-8.0.25.tar.gz
+          wget -q http://dev.mysql.com/get/Downloads/Connector-J/mysql-connector-java-8.0.27.tar.gz
           #wget -q https://oss.sonatype.org/service/local/repositories/releases/content/net/consensys/quorum/tessera/hashicorp-key-vault/21.7.1/hashicorp-key-vault-21.7.1.tar
-          tar -xf mysql-connector-java-8.0.25.tar.gz
+          tar -xf mysql-connector-java-8.0.27.tar.gz
           #tar -xf hashicorp-key-vault-21.7.1.tar
-          cp /mysql-connector-java-8.0.25/mysql-connector-java-8.0.25.jar $QUORUM_HOME
+          cp /mysql-connector-java-8.0.27/mysql-connector-java-8.0.27.jar $QUORUM_HOME
           #cp /hashicorp-key-vault-21.7.1/lib/* /tessera/lib/
-          SQL_JAR=$QUORUM_HOME/mysql-connector-java-8.0.25.jar
+          SQL_JAR=$QUORUM_HOME/mysql-connector-java-8.0.27.jar
 
           # Extracting version from manifest incase we want to add version specific steps/config
           TESSERA_VERSION=$(unzip -p /tessera/tessera-app.jar META-INF/MANIFEST.MF | grep Tessera-Version | cut -d " " -f2)
