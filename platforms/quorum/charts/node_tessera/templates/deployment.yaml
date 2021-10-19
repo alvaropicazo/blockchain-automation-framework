@@ -222,8 +222,8 @@ spec:
           echo $CONFIG_FINAL >  ${DDIR}/tessera-config-with-hosts.json
           cat  ${DDIR}/tessera-config-with-hosts.json
           tail -f /dev/null
-          TESSERA_MAIN=com.quorum.tessera.launcher.Main
-          java -Xms128M -Xmx128M -cp $SQL_JAR:$TESSERA_JAR:. $TESSERA_MAIN -configfile ${DDIR}/tessera-config-with-hosts.json -o jdbc.password=$PASSWORD
+          #TESSERA_MAIN=com.quorum.tessera.launcher.Main
+          java -Xms128M -Xmx128M -cp $SQL_JAR:$TESSERA_JAR: -configfile ${DDIR}/tessera-config-with-hosts.json -o jdbc.password=$PASSWORD
 
         ports:
           - containerPort: {{ .Values.node.ports.tm }}
