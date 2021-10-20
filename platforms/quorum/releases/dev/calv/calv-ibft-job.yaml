@@ -1,0 +1,31 @@
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  name: calv-ibft-job
+  namespace: calv-quo
+  annotations:
+    fluxcd.io/automated: "false"
+spec:
+  releaseName: calv-ibft-job
+  chart:
+    git: https://github.com/alvaropicazo/blockchain-automation-framework.git
+    ref: feat1551-new
+    path: platforms/quorum/charts/crypto_ibft
+  values:
+    peer:
+      name: calv
+      gethPassphrase: 12345
+    metadata:
+      name: calv-ibft-job
+      namespace: calv-quo
+    image:
+      initContainerName: index.docker.io/hyperledgerlabs/alpine-utils:1.0
+      node: quorumengineering/quorum:21.7.1
+      pullPolicy: Always
+    acceptLicense: YES
+    vault:
+      address: http://vault.internal.dev2.aws.blockchaincloudpoc-develop.com:20001
+      role: vault-role
+      authpath: quorumcalv
+      serviceaccountname: vault-auth
+      certsecretprefix: secretsv2/data/calv-quo
