@@ -38,6 +38,8 @@ spec:
             value: {{ $.Values.vault.role }}
           - name: VAULT_SECRET_PREFIX
             value: "{{ $.Values.vault.tmprefix }}"
+          - name: VAULT_KEY_PREFIX
+            value: "{{ $.Values.vault.keyprefix }}"            
           command: ["sh", "-c"]
           args:
             - |-
@@ -75,4 +77,4 @@ spec:
               vault_secret_key="${VAULT_SECRET_PREFIX}"
               # Generate tessera keys
               export HASHICORP_TOKEN=${VAULT_CLIENT_TOKEN}
-              tessera -keygen -keygenvaulttype HASHICORP -keygenvaulturl ${VAULT_ADDR} -keygenvaultsecretengine secretsv2 -filename ${PEER_NAME}/transaction
+              tessera -keygen -keygenvaulttype HASHICORP -keygenvaulturl ${VAULT_ADDR} -keygenvaultsecretengine secretsv2 -filename ${VAULT_KEY_PREFIX}/${PEER_NAME}/transaction

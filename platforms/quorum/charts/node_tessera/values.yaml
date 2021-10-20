@@ -84,7 +84,10 @@ vault:
   secretprefix: 
   #Provide the serviceaccount which is verified with Vault
   #Eg. serviceaccountname: vault-auth
-  serviceaccountname: 
+  serviceaccountname:
+  #Provide the path where tessera will find the keys
+  #Eg. vaultprefix: ns/crypto/peername
+  vaultprefix:
   #Provide the key name from where quorum secrets will be read
   #Eg. keyname: quorum
   keyname: 
