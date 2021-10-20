@@ -84,7 +84,7 @@ data:
         "keyData": [
         {
             "hashicorpVaultSecretEngineName": "secretsv2",
-            "hashicorpVaultSecretName": "data/calv-quo/crypto/calv/data/{{ .Values.vault.tm_keyname }}",
+            "hashicorpVaultSecretName": "calv/{ .Values.vault.tm_keyname }}",
             "hashicorpVaultSecretVersion": 2,
             "hashicorpVaultPrivateKeyId": "privateKey", 
             "hashicorpVaultPublicKeyId": "publicKey"
