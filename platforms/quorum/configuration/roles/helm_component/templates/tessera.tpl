@@ -20,7 +20,7 @@ spec:
     images:
       node: quorumengineering/quorum:{{ network.version }}
       alpineutils: {{ network.docker.url }}/alpine-utils:1.0
-      tessera: quorumengineering/tessera:{{ network.config.tm_version }}
+      tessera: quorumengineering/tessera:hashicorp-{{ network.config.tm_version }}
       busybox: busybox
       mysql: mysql/mysql-server:5.7
     node:
@@ -53,6 +53,7 @@ spec:
     vault:
       address: {{ vault.url }}
       secretprefix: {{ vault.secret_path | default('secretsv2') }}/data/{{ component_ns }}/crypto/{{ peer.name }}
+      vaultprefix: {{ component_ns }}/crypto/{{ peer.name }}
       serviceaccountname: vault-auth
       keyname: quorum
       tm_keyname: transaction
