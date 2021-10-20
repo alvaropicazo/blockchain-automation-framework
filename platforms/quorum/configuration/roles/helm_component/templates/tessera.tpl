@@ -53,7 +53,7 @@ spec:
     vault:
       address: {{ vault.url }}
       secretprefix: {{ vault.secret_path | default('secretsv2') }}/data/{{ component_ns }}/crypto/{{ peer.name }}
-      vaultprefix: {{ component_ns }}/crypto/{{ peer.name }}
+      vaultprefix: {{ component_ns }}/crypto/{{ peer.name }}ç/data
       serviceaccountname: vault-auth
       keyname: quorum
       tm_keyname: transaction
