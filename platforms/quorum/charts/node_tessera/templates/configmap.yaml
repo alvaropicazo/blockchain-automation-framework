@@ -77,13 +77,14 @@ data:
         {
               "keyVaultType": "HASHICORP",
               "properties": {
-                  "url": "{{ .Values.vault.address }}"              }
+                  "url": "{{ .Values.vault.address }}"
+              }
         }
         ],
         "keyData": [
         {
-            "hashicorpVaultSecretEngineName": "kv",
-            "hashicorpVaultSecretName": "secretsv2/calv-quo/crypto/calv/data/{{ .Values.vault.tm_keyname }}",
+            "hashicorpVaultSecretEngineName": "secretsv2",
+            "hashicorpVaultSecretName": "calv-quo/crypto/calv/data/{{ .Values.vault.tm_keyname }}",
             "hashicorpVaultSecretVersion": 2,
             "hashicorpVaultPrivateKeyId": "privateKey", 
             "hashicorpVaultPublicKeyId": "publicKey"
