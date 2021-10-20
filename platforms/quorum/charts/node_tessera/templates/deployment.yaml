@@ -210,17 +210,14 @@ spec:
           SQL_JAR=$QUORUM_HOME/mysql-connector-java-8.0.25.jar
 
           # Extracting version from manifest incase we want to add version specific steps/config
-          #TESSERA_VERSION=$(unzip -p /tessera/tessera-app.jar META-INF/MANIFEST.MF | grep Tessera-Version | cut -d " " -f2)
-          #echo "Tessera version (extracted from manifest file): ${TESSERA_VERSION}"
-          #TESSERA_JAR=/tessera/tessera-app.jar
            
           CONFIG_TMPL=$(cat ${QUORUM_HOME}/tessera-config.json.tmpl)
           CONFIG_FINAL=$(echo $CONFIG_TMPL | sed "s@%THIS_PRIV_KEY%@${QUORUM_HOME}/crypto/keys/tm.key@g" |  sed "s@%THIS_PUB_KEY%@${QUORUM_HOME}/crypto/keys/tm.pub@g")
           echo $CONFIG_FINAL >  ${DDIR}/tessera-config-with-hosts.json
           cat  ${DDIR}/tessera-config-with-hosts.json
           
-          TESSERA_MAIN=com.quorum.tessera.launcher.Main
           ./tessera/bin/tessera --debug -configfile /etc/quorum/qdata/tm/tessera-config-with-hosts.json -o jdbc.password=$PASSWORD
+          tail -f /dev/null
 
         ports:
           - containerPort: {{ .Values.node.ports.tm }}
