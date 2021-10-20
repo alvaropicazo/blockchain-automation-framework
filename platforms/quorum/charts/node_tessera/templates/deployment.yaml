@@ -217,7 +217,6 @@ spec:
           cat  ${DDIR}/tessera-config-with-hosts.json
           
           ./tessera/bin/tessera --debug -configfile /etc/quorum/qdata/tm/tessera-config-with-hosts.json -o jdbc.password=$PASSWORD
-          tail -f /dev/null
 
         ports:
           - containerPort: {{ .Values.node.ports.tm }}
