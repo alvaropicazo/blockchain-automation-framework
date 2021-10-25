@@ -123,7 +123,7 @@ spec:
           echo "${username}" > ${OUTPUT_PATH}/username
           echo "${password}" > ${OUTPUT_PATH}/password
 
-          vault_secret_key="${VAULT_SECRET_PREFIX}/data/{{ .Values.vault.tm_keyname }}"
+          vault_secret_key="${VAULT_SECRET_PREFIX}/{{ .Values.vault.tm_keyname }}"
           echo "Getting 2 keys from $vault_secret_key"          
           LOOKUP_SECRET_RESPONSE=$(curl -sS \
             --header "X-Vault-Token:${VAULT_CLIENT_TOKEN}" \
