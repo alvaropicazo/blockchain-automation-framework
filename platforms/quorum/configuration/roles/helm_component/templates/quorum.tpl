@@ -20,7 +20,7 @@ spec:
     images:
       node: quorumengineering/quorum:{{ network.version }}
       alpineutils: {{ network.docker.url }}/alpine-utils:1.0
-      tessera: quorumengineering/tessera:{{ network.config.tm_version }}
+      tessera: quorumengineering/tessera:hashicorp-{{ network.config.tm_version }}
       busybox: busybox
       mysql: mysql/mysql-server:5.7
     node:
