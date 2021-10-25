@@ -72,7 +72,7 @@ spec:
 ]
     proxy:
       provider: "ambassador"
-      external_url: stoalv.quo.dev2.aws.blockchaincloudpoc-develop.com
+      external_url: node.stoalv.quo.dev2.aws.blockchaincloudpoc-develop.com
       portTM: 443
       rpcport: 15021
       quorumport: 15020
