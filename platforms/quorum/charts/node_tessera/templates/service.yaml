@@ -14,11 +14,11 @@ metadata:
       host: {{ .Values.proxy.external_url }}
       prefix: /      
       service: {{ .Values.node.name }}-tessera.{{ .Values.metadata.namespace }}:{{ .Values.node.ports.tm }}
-      tls: {{ .Values.node.name }}_mapping_tlscontext
+      tls: {{ .Values.node.name }}_mapping_tlscontext_tm
       ---
       apiVersion: ambassador/v2
       kind: TLSContext
-      name: {{ .Values.node.name }}_mapping_tlscontext
+      name: {{ .Values.node.name }}_mapping_tlscontext_tm
       hosts:
       - {{ .Values.proxy.external_url }}
       secret: {{ .Values.node.name }}-ambassador-certs.{{ .Values.metadata.namespace }}
