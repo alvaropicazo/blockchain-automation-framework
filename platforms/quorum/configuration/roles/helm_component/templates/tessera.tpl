@@ -79,7 +79,7 @@ spec:
       {{ staticnodes }}
     proxy:
       provider: "ambassador"
-      external_url: {{ name }}-tm.{{ external_url }}
+      external_url: {{ peer.name }}-tm.{{ external_url }}
       portTM: {{ peer.transaction_manager.ambassador }}
       rpcport: {{ peer.rpc.ambassador }}
       quorumport: {{ peer.p2p.ambassador }}
