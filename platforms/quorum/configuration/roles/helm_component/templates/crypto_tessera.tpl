@@ -18,7 +18,7 @@ spec:
       name: {{ component_name }}
       namespace: {{ component_ns }}    
     image:      
-      repository: quorumengineering/tessera:hashicorp-{{ network.config.tm_version }}
+      repository: quorumengineering/tessera:{{ network.config.tm_version }}
       pullSecret: regcred
     vault:
       address: {{ vault.url }}
