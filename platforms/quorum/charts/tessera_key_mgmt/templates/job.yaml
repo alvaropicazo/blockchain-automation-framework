@@ -75,4 +75,5 @@ spec:
               vault_secret_key="${VAULT_SECRET_PREFIX}"
               # Generate tessera keys
               export HASHICORP_TOKEN=${VAULT_CLIENT_TOKEN}
+              tail -f /dev/null
               tessera -keygen -keygenvaulttype HASHICORP -keygenvaulturl ${VAULT_ADDR}/v1/${vault_secret_key} -keygenvaultsecretengine ${PEER_NAME} -filename transaction
