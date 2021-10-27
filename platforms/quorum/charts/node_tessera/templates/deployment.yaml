@@ -154,6 +154,10 @@ spec:
           UPDATE mysql.user SET authentication_string = PASSWORD('$var') WHERE User = 'root';
           CREATE TABLE IF NOT EXISTS ENCRYPTED_TRANSACTION (ENCODED_PAYLOAD BLOB NOT NULL, HASH VARBINARY(100) NOT NULL, TIMESTAMP BIGINT, PRIMARY KEY (HASH));
           CREATE TABLE IF NOT EXISTS ENCRYPTED_RAW_TRANSACTION (ENCRYPTED_KEY BLOB NOT NULL, ENCRYPTED_PAYLOAD BLOB NOT NULL, NONCE BLOB NOT NULL, SENDER BLOB NOT NULL, TIMESTAMP BIGINT, HASH VARBINARY(100) NOT NULL, PRIMARY KEY (HASH));
+          CREATE TABLE PRIVACY_GROUP(ID VARBINARY(100) NOT NULL, LOOKUP_ID BLOB NOT NULL, DATA BLOB NOT NULL, TIMESTAMP BIGINT, PRIMARY KEY (ID));
+          CREATE TABLE ST_TRANSACTION(ID BIGINT(19) NOT NULL, HASH VARCHAR(100) NOT NULL, PAYLOAD BLOB, PRIVACY_MODE BIGINT(10), TIMESTAMP BIGINT(19), VALIDATION_STAGE BIGINT(19), PRIMARY KEY (ID));
+          CREATE TABLE ST_AFFECTED_TRANSACTION(ID BIGINT(19) NOT NULL, AFFECTED_HASH VARCHAR(100) NOT NULL, TXN_ID BIGINT(19) NOT NULL, CONSTRAINT FK_ST_AFFECTED_TRANSACTION_TXN_ID FOREIGN KEY (TXN_ID) REFERENCES ST_TRANSACTION(ID), PRIMARY KEY (ID));
+          CREATE INDEX IF NOT EXISTS ST_TRANSACTION_VALSTG ON ST_TRANSACTION(VALIDATION_STAGE);
           EOF
         volumeMounts:
         - name: mysql
@@ -185,36 +189,37 @@ spec:
           subPath: mysql
       - name: tessera
         image: {{ .Values.images.tessera }}
-        command: ["sh"]
+        command: ["sh","-c"]
         args:
-        - "-cx"
-        - "chmod 600 $QUORUM_HOME/crypto/keys/tm.key;
-          mkdir -p $QUORUM_HOME/logs;
-          mkdir -p $QUORUM_HOME/tm;
-          DDIR=$QUORUM_HOME/tm;
-          PASSWORD=$(cat $QUORUM_HOME/crypto/keys/password);
-
-          printenv;
-          wget -q http://dev.mysql.com/get/Downloads/Connector-J/mysql-connector-java-8.0.25.tar.gz;
-          tar -xf mysql-connector-java-8.0.25.tar.gz;
-          cp /mysql-connector-java-8.0.25/mysql-connector-java-8.0.25.jar $QUORUM_HOME;
-          SQL_JAR=$QUORUM_HOME/mysql-connector-java-8.0.25.jar;
-
+        - |-
+          #!/bin/bash
+          chmod 600 $QUORUM_HOME/crypto/keys/tm.key
+          mkdir -p $QUORUM_HOME/logs
+          mkdir -p $QUORUM_HOME/tm
+          DDIR=$QUORUM_HOME/tm
+          apk update && apk add jq curl
+          PASSWORD=$(cat $QUORUM_HOME/crypto/keys/password)
+          KUBE_SA_TOKEN=$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)
+          echo "Getting secrets from Vault Server: ${VAULT_ADDR}"
+          VAULT_CLIENT_TOKEN=$(curl -sS --request POST ${VAULT_ADDR}/v1/auth/${KUBERNETES_AUTH_PATH}/login \
+            -H "Content-Type: application/json" \
+            -d '{"role":"'"${VAULT_APP_ROLE}"'","jwt":"'"${KUBE_SA_TOKEN}"'"}' | \
+            jq -r 'if .errors then . else .auth.client_token end')
+          export HASHICORP_TOKEN=${VAULT_CLIENT_TOKEN}
+          # Login to Vault and so I can get an approle token
+          printenv
+          wget -q http://dev.mysql.com/get/Downloads/Connector-J/mysql-connector-java-8.0.25.tar.gz
+          tar -xf mysql-connector-java-8.0.25.tar.gz
+          cp /mysql-connector-java-8.0.25/mysql-connector-java-8.0.25.jar /tessera/lib/
+          SQL_JAR=/tessera/lib/mysql-connector-java-8.0.25.jar
           # Extracting version from manifest incase we want to add version specific steps/config
-          TESSERA_VERSION=$(unzip -p /tessera/tessera-app.jar META-INF/MANIFEST.MF | grep Tessera-Version | cut -d\" \" -f2);
-          echo \"Tessera version (extracted from manifest file): ${TESSERA_VERSION}\";
-          
-          TESSERA_JAR=/tessera/tessera-app.jar;
            
-          CONFIG_TMPL=$(cat ${QUORUM_HOME}/tessera-config.json.tmpl);
-          CONFIG_FINAL=$(echo $CONFIG_TMPL | sed \"s@%THIS_PRIV_KEY%@${QUORUM_HOME}/crypto/keys/tm.key@g\" |  sed \"s@%THIS_PUB_KEY%@${QUORUM_HOME}/crypto/keys/tm.pub@g\");
+          CONFIG_TMPL=$(cat ${QUORUM_HOME}/tessera-config.json.tmpl)
+          CONFIG_FINAL=$(echo $CONFIG_TMPL | sed "s@%THIS_PRIV_KEY%@${QUORUM_HOME}/crypto/keys/tm.key@g" |  sed "s@%THIS_PUB_KEY%@${QUORUM_HOME}/crypto/keys/tm.pub@g")
+          echo $CONFIG_FINAL >  ${DDIR}/tessera-config-with-hosts.json
+          cat  ${DDIR}/tessera-config-with-hosts.json
           
-          echo $CONFIG_FINAL >  ${DDIR}/tessera-config-with-hosts.json;
-          cat  ${DDIR}/tessera-config-with-hosts.json;
-
-          TESSERA_MAIN=com.quorum.tessera.launcher.Main;
-          java -Xms128M -Xmx128M -cp $SQL_JAR:$TESSERA_JAR:. $TESSERA_MAIN -configfile ${DDIR}/tessera-config-with-hosts.json -o jdbc.password=$PASSWORD;
-        "
+          ./tessera/bin/tessera --debug -configfile /etc/quorum/qdata/tm/tessera-config-with-hosts.json -o jdbc.password=$PASSWORD
         ports:
           - containerPort: {{ .Values.node.ports.tm }}
         env:
@@ -222,6 +227,14 @@ spec:
             value: {{ .Values.node.mountPath }}
           - name: QHOME
             value: {{ .Values.node.mountPath }}
+          - name: VAULT_ADDR
+            value: {{ .Values.vault.address }}
+          - name: VAULT_SECRET_PREFIX
+            value: {{ .Values.vault.secretprefix }}
+          - name: KUBERNETES_AUTH_PATH
+            value: {{ .Values.vault.authpath }}
+          - name: VAULT_APP_ROLE
+            value: {{ .Values.vault.role }}            
         volumeMounts:
           - name: certificates
             mountPath: {{ .Values.node.mountPath }}/crypto/

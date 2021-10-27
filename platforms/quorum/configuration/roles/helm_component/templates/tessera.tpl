@@ -20,7 +20,7 @@ spec:
     images:
       node: quorumengineering/quorum:{{ network.version }}
       alpineutils: {{ network.docker.url }}/alpine-utils:1.0
-      tessera: quorumengineering/tessera:{{ network.config.tm_version }}
+      tessera: quorumengineering/tessera:hashicorp-{{ network.config.tm_version }}
       busybox: busybox
       mysql: mysql/mysql-server:5.7
     node:
@@ -62,9 +62,9 @@ spec:
       dburl: "jdbc:mysql://{{ peer.name }}-tessera:3306/demodb"
       dbusername: demouser
 {% if network.config.tm_tls == 'strict' %}
-      url: "https://{{ peer.name }}.{{ external_url }}:{{ peer.transaction_manager.ambassador }}"
+      url: "https://{{ peer.name }}-tm.{{ external_url }}:{{ peer.transaction_manager.ambassador }}"
 {% else %}
-      url: "http://{{ peer.name }}.{{ external_url }}:{{ peer.transaction_manager.ambassador }}"
+      url: "http://{{ peer.name }}-tm.{{ external_url }}:{{ peer.transaction_manager.ambassador }}"
 {% endif %}
       clienturl: "http://{{ peer.name }}-tessera:{{ peer.transaction_manager.clientport }}" #TODO: Enable tls strict for q2t
       othernodes:
@@ -78,7 +78,7 @@ spec:
       {{ staticnodes }}
     proxy:
       provider: "ambassador"
-      external_url: {{ name }}.{{ external_url }}
+      external_url: {{ peer.name }}-tm.{{ external_url }}
       portTM: {{ peer.transaction_manager.ambassador }}
       rpcport: {{ peer.rpc.ambassador }}
       quorumport: {{ peer.p2p.ambassador }}
