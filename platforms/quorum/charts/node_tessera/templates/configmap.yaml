@@ -73,12 +73,21 @@ data:
       "peer": {{ .Values.tessera.othernodes | toPrettyJson | indent 6 }},
       "keys": {
         "passwords": [],
+         "keyVaultConfigs": [
+        {
+              "keyVaultType": "HASHICORP",
+              "properties": {
+                  "url": "{{ .Values.vault.address }}"
+              }
+        }
+        ],
         "keyData": [
-          {
-            "privateKeyPath": "%THIS_PRIV_KEY%",
-            "publicKeyPath": "%THIS_PUB_KEY%"
-          }
-        ]
-      },
+        {
+            "hashicorpVaultSecretEngineName": "secretsv2",
+            "hashicorpVaultSecretName": "{{ .Values.vault.vaultprefix }}/{{ .Values.vault.tm_keyname }}",
+            "hashicorpVaultPrivateKeyId": "privateKey", 
+            "hashicorpVaultPublicKeyId": "publicKey"
+        }
+    ]},
       "alwaysSendTo": []
     }

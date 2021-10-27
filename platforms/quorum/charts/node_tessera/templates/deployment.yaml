@@ -123,18 +123,18 @@ spec:
           echo "${username}" > ${OUTPUT_PATH}/username
           echo "${password}" > ${OUTPUT_PATH}/password
 
-          vault_secret_key="${VAULT_SECRET_PREFIX}/{{ .Values.vault.tm_keyname }}"
-          echo "Getting 2 keys from $vault_secret_key"          
-          LOOKUP_SECRET_RESPONSE=$(curl -sS \
-            --header "X-Vault-Token:${VAULT_CLIENT_TOKEN}" \
-            ${VAULT_ADDR}/v1/${vault_secret_key} | \
-            jq -r 'if .errors then . else . end')
-          validateVaultResponse "secret (${vault_secret_key})" "${LOOKUP_SECRET_RESPONSE}" "LOOKUPSECRETRESPONSE" 
+          # vault_secret_key="${VAULT_SECRET_PREFIX}/{{ .Values.vault.tm_keyname }}"
+          # echo "Getting 2 keys from $vault_secret_key"          
+          # LOOKUP_SECRET_RESPONSE=$(curl -sS \
+          #   --header "X-Vault-Token:${VAULT_CLIENT_TOKEN}" \
+          #   ${VAULT_ADDR}/v1/${vault_secret_key} | \
+          #   jq -r 'if .errors then . else . end')
+          # validateVaultResponse "secret (${vault_secret_key})" "${LOOKUP_SECRET_RESPONSE}" "LOOKUPSECRETRESPONSE" 
 
-          tmpub=$(echo ${LOOKUP_SECRET_RESPONSE} | jq -r '.data.data["publicKey"]')
-          tmkey=$(echo ${LOOKUP_SECRET_RESPONSE} | jq -r '.data.data["privateKey"]')
-          echo -n "${tmpub}" > ${OUTPUT_PATH}/tm.pub
-          echo '{"data":{"bytes":"'"$tmkey"'"},"type":"unlocked"}' > ${OUTPUT_PATH}/tm.key 
+          # tmpub=$(echo ${LOOKUP_SECRET_RESPONSE} | jq -r '.data.data["publicKey"]')
+          # tmkey=$(echo ${LOOKUP_SECRET_RESPONSE} | jq -r '.data.data["privateKey"]')
+          # echo -n "${tmpub}" > ${OUTPUT_PATH}/tm.pub
+          # echo '{"data":{"bytes":"'"$tmkey"'"},"type":"unlocked"}' > ${OUTPUT_PATH}/tm.key 
 
         volumeMounts:
         - name: certificates
@@ -214,7 +214,7 @@ spec:
           SQL_JAR=/tessera/lib/mysql-connector-java-8.0.25.jar
 
           # Extracting version from manifest incase we want to add version specific steps/config
-           
+
           CONFIG_TMPL=$(cat ${QUORUM_HOME}/tessera-config.json.tmpl)
           CONFIG_FINAL=$(echo $CONFIG_TMPL | sed "s@%THIS_PRIV_KEY%@${QUORUM_HOME}/crypto/keys/tm.key@g" |  sed "s@%THIS_PUB_KEY%@${QUORUM_HOME}/crypto/keys/tm.pub@g")
           echo $CONFIG_FINAL >  ${DDIR}/tessera-config-with-hosts.json
