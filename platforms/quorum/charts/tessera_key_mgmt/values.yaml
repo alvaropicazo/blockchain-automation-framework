@@ -46,3 +46,6 @@ vault:
   # Provide the vault path where the tm secrets are stored
   # Eg. secretprefix: secret/warehouse-quo/crypto/warehouse/tm
   tmprefix: 
+
+  keyprefix:
+ 

@@ -38,11 +38,12 @@ spec:
             value: {{ $.Values.vault.role }}
           - name: VAULT_SECRET_PREFIX
             value: "{{ $.Values.vault.tmprefix }}"
+          - name: VAULT_KEY_PREFIX
+            value: "{{ $.Values.vault.keyprefix }}"    
           command: ["sh", "-c"]
           args:
             - |-
               apk update && apk add jq curl
-              alias tessera="java -jar /tessera/tessera-app.jar"
               
               validateVaultResponse () {
                 if echo ${2} | grep "errors"; then
@@ -75,4 +76,4 @@ spec:
               vault_secret_key="${VAULT_SECRET_PREFIX}"
               # Generate tessera keys
               export HASHICORP_TOKEN=${VAULT_CLIENT_TOKEN}
-              tessera -keygen -keygenvaulttype HASHICORP -keygenvaulturl ${VAULT_ADDR}/v1/${vault_secret_key} -keygenvaultsecretengine ${PEER_NAME} -filename transaction
+              ./tessera/bin/tessera -keygen -keygenvaulttype HASHICORP -keygenvaulturl ${VAULT_ADDR} -keygenvaultsecretengine secretsv2 -filename ${VAULT_KEY_PREFIX}/${PEER_NAME}/transaction
