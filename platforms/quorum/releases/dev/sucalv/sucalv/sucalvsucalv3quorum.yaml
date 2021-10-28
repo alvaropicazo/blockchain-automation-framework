@@ -1,0 +1,82 @@
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  name: sucalvsucalv3quorum
+  namespace: sucalv-quo
+  annotations:
+    fluxcd.io/automated: "false"
+spec:
+  releaseName: sucalvsucalv3quorum
+  helmVersion: v3
+  chart:
+    git: https://github.com/alvaropicazo/blockchain-automation-framework.git
+    ref: feat1551-tesversion
+    path: platforms/quorum/charts/node_quorum_validator  
+  values:
+    replicaCount: 1
+    metadata:
+      namespace: sucalv-quo
+      labels:
+    images:
+      node: quorumengineering/quorum:21.4.1
+      alpineutils: index.docker.io/hyperledgerlabs/alpine-utils:1.0
+      tessera: quorumengineering/tessera:21.4.0
+      busybox: busybox
+      mysql: mysql/mysql-server:5.7
+    node:
+      name: sucalv3
+      status: default
+      consensus: ibft
+      subject: O=Manufacturer,OU=Manufacturer,L=47.38/8.54/Zurich,C=CH
+      mountPath: /etc/quorum/qdata
+      imagePullSecret: regcred
+      keystore: keystore_1
+      
+      servicetype: ClusterIP
+      lock: false
+      ports:
+        rpc: 8546
+        raft: 50401
+        tm: 443
+        quorum: 21000
+        db: 3306
+      dbname: demodb
+      mysqluser: demouser
+    vault:
+      address: http://vault.internal.dev2.aws.blockchaincloudpoc-develop.com:20001
+      secretprefix: secretsv2/data/sucalv-quo/crypto/sucalv3
+      serviceaccountname: vault-auth
+      keyname: quorum
+      tm_keyname: transaction
+      role: vault-role
+      authpath: quorumsucalv
+    tessera:
+      dburl: "jdbc:mysql://sucalv3-tessera:3306/demodb"
+      dbusername: demouser
+      url: "https://sucalv3.quo.dev2.aws.blockchaincloudpoc-develop.com:443"
+      clienturl: "http://sucalv3-tessera:8888" #TODO: Enable tls strict for q2t
+      othernodes:
+        - url: https://caalv-tm.quo.dev2.aws.blockchaincloudpoc-develop.com
+        - url: https://stoalv-tm.quo.dev2.aws.blockchaincloudpoc-develop.com
+      tls: "STRICT"
+      trust: "TOFU"
+    genesis: ewogICJjb25maWciOiB7CiAgICAiY2hhaW5JZCI6IDEwLAogICAgImhvbWVzdGVhZEJsb2NrIjogMCwKICAgICJlaXAxNTBCbG9jayI6IDAsCiAgICAiZWlwMTUwSGFzaCI6ICIweDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAiLAogICAgImVpcDE1NUJsb2NrIjogMCwKICAgICJlaXAxNThCbG9jayI6IDAsCiAgICAiYnl6YW50aXVtQmxvY2siOiAwLAogICAgImNvbnN0YW50aW5vcGxlQmxvY2siOiAwLAogICAgInBldGVyc2J1cmdCbG9jayI6IDAsCiAgICAiaXN0YW5idWxCbG9jayI6IDAsCiAgICAiaXN0YW5idWwiOiB7CiAgICAgICJlcG9jaCI6IDMwMDAwLAogICAgICAicG9saWN5IjogMCwKICAgICAgImNlaWwyTmJ5M0Jsb2NrIjogMAogICAgfSwKICAgICJ0eG5TaXplTGltaXQiOiAxMjgsCiAgICAicWlwNzE0QmxvY2siOiAwLAogICAgImlzTVBTIjogZmFsc2UsCiAgICAiaXNRdW9ydW0iOiB0cnVlLAogICAgIm1heENvZGVTaXplQ29uZmlnIjogWwogICAgICB7CiAgICAgICAgImJsb2NrIjogMCwKICAgICAgICAic2l6ZSI6IDEyOAogICAgICB9CiAgICBdCiAgfSwKICAibm9uY2UiOiAiMHgwIiwKICAidGltZXN0YW1wIjogIjB4NjE3YWJhMTYiLAogICJleHRyYURhdGEiOiAiMHgwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwZjg5YWY4NTQ5NDJmOTVkZjQyZDYxNmFlZTllODk1MDkxOGYyMGY2MjMxZGJkYTQ0Zjc5NDllOTdjY2Q5YTYwNzRkZWUzZjMwYjllYTEzZjUwNGRkNTdlYjBlZmM5NGQ3YzY4ZWRmMDY1ZWE1OTEzNGVlMWRkOWRiZDQ1OGQwNGIyMGIzMWQ5NDM2OWNhOGExMjIwZDg3MmEyZWIwNDQ1ZTU3NjRlOWJjMmZiMzcxYWFiODQxMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMGMwIiwKICAiZ2FzTGltaXQiOiAiMHhlMDAwMDAwMCIsCiAgImRpZmZpY3VsdHkiOiAiMHgxIiwKICAibWl4SGFzaCI6ICIweDYzNzQ2OTYzNjE2YzIwNjI3OTdhNjE2ZTc0Njk2ZTY1MjA2NjYxNzU2Yzc0MjA3NDZmNmM2NTcyNjE2ZTYzNjUiLAogICJjb2luYmFzZSI6ICIweDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAiLAogICJhbGxvYyI6IHsKICAgICIyZjk1ZGY0MmQ2MTZhZWU5ZTg5NTA5MThmMjBmNjIzMWRiZGE0NGY3IjogewogICAgICAiYmFsYW5jZSI6ICIweDQ0NmMzYjE1Zjk5MjY2ODdkMmM0MDUzNGZkYjU2NDAwMDAwMDAwMDAwMCIKICAgIH0sCiAgICAiMzY5Y2E4YTEyMjBkODcyYTJlYjA0NDVlNTc2NGU5YmMyZmIzNzFhYSI6IHsKICAgICAgImJhbGFuY2UiOiAiMHg0NDZjM2IxNWY5OTI2Njg3ZDJjNDA1MzRmZGI1NjQwMDAwMDAwMDAwMDAiCiAgICB9LAogICAgIjllOTdjY2Q5YTYwNzRkZWUzZjMwYjllYTEzZjUwNGRkNTdlYjBlZmMiOiB7CiAgICAgICJiYWxhbmNlIjogIjB4NDQ2YzNiMTVmOTkyNjY4N2QyYzQwNTM0ZmRiNTY0MDAwMDAwMDAwMDAwIgogICAgfSwKICAgICJkN2M2OGVkZjA2NWVhNTkxMzRlZTFkZDlkYmQ0NThkMDRiMjBiMzFkIjogewogICAgICAiYmFsYW5jZSI6ICIweDQ0NmMzYjE1Zjk5MjY2ODdkMmM0MDUzNGZkYjU2NDAwMDAwMDAwMDAwMCIKICAgIH0KICB9LAogICJudW1iZXIiOiAiMHgwIiwKICAiZ2FzVXNlZCI6ICIweDAiLAogICJwYXJlbnRIYXNoIjogIjB4MDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMCIKfQ==
+    staticnodes: 
+      [
+    "enode://e6389c0faf3d4a3cd966bb203d9b16e294a8471fd75c4ea81153af64e329b83cebd0c7a16dfff97216e7378dadc805306cb44b22cf11556f4367a5e6333e4fa2@sucalv1.quo.dev2.aws.blockchaincloudpoc-develop.com:15010?discport=0",
+    "enode://c0e5c2b10fc31f5a372530b33815440e491b157e533f2882ef243bd1d3daa560da3cc3e6432ec7746743cb467a1a84c862194a34e20ae1c5af2fe50f255c7629@sucalv2.quo.dev2.aws.blockchaincloudpoc-develop.com:15012?discport=0",
+    "enode://2ba4ddbcab83cd83f839ed53f417540d88ae23c083b23c1c8ca2428d88440fa972ff05789db336271fc94d5af417715c665927c3d47823ab6d95abfe4f459728@sucalv3.quo.dev2.aws.blockchaincloudpoc-develop.com:15014?discport=0",
+    "enode://b3e48d6ab597b12d30f5b1c7ffe76e47e762b7b9c8086bb88d6eed39019dc598e3a133fa219c6c92199ed91525e6edeaedb67a067f5b65d4a7f6a49a16e8a1c6@sucalv4.quo.dev2.aws.blockchaincloudpoc-develop.com:15016?discport=0",
+    "enode://c9c7f79294f7e42488f583a1017239739dbeca0fd2f9d68a137598eca4b3f0a5cb7c12117925e42ea24b2ebb1a2cd1758647775b2dbbeb6b3480da6e0d4d0451@caalv.quo.dev2.aws.blockchaincloudpoc-develop.com:15018?discport=0",
+    "enode://f26fd7a43e7565c4bc6ec25bc91492216f75fdb4fee7463f7c5a6011980aa81d3e4693fb4ac7e4bc8cd6e685aee6ba1977cce2a38e311e2e2d2584cdff19fab1@stoalv.quo.dev2.aws.blockchaincloudpoc-develop.com:15020?discport=0"
+]
+    proxy:
+      provider: "ambassador"
+      external_url: sucalv.quo.dev2.aws.blockchaincloudpoc-develop.com
+      portTM: 443
+      rpcport: 15015
+      quorumport: 15014
+    storage:
+      storageclassname: awsstorageclass
+      storagesize: 1Gi
+      dbstorage: 1Gi
