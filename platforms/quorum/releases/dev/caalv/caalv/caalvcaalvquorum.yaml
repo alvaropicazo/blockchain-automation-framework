@@ -1,17 +1,17 @@
 apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease
 metadata:
-  name: caalvcaalvtessera
+  name: caalvcaalvquorum
   namespace: caalv-quo
   annotations:
     fluxcd.io/automated: "false"
 spec:
-  releaseName: caalvcaalvtessera
+  releaseName: caalvcaalvquorum
   helmVersion: v3
   chart:
     git: https://github.com/alvaropicazo/blockchain-automation-framework.git
     ref: feat1551-tesversion
-    path: platforms/quorum/charts/node_tessera  
+    path: platforms/quorum/charts/node_quorum_member
   values:
     replicaCount: 1
     metadata:
@@ -72,11 +72,10 @@ spec:
 ]
     proxy:
       provider: "ambassador"
-      external_url: caalv-tm.quo.dev2.aws.blockchaincloudpoc-develop.com
+      external_url: caalv.quo.dev2.aws.blockchaincloudpoc-develop.com
       portTM: 443
       rpcport: 15019
       quorumport: 15018
-      clientport: 8888
     storage:
       storageclassname: awsstorageclass
       storagesize: 1Gi
