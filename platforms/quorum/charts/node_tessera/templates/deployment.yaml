@@ -192,34 +192,30 @@ spec:
         command: ["sh","-c"]
         args:
         - |-
-          #!/bin/bash
-          chmod 600 $QUORUM_HOME/crypto/keys/tm.key
-          mkdir -p $QUORUM_HOME/logs
-          mkdir -p $QUORUM_HOME/tm
-          DDIR=$QUORUM_HOME/tm
-          apk update && apk add jq curl
-          PASSWORD=$(cat $QUORUM_HOME/crypto/keys/password)
-          KUBE_SA_TOKEN=$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)
-          echo "Getting secrets from Vault Server: ${VAULT_ADDR}"
-          VAULT_CLIENT_TOKEN=$(curl -sS --request POST ${VAULT_ADDR}/v1/auth/${KUBERNETES_AUTH_PATH}/login \
-            -H "Content-Type: application/json" \
-            -d '{"role":"'"${VAULT_APP_ROLE}"'","jwt":"'"${KUBE_SA_TOKEN}"'"}' | \
-            jq -r 'if .errors then . else .auth.client_token end')
-          export HASHICORP_TOKEN=${VAULT_CLIENT_TOKEN}
-          # Login to Vault and so I can get an approle token
-          printenv
-          wget -q http://dev.mysql.com/get/Downloads/Connector-J/mysql-connector-java-8.0.25.tar.gz
-          tar -xf mysql-connector-java-8.0.25.tar.gz
-          cp /mysql-connector-java-8.0.25/mysql-connector-java-8.0.25.jar /tessera/lib/
-          SQL_JAR=/tessera/lib/mysql-connector-java-8.0.25.jar
+        - "-cx"
+        - "chmod 600 $QUORUM_HOME/crypto/keys/tm.key;
+          mkdir -p $QUORUM_HOME/logs;
+          mkdir -p $QUORUM_HOME/tm;
+          DDIR=$QUORUM_HOME/tm;
+          PASSWORD=$(cat $QUORUM_HOME/crypto/keys/password);
+          printenv;
+          wget -q http://dev.mysql.com/get/Downloads/Connector-J/mysql-connector-java-8.0.25.tar.gz;
+          tar -xf mysql-connector-java-8.0.25.tar.gz;
+          cp /mysql-connector-java-8.0.25/mysql-connector-java-8.0.25.jar $QUORUM_HOME;
+          SQL_JAR=$QUORUM_HOME/mysql-connector-java-8.0.25.jar;
           # Extracting version from manifest incase we want to add version specific steps/config
-           
-          CONFIG_TMPL=$(cat ${QUORUM_HOME}/tessera-config.json.tmpl)
-          CONFIG_FINAL=$(echo $CONFIG_TMPL | sed "s@%THIS_PRIV_KEY%@${QUORUM_HOME}/crypto/keys/tm.key@g" |  sed "s@%THIS_PUB_KEY%@${QUORUM_HOME}/crypto/keys/tm.pub@g")
-          echo $CONFIG_FINAL >  ${DDIR}/tessera-config-with-hosts.json
-          cat  ${DDIR}/tessera-config-with-hosts.json
+          TESSERA_VERSION=$(unzip -p /tessera/tessera-app.jar META-INF/MANIFEST.MF | grep Tessera-Version | cut -d\" \" -f2);
+          echo \"Tessera version (extracted from manifest file): ${TESSERA_VERSION}\";
           
-          ./tessera/bin/tessera --debug -configfile /etc/quorum/qdata/tm/tessera-config-with-hosts.json -o jdbc.password=$PASSWORD
+          TESSERA_JAR=/tessera/tessera-app.jar;
+           
+          CONFIG_TMPL=$(cat ${QUORUM_HOME}/tessera-config.json.tmpl);
+          CONFIG_FINAL=$(echo $CONFIG_TMPL | sed \"s@%THIS_PRIV_KEY%@${QUORUM_HOME}/crypto/keys/tm.key@g\" |  sed \"s@%THIS_PUB_KEY%@${QUORUM_HOME}/crypto/keys/tm.pub@g\");
+          
+          echo $CONFIG_FINAL >  ${DDIR}/tessera-config-with-hosts.json;
+          cat  ${DDIR}/tessera-config-with-hosts.json;
+          TESSERA_MAIN=com.quorum.tessera.launcher.Main;
+          java -Xms128M -Xmx128M -cp $SQL_JAR:$TESSERA_JAR:. $TESSERA_MAIN -configfile ${DDIR}/tessera-config-with-hosts.json -o jdbc.password=$PASSWORD;
         ports:
           - containerPort: {{ .Values.node.ports.tm }}
         env:
