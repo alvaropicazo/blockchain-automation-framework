@@ -52,7 +52,7 @@ data:
           "enabled": true,
           "serverAddress": {{ .Values.tessera.url | quote }},
           "sslConfig": {
-            "tls": {{ .Values.tessera.tls | quote }},
+            "tls": "OFF",
             "generateKeyStoreIfNotExisted": true,
             "serverKeyStore": "{{ .Values.node.mountPath }}/tm/server-keystore",
             "serverKeyStorePassword": "quorum",
