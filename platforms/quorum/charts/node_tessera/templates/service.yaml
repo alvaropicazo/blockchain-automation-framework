@@ -9,7 +9,7 @@ metadata:
     getambassador.io/config: |
       ---
       apiVersion: ambassador/v2
-      kind: Mapping
+      kind: TCPMapping
       name: {{ .Values.node.name }}-tm      
       host: {{ .Values.proxy.external_url }}
       prefix: /      
