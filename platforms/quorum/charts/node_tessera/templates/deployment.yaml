@@ -211,7 +211,7 @@ spec:
           wget -q http://dev.mysql.com/get/Downloads/Connector-J/mysql-connector-java-8.0.25.tar.gz
           tar -xf mysql-connector-java-8.0.25.tar.gz
           cp /mysql-connector-java-8.0.25/mysql-connector-java-8.0.25.jar /tessera/lib/
-          SQL_JAR=/tessera/lib/mysql-connector-java-8.0.25.jar
+          #SQL_JAR=/tessera/lib/mysql-connector-java-8.0.25.jar
           # Extracting version from manifest incase we want to add version specific steps/config
            
           CONFIG_TMPL=$(cat ${QUORUM_HOME}/tessera-config.json.tmpl)
@@ -220,6 +220,7 @@ spec:
           cat  ${DDIR}/tessera-config-with-hosts.json
           
           ./tessera/bin/tessera --debug -configfile /etc/quorum/qdata/tm/tessera-config-with-hosts.json -o jdbc.password=$PASSWORD
+          tail -f /dev/null
         ports:
           - containerPort: {{ .Values.node.ports.tm }}
         env:
