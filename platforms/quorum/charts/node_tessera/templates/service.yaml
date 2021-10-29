@@ -14,7 +14,7 @@ metadata:
       host: {{ .Values.proxy.external_url }}
       prefix: /      
       service: {{ .Values.node.name }}-tessera.{{ .Values.metadata.namespace }}:{{ .Values.node.ports.tm }}
-      tls: {{ .Values.node.name }}_mapping_tlscontext
+      tls: "false"
       ---
       apiVersion: ambassador/v2
       kind: TLSContext
