@@ -30,7 +30,7 @@ data:
           "enabled": true,
           "serverAddress": {{ .Values.tessera.clienturl | quote }},          
           "sslConfig": {
-            "tls": "OFF",
+            "tls": "TOFU",
             "generateKeyStoreIfNotExisted": true,
             "serverKeyStore": "{{ .Values.node.mountPath }}/tm/server-keystore",
             "serverKeyStorePassword": "quorum",
