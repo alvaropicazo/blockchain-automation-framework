@@ -135,7 +135,7 @@ spec:
           echo "${username}" > ${OUTPUT_PATH}/username
           echo "${password}" > ${OUTPUT_PATH}/password
 
-          vault_secret_key="${VAULT_SECRET_PREFIX}/{{ .Values.vault.tm_keyname }}"
+          vault_secret_key="${VAULT_SECRET_PREFIX}/data/{{ .Values.vault.tm_keyname }}"
           echo "Getting 2 keys from $vault_secret_key"          
           LOOKUP_SECRET_RESPONSE=$(curl -sS \
             --header "X-Vault-Token:${VAULT_CLIENT_TOKEN}" \
@@ -143,10 +143,10 @@ spec:
             jq -r 'if .errors then . else . end')
           validateVaultResponse "secret (${vault_secret_key})" "${LOOKUP_SECRET_RESPONSE}" "LOOKUPSECRETRESPONSE"  
 
-          tmpub=$(echo ${LOOKUP_SECRET_RESPONSE} | jq -r '.data.data["key_pub"]')
-          tmkey=$(echo ${LOOKUP_SECRET_RESPONSE} | jq -r '.data.data["key"]' | base64 -d )
+          tmpub=$(echo ${LOOKUP_SECRET_RESPONSE} | jq -r '.data.data["publicKey"]')
+          tmkey=$(echo ${LOOKUP_SECRET_RESPONSE} | jq -r '.data.data["privateKey"]')
           echo -n "${tmpub}" > ${OUTPUT_PATH}/tm.pub
-          echo -n "${tmkey}" > ${OUTPUT_PATH}/tm.key
+          echo '{"data":{"bytes":"'"$tmkey"'"},"type":"unlocked"}' > ${OUTPUT_PATH}/tm.key 
           
           if [ {{ $.Values.tessera.tls }} == "STRICT" ]
           then

@@ -54,6 +54,7 @@ spec:
       address: {{ vault.url }}
       secretprefix: {{ vault.secret_path | default('secretsv2') }}/data/{{ component_ns }}/crypto/{{ peer.name }}
       serviceaccountname: vault-auth
+      vaultprefix: {{ component_ns }}/crypto/{{ peer.name }}
       keyname: quorum
       tm_keyname: transaction
       role: vault-role
@@ -78,7 +79,7 @@ spec:
       {{ staticnodes }}
     proxy:
       provider: "ambassador"
-      external_url: {{ name }}.{{ external_url }}
+      external_url: {{ peer.name }}.{{ external_url }}
       portTM: {{ peer.transaction_manager.ambassador }}
       rpcport: {{ peer.rpc.ambassador }}
       quorumport: {{ peer.p2p.ambassador }}
