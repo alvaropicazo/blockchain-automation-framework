@@ -45,13 +45,13 @@
   retries: "{{ network.env.retry_count}}"
   delay: 40
 
-# Call get_update_block to fetch the syschannel channel block
-- name: Call get_update_block to fetch the syschannel channel block
-  include_tasks: get_update_block.yaml
-  vars:
-    script: "syschannel-update-script.sh"
-    channel_name: "{{ sys_channel_name }}"
-    check: "fetch_block"
+# # Call get_update_block to fetch the syschannel channel block
+# - name: Call get_update_block to fetch the syschannel channel block
+#   include_tasks: get_update_block.yaml
+#   vars:
+#     script: "syschannel-update-script.sh"
+#     channel_name: "{{ sys_channel_name }}"
+#     check: "fetch_block"
 
 # Call get_update_block to fetch the appchannel channels block
 - name: Call get_update_block to fetch the {{ channel_name }} channel block
@@ -64,13 +64,13 @@
   loop_control:
     loop_var: channel
 
-# Call get_update_block to update the syschannel channel block
-- name: Call get_update_block to update the syschannel channel block
-  include_tasks: get_update_block.yaml
-  vars:
-    script: "syschannel-update-script.sh"
-    channel_name: "{{ sys_channel_name }}"
-    check: "update_block"
+# # Call get_update_block to update the syschannel channel block
+# - name: Call get_update_block to update the syschannel channel block
+#   include_tasks: get_update_block.yaml
+#   vars:
+#     script: "syschannel-update-script.sh"
+#     channel_name: "{{ sys_channel_name }}"
+#     check: "update_block"
 
 # Call get_update_block to fetch the appchannel channels block
 - name: Call get_update_block to update the {{ channel_name }} channel block
