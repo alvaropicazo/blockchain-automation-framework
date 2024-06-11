@@ -61,8 +61,12 @@
   shell: |
     vault kv put {{ org.vault.secret_path | default('secretsv2') }}/{{ org.name | lower }}/ordererOrganizations/{{ component_ns }}/{{ channel.channel_name | lower }}  {{ network.env.type }}GenesisBlock="$(cat {{build_path}}/channel-artifacts/{{ channel.channel_name | lower }}.genesis.block.base64)"
   environment:
-    VAULT_ADDR: "{{ org.vault.url }}"
+    VAULT_ADDR: "{{ org.vault.url }}" 
     VAULT_TOKEN: "{{ org.vault.root_token }}"
+  loop: "{{ network.channels }}"
+  loop_control:
+    loop_var: channel
+  when: add_new_org == 'false' and ('2.5.' in network.version)
 
 # Delete the orderer cli
 - name: "Delete all temp {{ orderer.name }}-{{ org.name }}-cli"
