@@ -23,12 +23,12 @@
       include_role:
         name: "create/new_cli"
       vars:
-        peers: "{{ org.services.peers }}"
+        peers: "{{ org.services.orderers }}"
         docker_url: "{{ network.docker.url }}"
       loop: "{{ network.organizations }}"
       loop_control:
         loop_var: org
-      when: org.type == "peer" and org.org_status == "new"
+      when: org.type == "orderer" and org.org_status == "new"
 
   vars: #These variables can be overriden from the command line
     privilege_escalate: false           #Default to NOT escalate to root privledges
