@@ -31,7 +31,7 @@
     component_ns: "{{ component_name }}"
     kubernetes: "{{ item.k8s }}"
     hr_name: "{{ component_name }}-ca-tools"
-  when: (add_peer is defined and add_peer == 'true') or (refresh_cert is defined and refresh_cert == 'true')
+  when: (add_peer is defined and add_peer == 'true') or (refresh_cert is defined and refresh_cert == 'true')  or (refresh_user_cert is defined and refresh_user_cert == 'true')
 
 # Delete old certificates
 - name: "Delete old certificates"
@@ -39,7 +39,7 @@
   vars:
     org_name: "{{ item.name | lower }}"
     users: "{{ item.users }}"
-  when: (refresh_cert is defined and refresh_cert == 'true') or (refresh_user_cert == 'true')
+  when: (refresh_cert is defined and refresh_cert == 'true') or (is defined and refresh_user_cert == 'true')
 
 # Get Orderer certificates
 - name: "Get Orderer certificates"

@@ -20,8 +20,8 @@
     vault kv delete {{ item.vault.secret_path | default('secretsv2') }}/{{ item.name | lower }}/peerOrganizations/{{ component_name }}/peers/{{peer.name}}.{{ component_name }}/msp
     {% endfor %}
     {% for user in users %}
-    vault kv delete {{ item.vault.secret_path | default('secretsv2') }}/{{ item.name | lower }}/peerOrganizations/{{ component_name }}/users/{{user.name}}/tls
-    vault kv delete {{ item.vault.secret_path | default('secretsv2') }}/{{ item.name | lower }}/peerOrganizations/{{ component_name }}/users/{{user.name}}/msp
+    vault kv delete {{ item.vault.secret_path | default('secretsv2') }}/{{ item.name | lower }}/peerOrganizations/{{ component_name }}/users/{{user.identity}}/tls
+    vault kv delete {{ item.vault.secret_path | default('secretsv2') }}/{{ item.name | lower }}/peerOrganizations/{{ component_name }}/users/{{user.identity}}/msp
     {% endfor %}
     vault kv delete {{ item.vault.secret_path | default('secretsv2') }}/{{ item.name | lower }}/credentials/{{ component_name }}/couchdb/{{ org_name }}
   vars:
@@ -35,8 +35,8 @@
 - name: Delete Crypto for peers
   shell: |
     {% for user in users %}
-    vault kv delete {{ item.vault.secret_path | default('secretsv2') }}/{{ item.name | lower }}/peerOrganizations/{{ component_name }}/users/{{user.name}}/tls
-    vault kv delete {{ item.vault.secret_path | default('secretsv2') }}/{{ item.name | lower }}/peerOrganizations/{{ component_name }}/users/{{user.name}}/msp
+    vault kv delete {{ item.vault.secret_path | default('secretsv2') }}/{{ item.name | lower }}/peerOrganizations/{{ component_name }}/users/{{user.identity}}/tls
+    vault kv delete {{ item.vault.secret_path | default('secretsv2') }}/{{ item.name | lower }}/peerOrganizations/{{ component_name }}/users/{{user.identity}}/msp
     {% endfor %}
   vars:
     peers: "{{ item.services.peers }}"
