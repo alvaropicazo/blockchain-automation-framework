@@ -20,11 +20,11 @@
   no_log: "{{ no_ansible_log | default(false) }}"
   tasks:
 
-    # delete build directory
-    - name: Remove build directory
-      file:
-        path: "./build"
-        state: absent
+    # # delete build directory
+    # - name: Remove build directory
+    #   file:
+    #     path: "./build"
+    #     state: absent
         
     # Create Namespaces and Vault-rbac kubernetes-value files for new organization
     - include_role:
