@@ -1,0 +1,79 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: validator5
+  namespace: sualv-bes
+  annotations:
+    flux.weave.works/automated: "false"
+spec:
+  releaseName: validator5
+  interval: 1m
+  chart:
+   spec:
+    chart: platforms/hyperledger-besu/charts/besu-node
+    sourceRef:
+      kind: GitRepository
+      name: flux-bes-alv
+      namespace: flux-bes-alv
+  values:
+    global:
+      serviceAccountName: vault-auth
+      cluster:
+        provider: azure
+        cloudNativeServices: false
+      vault:
+        type: hashicorp
+        network: besu
+        address: http://98.64.226.131:20001
+        authPath: bes-alvsualv
+        secretEngine: secretsv2
+        secretPrefix: "data/bes-alvsualv"
+        role: vault-role
+      proxy:
+        provider: ambassador
+        externalUrlSuffix: sualv.bes.blockchaincloudpoc-develop.com
+        p2p: 15063
+    storage:
+      enabled: true
+      size: "2Gi"
+    tessera:
+      enabled: false
+    tls:
+      enabled: false
+    image:
+      pullSecret: regcred
+      besu:
+        repository: hyperledger/besu
+        tag: 22.10.2
+    node:
+      removeKeysOnDelete: false
+      isBootnode: False
+      usesBootnodes: false
+      besu:
+        identity: validator5
+        envBesuOpts: ""
+        resources:
+          cpuLimit: 0.25
+          cpuRequest: 0.05
+          memLimit: "1G"
+          memRequest: "300M"
+        p2p:
+          port: 30303
+          discovery: false
+        rpc:
+          port: 8545
+        ws:
+          port: 8546
+        metrics:
+          enabled: True
+          port: 9545
+          serviceMonitorEnabled: False
+        permissions:
+          enabled: False #Add other permissioning params below this
+    labels:
+      service:
+        - component: besu
+      pvc:
+      deployment:
+        - owner: bevel
+        - component: besu
