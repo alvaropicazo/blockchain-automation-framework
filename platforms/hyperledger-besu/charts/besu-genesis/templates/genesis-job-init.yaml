@@ -15,7 +15,7 @@ metadata:
   annotations:
     helm.sh/hook-delete-policy: "hook-succeeded"
 spec:
-  backoffLimit: 3
+  backoffLimit: 10
   template:
     metadata:
       labels:
