@@ -65,4 +65,4 @@ spec:
       ca_url: ca.salvaro-net:7054
 
     orderers:
-      name: orderer7-orderer8-
+      name: orderer5-orderer6-
