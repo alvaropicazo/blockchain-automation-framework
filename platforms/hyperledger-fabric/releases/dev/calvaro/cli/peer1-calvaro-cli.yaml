@@ -1,0 +1,44 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: peer1-calvaro-cli
+  namespace: calvaro-net
+  annotations:
+    fluxcd.io/automated: "false"
+spec:
+  interval: 1m
+  releaseName: peer1-calvaro-cli
+  chart:
+    spec:
+      interval: 1m
+      sourceRef:
+        kind: GitRepository
+        name: flux-fabric-alvaro
+        namespace: flux-fabric-alvaro
+      chart: platforms/hyperledger-fabric/charts/fabric-cli    
+  values:
+    metadata:
+      namespace: calvaro-net
+      images:
+        fabrictools: ghcr.io/hyperledger/bevel-fabric-tools:2.2.2
+        alpineutils: ghcr.io/hyperledger/bevel-alpine:latest
+    storage:
+      class: calvaro-bevel-storageclass
+      size: 256Mi
+    vault:
+      role: vault-role
+      address: http://98.64.226.131:20001
+      authpath: fabric-alvarocalvaro
+      adminsecretprefix: secretsv2/data/calvaro/peerOrganizations/calvaro-net/users/admin
+      orderersecretprefix: secretsv2/data/calvaro/peerOrganizations/calvaro-net/orderer
+      serviceaccountname: vault-auth
+      type: hashicorp
+      imagesecretname: regcred
+      tls: false
+    peer:
+      name: peer1
+      localmspid: calvaroMSP
+      tlsstatus: true
+      address: peer1.calvaro-net.hlf.blockchaincloudpoc-develop.com:443
+    orderer:
+      address: orderer7.hlf.blockchaincloudpoc-develop.com:443
