@@ -21,10 +21,10 @@
   tasks:
 
   # delete build directory
-  - name: Remove build directory
-    file:
-      path: "./build"
-      state: absent
+  # - name: Remove build directory
+  #   file:
+  #     path: "./build"
+  #     state: absent
   # Create Namespaces and Vault-rbac kubernetes-value files for new organization
   - include_role:
       name: "create/namespace"

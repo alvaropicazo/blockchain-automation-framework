@@ -19,10 +19,10 @@
   no_log: "{{ no_ansible_log | default(false) }}"
   tasks:
   # delete build directory
-  - name: Remove build directory
-    file:
-      path: "./build"
-      state: absent
+  # - name: Remove build directory
+  #   file:
+  #     path: "./build"
+  #     state: absent
 
   # Create CA Tools helm-value files and check-in
   - name: Create CA tools for each organization
