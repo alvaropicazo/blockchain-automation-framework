@@ -1,0 +1,52 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: walvaro-net-ca
+  namespace: walvaro-net
+  annotations:
+    fluxcd.io/automated: "false"
+spec:
+  interval: 1m
+  releaseName: walvaro-net-ca
+  chart:
+    spec:
+      interval: 1m
+      sourceRef:
+        kind: GitRepository
+        name: flux-fabric-alvaro
+        namespace: flux-fabric-alvaro
+      chart: platforms/hyperledger-fabric/charts/fabric-ca-server  
+  values:
+    metadata:
+      namespace: walvaro-net
+      images:
+        alpineutils: ghcr.io/hyperledger/bevel-alpine:latest
+        ca: ghcr.io/hyperledger/bevel-fabric-ca:1.4.8
+ 
+    server:
+      name: ca
+      tlsstatus: true
+      admin: walvaro-admin 
+  
+    storage:
+      storageclassname: walvaro-bevel-storageclass
+      storagesize: 512Mi
+    vault:
+      role: vault-role
+      address: http://98.64.226.131:20001
+      authpath: fabric-alvarowalvaro
+      secretcert: secretsv2/data/walvaro/peerOrganizations/walvaro-net/ca?ca.walvaro-net-cert.pem
+      secretkey: secretsv2/data/walvaro/peerOrganizations/walvaro-net/ca?walvaro-net-CA.key
+      secretadminpass: secretsv2/data/walvaro/credentials/walvaro-net/ca/walvaro?user
+      serviceaccountname: vault-auth
+      type: hashicorp
+      imagesecretname: regcred
+    service:
+      servicetype: ClusterIP
+      ports:
+        tcp:
+          clusteripport: 7054
+    proxy:
+      provider: haproxy
+      type: peer
+      external_url_suffix: hlf.blockchaincloudpoc-develop.com
