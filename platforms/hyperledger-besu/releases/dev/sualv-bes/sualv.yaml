@@ -1,12 +1,12 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: validator5
+  name: sualv
   namespace: sualv-bes
   annotations:
     flux.weave.works/automated: "false"
 spec:
-  releaseName: validator5
+  releaseName: sualv
   interval: 1m
   chart:
    spec:
@@ -32,14 +32,50 @@ spec:
       proxy:
         provider: ambassador
         externalUrlSuffix: sualv.bes.blockchaincloudpoc-develop.com
-        p2p: 15063
+        p2p: 15067
+        tmport: 443
     storage:
-      enabled: true
       size: "2Gi"
     tessera:
-      enabled: false
+      enabled: true
+      storage:
+        enabled: false
+        size: 1Gi
+        dbSize: 2Gi
+        allowedTopologies:
+          enabled: false
+      image:  
+        tessera: 
+          repository: quorumengineering/tessera
+          tag: 21.7.3
+        mysql: 
+          repository: mysql/mysql-server
+          tag: 5.7
+        pullSecret: regcred
+      tessera:
+        removeKeysOnDelete: true
+        resources:
+          cpuLimit: 0.25
+          cpuRequest: 0.05
+          memLimit: "2G"
+          memRequest: "1G"
+        password: 'password'
+        port: 443
+        tpport: 9080
+        q2tport: 8888
+        metrics:
+          enabled: True
+          port: 9545
+          serviceMonitorEnabled: False
+        tlsMode: "STRICT"
+        trust: "TOFU"
     tls:
-      enabled: false
+      enabled: true
+      image:
+        pullSecret: regcred
+      settings:
+        certSubject: 'CN=DLT Root CA,OU=DLT,O=DLT,L=London,C=GB'
+        tmTls: True
     image:
       pullSecret: regcred
       besu:
@@ -47,16 +83,18 @@ spec:
         tag: 22.10.2
     node:
       removeKeysOnDelete: false
-      isBootnode: False
+      isBootnode: false
       usesBootnodes: false
       besu:
-        identity: validator5
+        identity: O=Carrier,OU=Carrier,L=51.50/-0.13/London,C=GB
         envBesuOpts: ""
         resources:
           cpuLimit: 0.25
           cpuRequest: 0.05
           memLimit: "1G"
           memRequest: "300M"
+        account:
+          password: 12345
         p2p:
           port: 30303
           discovery: false
@@ -68,6 +106,8 @@ spec:
           enabled: True
           port: 9545
           serviceMonitorEnabled: False
+        privacy:
+          clientport: 8888
         permissions:
           enabled: False #Add other permissioning params below this
     labels:
