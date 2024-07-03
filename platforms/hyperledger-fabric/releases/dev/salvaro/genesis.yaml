@@ -40,7 +40,8 @@ consensus: raft
 channels:
  
  
-  - name: allchannel
+ 
+  - name: channeltwo
     consortium: SupplyChainConsortium
     orderers: 
       - salvaro
@@ -48,6 +49,6 @@ channels:
       - calvaro
 
 settings:
-  generateGenesis: True 
+  generateGenesis: False 
   removeConfigMapOnDelete: false
 
