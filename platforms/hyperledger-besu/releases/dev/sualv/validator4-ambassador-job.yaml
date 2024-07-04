@@ -1,0 +1,36 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: validator4-ambassador-job
+  namespace: sualv-bes
+  annotations:
+    flux.weave.works/automated: "false"
+spec:
+  releaseName: validator4-ambassador-job
+  interval: 1m
+  chart:
+   spec:
+    chart: platforms/hyperledger-besu/charts/besu-tlscert-gen
+    sourceRef:
+      kind: GitRepository
+      name: flux-bes-alv
+      namespace: flux-bes-alv
+  values:
+    image:
+      alpineutils: ghcr.io/hyperledger/bevel-alpine:latest
+      pullSecret: regcred
+      pullPolicy: IfNotPresent
+    settings:
+      tmTls: True
+      certSubject: CN=DLT Root CA/OU=DLT/O=DLT/L=London/C=GB
+      externalURL: validator4.sualv.bes.blockchaincloudpoc-develop.com
+
+    vault:
+      address: http://98.64.226.131:20001
+      secretEngine: secretsv2
+      authPath: bes-alvsualv
+      secretPrefix: data/sualv-bes/crypto/validator4/tls
+      role: vault-role
+      serviceAccountName: vault-auth
+      type: hashicorp
+

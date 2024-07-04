@@ -26,9 +26,9 @@
   gather_facts: no
   no_log: "{{ no_ansible_log | default(false) }}"
   tasks:
-    - name: Fail the playbook until new helm charts are available
-      ansible.builtin.fail:
-        msg: This playbook is deprecated until new helm charts are created.
+  #   - name: Fail the playbook until new helm charts are available
+  #     ansible.builtin.fail:
+  #       msg: This playbook is deprecated until new helm charts are created.
     # delete build directory
     - name: Remove build directory
       file:
