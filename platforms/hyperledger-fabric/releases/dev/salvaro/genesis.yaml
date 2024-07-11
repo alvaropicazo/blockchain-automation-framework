@@ -48,6 +48,6 @@ channels:
       - calvaro
 
 settings:
-  generateGenesis: True 
+  generateGenesis: False 
   removeConfigMapOnDelete: false
 
