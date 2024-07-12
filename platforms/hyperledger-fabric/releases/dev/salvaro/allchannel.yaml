@@ -1,0 +1,32 @@
+global:
+  version: 2.5.4
+  serviceAccountName: vault-auth
+  cluster:
+    provider: azure
+    cloudNativeServices: false
+  vault:
+    type: hashicorp
+    network: fabric
+    address: http://98.64.226.131:20001
+    authPath: fabric-alvarosalvaro
+    secretEngine: secretsv2
+    secretPrefix: "data/fabric-alvarosalvaro"
+    role: vault-role
+    tls: false
+  proxy:
+    provider: haproxy
+    externalUrlSuffix: hlf.blockchaincloudpoc-develop.com
+
+image:
+  fabricTools: ghcr.io/hyperledger/bevel-fabric-tools
+  alpineUtils: ghcr.io/hyperledger/bevel-alpine:latest
+  pullSecret: regcred
+
+orderers:
+  - name: orderer7
+    adminAddress: orderer7.salvaro-net:7055
+  - name: orderer8
+    adminAddress: orderer8.salvaro-net:7055
+
+addOrderer: false
+
