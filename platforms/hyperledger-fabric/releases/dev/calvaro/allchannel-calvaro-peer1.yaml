@@ -8,9 +8,9 @@ global:
     type: hashicorp
     network: fabric
     address: http://98.64.226.131:20001
-    authPath: fabric-alvarosalvaro
+    authPath: fabric-alvarocalvaro
     secretEngine: secretsv2
-    secretPrefix: "data/fabric-alvarosalvaro"
+    secretPrefix: "data/fabric-alvarocalvaro"
     role: vault-role
     tls: false
   proxy:
@@ -22,11 +22,12 @@ image:
   alpineUtils: ghcr.io/hyperledger/bevel-alpine:latest
   pullSecret: regcred
 
-orderers:
-  - name: orderer7
-    adminAddress: orderer7.salvaro-net:7055
-  - name: orderer8
-    adminAddress: orderer8.salvaro-net:7055
-
-addOrderer: false
-
+peer:
+  name: peer1
+  type: anchor
+  address: peer1.calvaro-net.hlf.blockchaincloudpoc-develop.com:443
+  localMspId: calvaroMSP
+  logLevel: debug
+  tlsStatus: true
+  channelName: allchannel  
+  ordererAddress: orderer7.hlf.blockchaincloudpoc-develop.com:443
