@@ -11,12 +11,11 @@
 # Create the value file for first orderer in orderer organization
 - name: "create valuefile for cli {{ orderer.name }}-{{ org.name }}-{{ channel_name }}"
   include_role:
-    name: helm_component
+    name: k8_component
   vars:
     component_type_name: "{{ org.name | lower }}"
     name: "{{ orderer.name | lower }}"
-    type: "cli"    
-    peer: "{{ orderer }}"
+    type: "orderer_cli_job"    
     component_name: "cli-{{ channel_name }}-{{ org.name }}-{{ orderer.name }}"
     orderer_name: "{{ orderer.name }}"
     component: "{{ org.name | lower}}"
