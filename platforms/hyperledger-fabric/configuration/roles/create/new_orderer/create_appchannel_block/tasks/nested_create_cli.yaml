@@ -24,6 +24,7 @@
     vault: "{{ org.vault }}"
     channel_name: "{{ channel_name }}"
     storage_class: "{{ org.name | lower }}-bevel-storageclass"
+    values_dir: "{{playbook_dir}}/../../../{{org.gitops.release_dir}}/{{ org.name | lower }}"
     release_dir: "{{ build_path }}"
     orderer_component: "{{ orderer.name | lower }}.{{ org.name | lower }}-net"
     orderer_address: "{{ orderer.ordererAddress }}"
