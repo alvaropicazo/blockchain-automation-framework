@@ -16,6 +16,7 @@
     component_type_name: "{{ org.name | lower }}"
     name: "{{ orderer.name | lower }}"
     type: "cli"    
+    peer: "{{ orderer }}"
     component_name: "cli-{{ channel_name }}-{{ org.name }}-{{ orderer.name }}"
     orderer_name: "{{ orderer.name }}"
     component: "{{ org.name | lower}}"
