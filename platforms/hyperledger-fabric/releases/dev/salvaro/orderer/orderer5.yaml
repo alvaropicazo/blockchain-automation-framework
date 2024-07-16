@@ -54,7 +54,7 @@ spec:
         componentSubject: "O=Orderer,L=51.50/-0.13/London,C=GB"
 
       settings:
-        createConfigMaps: True
+        createConfigMaps: False
         refreshCertValue: false
         addPeerValue: false
         removeCertsOnDelete: true
