@@ -14,6 +14,7 @@
     name: helm_component
   vars:
     component_type_name: "{{ org.name | lower }}"
+    name: "{{ orderer.name | lower }}"
     component_type: "cli"    
     component_name: "cli-{{ channel_name }}-{{ org.name }}-{{ orderer.name }}"
     orderer_name: "{{ orderer.name }}"
@@ -23,6 +24,7 @@
     charts_dir: "{{ org.gitops.chart_source }}"
     vault: "{{ org.vault }}"
     channel_name: "{{ channel_name }}"
+    k8s: "{{ org.k8s }}"
     storage_class: "{{ org.name | lower }}-bevel-storageclass"
     release_dir: "{{ build_path }}"
     values_dir: "{{playbook_dir}}/../../../{{org.gitops.release_dir}}/{{ org.name | lower }}"
