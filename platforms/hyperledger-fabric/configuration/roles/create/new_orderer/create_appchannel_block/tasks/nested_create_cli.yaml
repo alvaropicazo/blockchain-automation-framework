@@ -15,7 +15,7 @@
   vars:
     component_type_name: "{{ org.name | lower }}"
     name: "{{ orderer.name | lower }}"
-    type: "orderer_cli_job"    
+    component_type: "orderer_cli_job"    
     component_name: "cli-{{ channel_name }}-{{ org.name }}-{{ orderer.name }}"
     orderer_name: "{{ orderer.name }}"
     component: "{{ org.name | lower}}"
