@@ -1,8 +1,8 @@
 metadata:
   namespace: {{ component_ns }}
   images:
-    fabrictools: {{ docker_url }}/{{ fabric_tools_image[network.version] }}
-    alpineutils: {{ docker_url }}/{{ alpine_image }}
+    fabricTools: {{ docker_url }}/{{ fabric_tools_image }}
+    alpineUtils: {{ docker_url }}/bevel-alpine:{{ bevel_alpine_version }}
 storage:
   class: {{ storage_class }}
   size: 256Mi
