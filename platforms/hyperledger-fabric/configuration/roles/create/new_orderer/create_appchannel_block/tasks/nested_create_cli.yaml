@@ -18,6 +18,7 @@
     type: "cli"    
     component_name: "cli-{{ channel_name }}-{{ org.name }}-{{ orderer.name }}"
     orderer_name: "{{ orderer.name }}"
+    component: "{{ org.name | lower}}"
     component_ns: "{{ org.name | lower}}-net"
     git_url: "{{ org.gitops.git_url }}"
     git_branch: "{{ org.gitops.branch }}"
