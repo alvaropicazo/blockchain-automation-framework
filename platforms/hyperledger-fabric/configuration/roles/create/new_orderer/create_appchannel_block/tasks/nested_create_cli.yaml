@@ -45,7 +45,7 @@
     kubernetes: "{{ org.k8s }}"
     context: "{{ org.k8s.context }}"
     label_selectors:
-      - app = "cli"
+      - app = cli
   register: get_cli
   until: ("Running" in get_cli|json_query('resources[*].status.phase'))
   retries: "{{ network.env.retry_count}}"
