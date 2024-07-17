@@ -41,11 +41,12 @@
 - name: "Check if fabric cli is present"
   k8s_info:
     kind: Pod
-    namespace: "{{ org.name }}-net"
-    kubeconfig: "{{ org.k8s.config_file }}"
+    namespace: "{{ org.name | lower }}-net"
+    component_name: "{{ orderer.name }}"
+    kubernetes: "{{ org.k8s }}"
     context: "{{ org.k8s.context }}"
     label_selectors:
-      - app = cli
+      - app = {{ component_name }}
   register: get_cli
   until: ("Running" in get_cli|json_query('resources[*].status.phase'))
   retries: "{{ network.env.retry_count}}"
