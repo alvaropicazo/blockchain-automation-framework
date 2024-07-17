@@ -41,8 +41,8 @@
 - name: "Check if fabric cli is present"
   k8s_info:
     kind: Pod
-    namespace: "{{ org.name | lower }}-net"
-    kubernetes: "{{ org.k8s }}"
+    namespace: "{{ org.name }}-net"
+    kubeconfig: "{{ org.k8s.config_file }}"
     context: "{{ org.k8s.context }}"
     label_selectors:
       - app = cli
