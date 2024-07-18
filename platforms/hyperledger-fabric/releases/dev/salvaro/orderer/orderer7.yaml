@@ -1,0 +1,93 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: orderer7
+  namespace: salvaro-net
+  annotations:
+    fluxcd.io/automated: "false"
+spec:
+  interval: 1m
+  releaseName: orderer7
+  chart:
+    spec:
+      interval: 1m
+      sourceRef:
+        kind: GitRepository
+        name: flux-fabric-alvaro
+        namespace: flux-fabric-alvaro
+      chart: platforms/hyperledger-fabric/charts/fabric-orderernode
+  values:
+    global:
+      version: 2.5.4
+      serviceAccountName: vault-auth
+      cluster:
+        provider: azure
+        cloudNativeServices: false
+      vault:
+        type: hashicorp
+        network: fabric
+        address: http://98.64.226.131:20001
+        authPath: fabric-alvarosalvaro
+        secretEngine: secretsv2
+        secretPrefix: "data/fabric-alvarosalvaro"
+        role: vault-role
+        tls: false
+      proxy:
+        provider: haproxy
+        externalUrlSuffix: hlf.blockchaincloudpoc-develop.com
+
+    storage:
+      size: 512Mi
+      reclaimPolicy: "Delete" 
+      volumeBindingMode: 
+      allowedTopologies:
+        enabled: false
+
+    certs:
+      generateCertificates: true
+      orgData:
+        caAddress: ca.salvaro-net.hlf.blockchaincloudpoc-develop.com
+        caAdminUser: salvaro-admin
+        caAdminPassword: salvaro-adminpw
+        orgName: salvaro
+        type: orderer
+        componentSubject: "O=Orderer,L=51.50/-0.13/London,C=GB"
+
+      settings:
+        createConfigMaps: True
+        refreshCertValue: false
+        addPeerValue: false
+        removeCertsOnDelete: true
+        removeOrdererTlsOnDelete: true
+
+    image:
+      orderer: ghcr.io/hyperledger/bevel-fabric-orderer
+      alpineUtils: ghcr.io/hyperledger/bevel-alpine:latest
+      pullSecret: regcred
+
+    orderer:
+      consensus: raft
+      logLevel: info
+      localMspId: salvaroMSP
+      tlsStatus: true
+      keepAliveServerInterval: 10s
+      serviceType: ClusterIP
+      ports:
+        grpc:
+          clusterIpPort: 7050
+        metrics: 
+          enabled: False
+          clusterIpPort: 9443
+      resources:
+        limits:
+          memory: 512M
+          cpu: 1
+        requests:
+          memory: 512M
+          cpu: 0.25
+
+
+    healthCheck: 
+      retries: 10
+      sleepTimeAfterError: 15
+
