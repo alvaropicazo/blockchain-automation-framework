@@ -1,4 +1,3 @@
-
 global:
   version: {{ network.version }}
   serviceAccountName: vault-auth
@@ -19,9 +18,9 @@ image:
   fabricTools: {{ docker_url }}/{{ fabric_tools_image }}
   alpineUtils: {{ docker_url }}/bevel-alpine:{{ bevel_alpine_version }}
 {% if network.docker.username is defined and network.docker.password is defined %}
-      pullSecret: regcred
+  pullSecret: regcred
 {% else %}
-      pullSecret: ""
+  pullSecret: ""
 {% endif %}
 
 peerName: {{ orderer.name }}
