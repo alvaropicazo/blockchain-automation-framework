@@ -65,7 +65,7 @@
     KUBECONFIG={{ kubernetes.config_file }} kubectl exec -n {{ org.name }}-net ${PEER_CLI} -- peer channel update -f {{ channel_name }}_update_in_envelope.pb -o {{ ordererAddress }} -c {{ channel_name }} --tls --cafile ${ORDERER_CA}
     KUBECONFIG={{ kubernetes.config_file }} kubectl cp {{ org.name }}-net/${PEER_CLI}:/opt/gopath/src/github.com/hyperledger/fabric/peer/{{ channel_name }}_modified_config.json {{ build_path }}/{{ channel_name }}_config_block_with_added_content.json  
   environment:
-    ORDERER_CA: "/opt/gopath/src/github.com/hyperledger/fabric/crypto/orderer/tls/ca.crt"
+    ORDERER_CA: "/opt/gopath/src/github.com/hyperledger/fabric/orderer/tls/orderer.crt"
   vars: 
     kubernetes: "{{ org.k8s }}"
     ordererAddress: "{{ orderer.ordererAddress }}"
@@ -84,7 +84,7 @@
     KUBECONFIG={{ kubernetes.config_file }} kubectl exec -n {{ org.name }}-net ${PEER_CLI} -- peer channel update -f {{ channel_name }}_update_in_envelope.pb -o {{ ordererAddress }} -c {{ channel_name }} --tls --cafile ${ORDERER_CA}
     KUBECONFIG={{ kubernetes.config_file }} kubectl cp {{ org.name }}-net/${PEER_CLI}:/opt/gopath/src/github.com/hyperledger/fabric/peer/{{ channel_name }}_modified_config.json {{ build_path }}/{{ channel_name }}_config_block_with_added_content.json  
   environment:
-    ORDERER_CA: "/opt/gopath/src/github.com/hyperledger/fabric/crypto/orderer/tls/ca.crt"
+    ORDERER_CA: "/opt/gopath/src/github.com/hyperledger/fabric/orderer/tls/orderer.crt"
   vars: 
     kubernetes: "{{ org.k8s }}"
     ordererAddress: "{{ orderer.name | lower }}.{{ component_ns }}:{{ orderer.grpc.port }}"
@@ -97,7 +97,7 @@
     KUBECONFIG={{ kubernetes.config_file }} kubectl exec -n {{ org.name }}-net ${PEER_CLI} -- peer channel fetch config {{ channel_name }}_latest_config_block.pb -o {{ ordererAddress }} -c {{ channel_name }} --tls --cafile ${ORDERER_CA}
     KUBECONFIG={{ kubernetes.config_file }} kubectl cp {{ org.name }}-net/${PEER_CLI}:/opt/gopath/src/github.com/hyperledger/fabric/peer/{{ channel_name }}_latest_config_block.pb {{ build_path }}/{{ channel_name }}_config_block.pb
   environment:
-    ORDERER_CA: "/opt/gopath/src/github.com/hyperledger/fabric/crypto/orderer/tls/ca.crt"
+    ORDERER_CA: "/opt/gopath/src/github.com/hyperledger/fabric/orderer/tls/orderer.crt"
   vars: 
     kubernetes: "{{ org.k8s }}"
     ordererAddress: "{{ orderer.ordererAddress }}"
@@ -110,7 +110,7 @@
     KUBECONFIG={{ kubernetes.config_file }} kubectl exec -n {{ org.name }}-net ${PEER_CLI} -- peer channel fetch config {{ channel_name }}_latest_config_block.pb -o {{ ordererAddress }} -c {{ channel_name }} --tls --cafile ${ORDERER_CA}
     KUBECONFIG={{ kubernetes.config_file }} kubectl cp {{ org.name }}-net/${PEER_CLI}:/opt/gopath/src/github.com/hyperledger/fabric/peer/{{ channel_name }}_latest_config_block.pb {{ build_path }}/{{ channel_name }}_config_block.pb
   environment:
-    ORDERER_CA: "/opt/gopath/src/github.com/hyperledger/fabric/crypto/orderer/tls/ca.crt"
+    ORDERER_CA: "/opt/gopath/src/github.com/hyperledger/fabric/orderer/tls/orderer.crt"
   vars: 
     kubernetes: "{{ org.k8s }}"
     ordererAddress: "{{ orderer.name | lower }}.{{ component_ns }}:{{ orderer.grpc.port }}"
