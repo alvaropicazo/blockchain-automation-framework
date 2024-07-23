@@ -64,9 +64,9 @@
     KUBECONFIG={{ kubernetes.config_file }} kubectl cp {{ org.name }}-net/${PEER_CLI}:/opt/gopath/src/github.com/hyperledger/fabric/peer/{{ channel_name }}_update_in_envelope.pb {{ build_path }}/{{ channel_name }}_update_in_envelope.pb  
     KUBECONFIG={{ kubernetes.config_file }} kubectl cp {{ org.name }}-net/${PEER_CLI}:/opt/gopath/src/github.com/hyperledger/fabric/peer/{{ channel_name }}_modified_config.json {{ build_path }}/{{ channel_name }}_config_block_with_added_content.json  
   environment:
-    OSN_TLS_CA_ROOT_CERT: "/opt/gopath/src/github.com/hyperledger/fabric/crypto/admin/tls/tlsca.crt"
-    ADMIN_TLS_SIGN_CERT: "/opt/gopath/src/github.com/hyperledger/fabric/crypto/admin/tls/server.crt"
-    ADMIN_TLS_PRIVATE_KEY: "/opt/gopath/src/github.com/hyperledger/fabric/crypto/admin/tls/server.key"
+    OSN_TLS_CA_ROOT_CERT: "/opt/gopath/src/github.com/hyperledger/fabric/crypto/tls/msp/tlsca.crt"
+    ADMIN_TLS_SIGN_CERT: "/opt/gopath/src/github.com/hyperledger/fabric/crypto/tls/msp/server.crt"
+    ADMIN_TLS_PRIVATE_KEY: "/opt/gopath/src/github.com/hyperledger/fabric/crypto/tls/msp/server.key"
     ORDERER_CA: "/opt/gopath/src/github.com/hyperledger/fabric/orderer/tls/orderer.crt"
 
   vars: 
@@ -115,6 +115,9 @@
     KUBECONFIG={{ kubernetes.config_file }} kubectl cp {{ org.name }}-net/${PEER_CLI}:/opt/gopath/src/github.com/hyperledger/fabric/peer/{{ channel_name }}_signed_config_block.pb {{ build_path }}/{{ channel_name }}_config_block.pb
   environment:
     ORDERER_CA: "/opt/gopath/src/github.com/hyperledger/fabric/orderer/tls/orderer.crt"
+    OSN_TLS_CA_ROOT_CERT: "/opt/gopath/src/github.com/hyperledger/fabric/crypto/tls/msp/tlsca.crt"
+    ADMIN_TLS_SIGN_CERT: "/opt/gopath/src/github.com/hyperledger/fabric/crypto/tls/msp/server.crt"
+    ADMIN_TLS_PRIVATE_KEY: "/opt/gopath/src/github.com/hyperledger/fabric/crypto/tls/msp/server.key"
   vars: 
     kubernetes: "{{ org.k8s }}"
     ordererAddress: "{{ orderer.ordererAddress }}"
