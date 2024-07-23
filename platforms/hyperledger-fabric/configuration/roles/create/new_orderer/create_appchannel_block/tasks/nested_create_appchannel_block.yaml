@@ -80,9 +80,3 @@
   include_tasks: nested_create_cli.yaml
   vars:
     orderer: "{{ org.services.orderers | first }}"
-
-# Sign by other peers the pb file
-- name: Call nested_create_cli for the first orderer
-  include_tasks: sign_nested_block.yaml
-  vars:
-    orderer: "{{ org.services.orderers | first }}"
