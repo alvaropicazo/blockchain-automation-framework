@@ -185,6 +185,7 @@ spec:
 
             OUTPUT_PATH="${MOUNT_PATH}/admin/msp"
             OUTPUT_TLS_PATH="${MOUNT_PATH}/tls/msp"
+            mkdir -p ${OUTPUT_TLS_PATH}
             mkdir -p ${OUTPUT_PATH}/admincerts
             mkdir -p ${OUTPUT_PATH}/cacerts
             mkdir -p ${OUTPUT_PATH}/keystore
