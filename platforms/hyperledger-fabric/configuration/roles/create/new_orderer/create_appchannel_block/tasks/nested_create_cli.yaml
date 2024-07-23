@@ -61,7 +61,7 @@
     KUBECONFIG={{ kubernetes.config_file }} kubectl cp {{ build_path }}/update-channel-script.sh {{ org.name }}-net/${PEER_CLI}:/opt/gopath/src/github.com/hyperledger/fabric/peer/update_consenter.sh
     KUBECONFIG={{ kubernetes.config_file }} kubectl exec -n {{ org.name }}-net ${PEER_CLI} -- chmod 777 ./update_consenter.sh
     KUBECONFIG={{ kubernetes.config_file }} kubectl exec -n {{ org.name }}-net ${PEER_CLI} -- sh ./update_consenter.sh
-    KUBECONFIG={{ kubernetes.config_file }} kubectl cp {{ org.name }}-net/${PEER_CLI}:/opt/gopath/src/github.com/hyperledger/fabric/peer/{{ channel_name }}}_update_in_envelope.pb {{ build_path }}/{{ channel_name }}}_update_in_envelope.pb  
+    KUBECONFIG={{ kubernetes.config_file }} kubectl cp {{ org.name }}-net/${PEER_CLI}:/opt/gopath/src/github.com/hyperledger/fabric/peer/{{ channel_name }}_update_in_envelope.pb {{ build_path }}/{{ channel_name }}}_update_in_envelope.pb  
     KUBECONFIG={{ kubernetes.config_file }} kubectl cp {{ org.name }}-net/${PEER_CLI}:/opt/gopath/src/github.com/hyperledger/fabric/peer/{{ channel_name }}_modified_config.json {{ build_path }}/{{ channel_name }}_config_block_with_added_content.json  
   environment:
     OSN_TLS_CA_ROOT_CERT: "/opt/gopath/src/github.com/hyperledger/fabric/crypto/admin/tls/tlsca.crt"
@@ -96,7 +96,7 @@
 - name: sign the latest block from the blockchain by peer node
   shell: |
     export PEER_CLI=$(KUBECONFIG={{ org.k8s.config_file }} kubectl get po -n {{ org_peer.name }}-net | grep "cli" | head -n 1 | awk '{print $1}')
-    KUBECONFIG={{ kubernetes.config_file }} kubectl cp {{ build_path }}/{{ channel_name }}}_update_in_envelope.pb {{ org_peer.name }}-net/${PEER_CLI}:/opt/gopath/src/github.com/hyperledger/fabric/peer/{{ channel_name }}_update_in_envelope.pb
+    KUBECONFIG={{ kubernetes.config_file }} kubectl cp {{ build_path }}/{{ channel_name }}_update_in_envelope.pb {{ org_peer.name }}-net/${PEER_CLI}:/opt/gopath/src/github.com/hyperledger/fabric/peer/{{ channel_name }}_update_in_envelope.pb
     KUBECONFIG={{ kubernetes.config_file }} kubectl exec -n {{ org_peer.name }}-net ${PEER_CLI} -- peer channel signconfigtx -f /opt/gopath/src/github.com/hyperledger/fabric/peer/{{ channel_name }}_update_in_envelope.pb
     KUBECONFIG={{ kubernetes.config_file }} kubectl cp {{ org_peer.name }}-net/${PEER_CLI}:/opt/gopath/src/github.com/hyperledger/fabric/peer/{{ channel_name }}_update_in_envelope.pb {{ build_path }}/{{ channel_name }}_signed_config_block.pb
   environment:
