@@ -59,6 +59,8 @@
     KUBECONFIG={{ kubernetes.config_file }} kubectl exec -n {{ org.name }}-net ${PEER_CLI} -- peer channel fetch config {{ channel_name }}_config_block.pb -o {{ existingOrdererAddress }} -c {{ channel_name }} --tls --cafile ${ORDERER_CA}
     KUBECONFIG={{ kubernetes.config_file }} kubectl exec -n {{ org.name }}-net ${PEER_CLI} -- osnadmin channel join --channelID {{ channel_name }}  --config-block {{ channel_name }}_config_block.pb -o {{ orderer.name }}.{{ component_ns }}:7055 --ca-file ${OSN_TLS_CA_ROOT_CERT} --client-cert ${ADMIN_TLS_SIGN_CERT} --client-key ${ADMIN_TLS_PRIVATE_KEY}
     KUBECONFIG={{ kubernetes.config_file }} kubectl cp {{ build_path }}/update-channel-script.sh {{ org.name }}-net/${PEER_CLI}:/opt/gopath/src/github.com/hyperledger/fabric/peer/update_consenter.sh
+    KUBECONFIG={{ kubernetes.config_file }} kubectl cp {{ build_path }}/channel-artifacts/{{ channel_name | lower}}-orderer {{ org.name }}-net/${PEER_CLI}:/opt/gopath/src/github.com/hyperledger/fabric/peer/orderer
+    KUBECONFIG={{ kubernetes.config_file }} kubectl cp {{ build_path }}/channel-artifacts/{{ channel_name | lower}}-orderer-tls {{ org.name }}-net/${PEER_CLI}:/opt/gopath/src/github.com/hyperledger/fabric/peer/orderer-tls
     KUBECONFIG={{ kubernetes.config_file }} kubectl exec -n {{ org.name }}-net ${PEER_CLI} -- chmod 777 ./update_consenter.sh
     KUBECONFIG={{ kubernetes.config_file }} kubectl exec -n {{ org.name }}-net ${PEER_CLI} -- sh ./update_consenter.sh
     KUBECONFIG={{ kubernetes.config_file }} kubectl cp {{ org.name }}-net/${PEER_CLI}:/opt/gopath/src/github.com/hyperledger/fabric/peer/{{ channel_name }}_update_in_envelope.pb {{ build_path }}/{{ channel_name }}_update_in_envelope.pb  
