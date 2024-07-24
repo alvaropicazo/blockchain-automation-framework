@@ -107,6 +107,7 @@
       build_path: "./build"
       channel_name: "{{ channel.channel_name | lower }}"
       org_peer: "{{ channel.participants | first}}"
+      existingOrdererAddress: "{{ org_peer.ordererAddress }}"
       peer: "{{ org_peer.peers | first }}"
       docker_url: "{{ network.docker.url }}"
     loop: "{{ network.channels }}"

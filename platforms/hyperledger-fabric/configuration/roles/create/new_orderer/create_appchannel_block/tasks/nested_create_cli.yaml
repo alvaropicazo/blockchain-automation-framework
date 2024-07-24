@@ -56,7 +56,7 @@
 - name: fetch and update the configuration block from the blockchain
   shell: |
     export PEER_CLI=$(KUBECONFIG={{ org.k8s.config_file }} kubectl get po -n {{ org.name }}-net | grep "fabric-cli" | head -n 1 | awk '{print $1}')
-    KUBECONFIG={{ kubernetes.config_file }} kubectl exec -n {{ org.name }}-net ${PEER_CLI} -- peer channel fetch config {{ channel_name }}_config_block.pb -o {{ ordererAddress }} -c {{ channel_name }} --tls --cafile ${ORDERER_CA}
+    KUBECONFIG={{ kubernetes.config_file }} kubectl exec -n {{ org.name }}-net ${PEER_CLI} -- peer channel fetch config {{ channel_name }}_config_block.pb -o {{ existingOrdererAddress }} -c {{ channel_name }} --tls --cafile ${ORDERER_CA}
     KUBECONFIG={{ kubernetes.config_file }} kubectl exec -n {{ org.name }}-net ${PEER_CLI} -- osnadmin channel join --channelID {{ channel_name }}  --config-block {{ channel_name }}_config_block.pb -o {{ ordererAddress }} --ca-file ${OSN_TLS_CA_ROOT_CERT} --client-cert ${ADMIN_TLS_SIGN_CERT} --client-key ${ADMIN_TLS_PRIVATE_KEY}
     KUBECONFIG={{ kubernetes.config_file }} kubectl cp {{ build_path }}/update-channel-script.sh {{ org.name }}-net/${PEER_CLI}:/opt/gopath/src/github.com/hyperledger/fabric/peer/update_consenter.sh
     KUBECONFIG={{ kubernetes.config_file }} kubectl exec -n {{ org.name }}-net ${PEER_CLI} -- chmod 777 ./update_consenter.sh
