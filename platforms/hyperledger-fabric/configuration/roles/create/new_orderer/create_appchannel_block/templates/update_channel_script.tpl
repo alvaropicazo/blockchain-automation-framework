@@ -29,10 +29,11 @@ if [ "$NETWORK_VERSION" != "2.5.4" ]; then
 else
     echo "version 2.5.4++++"
     echo "installing python"
-    apt-get install python3
+    apt-get install -y python3
     python3 add_new_orderer_to_config.py {{ channel_name }}_config.json {{ channel_name }}_modified_config.json \
     -a {{ ordererAddress }} \
     -i /opt/gopath/src/github.com/hyperledger/fabric/crypto/admin/msp/signcerts/server.crt \
+    -o {{ ordererOrg }} \
     -s ${ORDERER_CA} \
     -c ${ORDERER_CA}
     jq --argjson a "$(cat ./orderer)" '.channel_group.values.OrdererAddresses.value.addresses += $a' {{ channel_name }}_config.json > {{ channel_name }}_modified_intermediate_address_config.json

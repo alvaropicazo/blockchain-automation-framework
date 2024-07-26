@@ -72,6 +72,7 @@
   vars:
     component_name: "{{ org.name | lower }}"
     ordererAddress: "{{ orderer.ordererAddress }}"
+    ordererOrg: "{{ org.name | lower }}MSP"
     os: "{{ fabric.os }}"
     arch: "{{ fabric.arch }}"
     version: "{{ network.version }}"

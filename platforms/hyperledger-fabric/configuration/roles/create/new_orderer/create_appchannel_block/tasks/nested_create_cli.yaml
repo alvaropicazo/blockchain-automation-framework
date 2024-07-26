@@ -74,6 +74,7 @@
   vars: 
     kubernetes: "{{ org.k8s }}"
     ordererAddress: "{{ orderer.ordererAddress }}"
+    ordererOrg: "{{ org.name }}MSP"
   when: network.env.proxy != 'none'
 
 # Fetch and update the configuration block from the blockchain for proxy none

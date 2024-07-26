@@ -66,6 +66,7 @@
     dest: "{{ build_path }}/update-channel-script.sh"
   vars:
     ordererAddress: "{{ orderer.ordererAddress }}"
+    ordererOrg: "{{ org.name | lower }}MSP"
     os: "{{ fabric.os }}"
     arch: "{{ fabric.arch }}"
     version: "{{ network.version }}"

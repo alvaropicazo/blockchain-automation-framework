@@ -19,6 +19,7 @@ def parse_args():
     parser.add_argument('updated_config_path', type=str)
     parser.add_argument('-a', '--address', type=str, required=True)
     parser.add_argument('-i', '--identity', type=str, required=True)
+    parser.add_argument('-o', '--orderer', type=str, required=True)
     parser.add_argument('-s', '--server-cert', type=str, required=True)
     parser.add_argument('-c', '--client-cert', type=str, required=True)
     return parser.parse_args()
@@ -45,7 +46,7 @@ def _calculate_bft_quorum(n: int) -> int:
     return int(math.ceil((n + f + 1) / 2))
 
 
-def update_config(config_path: str, updated_config_path: str, address: str, identity_pem_path: str, server_pem_path: str, client_pem_path: str):
+def update_config(config_path: str, updated_config_path: str, address: str, identity_pem_path: str, orderer_org: str, server_pem_path: str, client_pem_path: str):
     with open(config_path, 'r') as f:
         config = json.load(f)
     identity = _pem_file_to_base64(identity_pem_path)
@@ -53,7 +54,7 @@ def update_config(config_path: str, updated_config_path: str, address: str, iden
     server_cert = _pem_file_to_base64(server_pem_path)
     host, port = address.split(':')
 
-    addresses = config['channel_group']['groups']['Orderer']['groups']['OrdererOrg']['values']['Endpoints']['value']['addresses']
+    addresses = config['channel_group']['groups']['Orderer']['groups'][orderer_org]['values']['Endpoints']['value']['addresses']
     addresses_before_update = copy.deepcopy(addresses)
     original_orderers_count = len(addresses_before_update)
     addresses.append(f'{addresses[0].split(":")[0]}:{port}')
@@ -93,6 +94,6 @@ def update_config(config_path: str, updated_config_path: str, address: str, iden
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
     args = parse_args()
-    update_config(args.config_path, args.updated_config_path, args.address, args.identity, args.server_cert, args.client_cert)
+    update_config(args.config_path, args.updated_config_path, args.address, args.identity, args.orderer_org, args.server_cert, args.client_cert)
 
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/
