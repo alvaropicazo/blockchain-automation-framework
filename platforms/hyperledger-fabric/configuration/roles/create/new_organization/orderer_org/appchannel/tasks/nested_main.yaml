@@ -64,7 +64,8 @@
   template:
     src: "update_channel_script.tpl"
     dest: "{{ build_path }}/update-channel-script.sh"
-  vars:    
+  vars:
+    ordererAddress: "{{ orderer.ordererAddress }}"
     os: "{{ fabric.os }}"
     arch: "{{ fabric.arch }}"
     version: "{{ network.version }}"

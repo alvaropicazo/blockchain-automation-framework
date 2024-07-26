@@ -71,6 +71,7 @@
     dest: "{{ build_path }}/update-channel-script.sh"
   vars:
     component_name: "{{ org.name | lower }}"
+    ordererAddress: "{{ orderer.ordererAddress }}"
     os: "{{ fabric.os }}"
     arch: "{{ fabric.arch }}"
     version: "{{ network.version }}"

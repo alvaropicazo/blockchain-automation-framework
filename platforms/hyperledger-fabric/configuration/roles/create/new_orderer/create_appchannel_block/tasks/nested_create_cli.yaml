@@ -71,7 +71,6 @@
     ADMIN_TLS_SIGN_CERT: "/opt/gopath/src/github.com/hyperledger/fabric/crypto/tls/msp/server.crt"
     ADMIN_TLS_PRIVATE_KEY: "/opt/gopath/src/github.com/hyperledger/fabric/crypto/tls/msp/server.key"
     ORDERER_CA: "/opt/gopath/src/github.com/hyperledger/fabric/orderer/tls/orderer.crt"
-
   vars: 
     kubernetes: "{{ org.k8s }}"
     ordererAddress: "{{ orderer.ordererAddress }}"
