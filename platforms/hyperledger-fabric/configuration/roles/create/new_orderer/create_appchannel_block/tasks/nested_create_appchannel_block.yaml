@@ -47,9 +47,7 @@
   environment:
     VAULT_ADDR: "{{ vault.url }}"
     VAULT_TOKEN: "{{ vault.root_token }}"
-  loop: "{{ orderers }}"
-  loop_control:
-    loop_var: orderer
+
 # Create orderer-tls for tls certificate information
 - name: "adding tls certificate information"
   shell: |
