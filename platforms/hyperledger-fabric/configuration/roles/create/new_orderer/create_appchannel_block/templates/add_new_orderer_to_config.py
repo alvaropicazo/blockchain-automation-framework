@@ -68,8 +68,7 @@ def update_config(config_path: str, updated_config_path: str, address: str, iden
     identities.append(new_identity)
     _log_update('block validation identities', identities_before_update, identities)
 
-    rule = config['channel_group']['groups']['Orderer']['policies']['BlockValidation']['policy']['value'][
-        'rule']
+    rule = config['channel_group']['groups']['Orderer']['policies']['BlockValidation']['policy']['value']['rule']
     rule_before_update = copy.deepcopy(rule)
     rule['n_out_of']['n'] = _calculate_bft_quorum(new_orderers_count)
     rule['n_out_of']['rules'].append({'signed_by': new_orderers_count - 1})
