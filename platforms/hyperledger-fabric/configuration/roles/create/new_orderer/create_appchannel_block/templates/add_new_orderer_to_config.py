@@ -94,6 +94,6 @@ def update_config(config_path: str, updated_config_path: str, address: str, iden
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
     args = parse_args()
-    update_config(args.config_path, args.updated_config_path, args.address, args.identity, args.orderer_org, args.server_cert, args.client_cert)
+    update_config(args.config_path, args.updated_config_path, args.address, args.identity, args.orderer, args.server_cert, args.client_cert)
 
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/
