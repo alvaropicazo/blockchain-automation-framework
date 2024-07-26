@@ -6,6 +6,7 @@ CURRENT_DIR=${PWD}
 NETWORK_VERSION="{{ version }}"
 
 echo "installing jq "
+apt-get update
 apt-get install -y jq
 if [ "$NETWORK_VERSION" != "2.5.4" ]; then
     echo "installing configtxlator"
