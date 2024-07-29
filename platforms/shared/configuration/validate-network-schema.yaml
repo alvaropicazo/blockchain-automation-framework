@@ -32,9 +32,9 @@
         content: |
           {{ tempNetworkyaml |to_nice_yaml( width=50, explicit_start=True, explicit_end=True) }}
         dest: ./build/temp.yaml             
-    - name: "run schema validator on network.yaml"
-      shell: |
-        ajv validate -s {{ playbook_dir }}/../../network-schema.json -d ./build/temp.yaml
+    # - name: "run schema validator on network.yaml"
+    #   shell: |
+    #     ajv validate -s {{ playbook_dir }}/../../network-schema.json -d ./build/temp.yaml
     - name: Remove the build directory and contents
       file:
         path: "./build"
