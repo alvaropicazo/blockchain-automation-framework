@@ -87,12 +87,6 @@
     arch: "{{ fabric.arch }}"
     version: "{{ network.version }}"
 
-# Copy add_new_orderer_to_config python script for version 2.5.x
-- name: "Copy add_new_orderer_to_config python script "
-  template:
-    src: "add_new_orderer_to_config.py"
-    dest: "{{ build_path }}/add_new_orderer_to_config.py"
-
 # Call nested_create_cli to generate the cli value files for the orderer organization
 - name: Call nested_create_cli for the first orderer
   include_tasks: nested_create_cli.yaml
