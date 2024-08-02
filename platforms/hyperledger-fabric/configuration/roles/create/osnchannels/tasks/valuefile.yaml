@@ -64,6 +64,8 @@
     git_branch: "{{ org.gitops.branch }}"
     charts_dir: "{{ org.gitops.chart_source }}"
     vault: "{{ org.vault }}"
+    existing_orderer: "{{ network.orderers | first }}"
+    existingOrdererAddress: "{{ existing_orderer.uri }}"
     k8s: "{{ org.k8s }}"
     orderers_list: "{{ org.services.orderers }}"
     first_orderer: "{{ org.services.orderers | first }}"

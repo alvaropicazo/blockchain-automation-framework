@@ -2,26 +2,26 @@
 global:
   serviceAccountName: vault-auth
   cluster:
-    provider: azure
+    provider: aws
     cloudNativeServices: false
-    kubernetesUrl: "https://yourkubernetes.com"
+    kubernetesUrl: https://25B52ACACF9BEB99DFD3C53B47616C90.gr7.eu-west-1.eks.amazonaws.com
   vault:
     type: hashicorp
     role: vault-role
-    address: http://vault.url:8200
-    authPath: carrier
+    address: http://vault.internal.dev.aws.blockchaincloudpoc-develop.com:20002
+    authPath: calvaro
     secretEngine: secretsv2
-    secretPrefix: "data/carrier"
+    secretPrefix: "data/calvaro"
     tls: false
   proxy:
     provider: haproxy
-    externalUrlSuffix: test.yourdomain.com
+    externalUrlSuffix: hlf.blockchaincloudpoc-develop.com
 
 storage:
   size: 512Mi
 server:
   removeCertsOnDelete: true
   tlsStatus: true
-  adminUsername: carrier-admin
-  adminPassword: carrier-adminpw
+  adminUsername: calvaro-admin
+  adminPassword: calvaro-adminpw
   subject: /C=GB/ST=London/L=London/O=Carrier

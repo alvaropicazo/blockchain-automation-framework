@@ -3,27 +3,27 @@ global:
   version: 2.5.4
   serviceAccountName: vault-auth
   cluster:
-    provider: azure
+    provider: aws
     cloudNativeServices: false
   vault:
     type: hashicorp
     role: vault-role
-    address: http://vault.url:8200
-    authPath: supplychain
+    address: http://vault.internal.dev.aws.blockchaincloudpoc-develop.com:20002
+    authPath: salvaro
     secretEngine: secretsv2
-    secretPrefix: "data/supplychain"
+    secretPrefix: "data/salvaro"
     tls: false
   proxy:
     provider: haproxy
-    externalUrlSuffix: test.yourdomain.com
+    externalUrlSuffix: hlf.blockchaincloudpoc-develop.com
 
 certs:
   generateCertificates: true
   orgData:
-    caAddress: ca.supplychain-net.test.yourdomain.com
-    caAdminUser: supplychain-admin
-    caAdminPassword: supplychain-adminpw
-    orgName: supplychain
+    caAddress: ca.salvaro-net.hlf.blockchaincloudpoc-develop.com
+    caAdminUser: salvaro-admin
+    caAdminPassword: salvaro-adminpw
+    orgName: salvaro
     type: orderer
     componentSubject: "O=Orderer,L=51.50/-0.13/London,C=GB"
   settings:
@@ -37,5 +37,5 @@ certs:
 orderer:
   consensus: raft
   logLevel: info
-  localMspId: supplychainMSP
+  localMspId: salvaroMSP
   tlsstatus: true

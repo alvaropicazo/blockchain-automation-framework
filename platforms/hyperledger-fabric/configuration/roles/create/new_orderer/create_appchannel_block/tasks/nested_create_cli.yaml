@@ -51,12 +51,13 @@
   retries: "{{ network.env.retry_count}}"
   delay: 40
 
+
+
 # Fetch block and join channel from the blockchain using proxy
 - name: fetch and update the configuration block from the blockchain
   shell: |
     export PEER_CLI=$(KUBECONFIG={{ org.k8s.config_file }} kubectl get po -n {{ org.name }}-net | grep "fabric-cli" | head -n 1 | awk '{print $1}')
     KUBECONFIG={{ kubernetes.config_file }} kubectl exec -n {{ org.name }}-net ${PEER_CLI} -- peer channel fetch config {{ channel_name }}_config_block.pb -o {{ existingOrdererAddress }} -c {{ channel_name }} --tls --cafile ${ORDERER_CA}
-    KUBECONFIG={{ kubernetes.config_file }} kubectl exec -n {{ org.name }}-net ${PEER_CLI} -- osnadmin channel join --channelID {{ channel_name }}  --config-block {{ channel_name }}_config_block.pb -o {{ orderer.name }}.{{ component_ns }}:7055 --ca-file ${OSN_TLS_CA_ROOT_CERT} --client-cert ${ADMIN_TLS_SIGN_CERT} --client-key ${ADMIN_TLS_PRIVATE_KEY}
   environment:
     OSN_TLS_CA_ROOT_CERT: "/opt/gopath/src/github.com/hyperledger/fabric/crypto/tls/msp/tlsca.crt"
     ADMIN_TLS_SIGN_CERT: "/opt/gopath/src/github.com/hyperledger/fabric/crypto/tls/msp/server.crt"
@@ -68,6 +69,9 @@
     ordererOrg: "{{ org.name }}MSP"
   when: network.env.proxy != 'none'
 
+- pause:
+    minutes: 840
+    
 # Fetch block and join channel from the blockchain for proxy none
 - name: Fetch and update the configuration block from the blockchain for proxy none
   shell: |

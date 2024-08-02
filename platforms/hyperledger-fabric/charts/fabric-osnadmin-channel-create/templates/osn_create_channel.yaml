@@ -101,6 +101,10 @@ spec:
             echo "${TLS_CA_CERT}" > ${OUTPUT_PATH}/ca.crt
             echo "${TLS_SERVER_CERT}" > ${OUTPUT_PATH}/server.crt
             echo "${TLS_SERVER_KEY}" > ${OUTPUT_PATH}/server.key
+
+            echo "WHERE IS IT BEING SAVED"
+            echo ${OUTPUT_PATH}
+            echo ${PWD}
           }
 
           function getOrdererMspSecret {
@@ -129,7 +133,7 @@ spec:
             CACERT=$(echo ${KUBENETES_SECRET} | jq -r '.data.cacrt'  | base64 -d)
             CLIENTSEVER=$(echo ${KUBENETES_SECRET} | jq -r '.data.servercrt'  | base64 -d)
             CLIENTKEY=$(echo ${KUBENETES_SECRET} | jq -r '.data.serverkey'  | base64 -d)
-            
+
             echo "${CACERT}" > ${OUTPUT_PATH}/ca.crt
             echo "${CLIENTSEVER}" > ${OUTPUT_PATH}/server.crt
             echo "${CLIENTKEY}" > ${OUTPUT_PATH}/server.key
@@ -210,7 +214,7 @@ spec:
           if [ $ADD_ORDERER = false ]
           then
             cat ./genesis/genesis.block.base64 | base64 -d > orderer.genesis.block
-          else 
+          else
             peer channel fetch config ${CHANNEL_NAME}_config_block.pb -o ${CORE_PEER_ADDRESS} -c ${CHANNEL_NAME} --tls --cafile ${ORDERER_CA}
           fi 
 
@@ -222,9 +226,14 @@ spec:
             # The ORDERER_URL is hardcoded to use local orderer URL as of now
             ORDERER_URL="{{ .adminAddress }}"
 
+            echo ${OSN_TLS_CA_ROOT_CERT}
+            echo $(cat /opt/gopath/src/github.com/hyperledger/fabric/crypto/tls/msp/tlsca.crt)
+
+            echo $(cat ${OSN_TLS_CA_ROOT_CERT})
+            echo ${ORDERER_URL}
+
             CHANNEL_LIST_QUERY_RESPONSE=$(osnadmin channel list --channelID ${CHANNEL_NAME} -o "${ORDERER_URL}" --ca-file "${OSN_TLS_CA_ROOT_CERT}" --client-cert "${ADMIN_TLS_SIGN_CERT}" --client-key "${ADMIN_TLS_PRIVATE_KEY}")
             if echo "$CHANNEL_LIST_QUERY_RESPONSE" | grep '404'; then
-              echo "Creating channel....."
               if [ $ADD_ORDERER = false ]
               then
                 osnadmin channel join --channelID "${CHANNEL_NAME}" --config-block orderer.genesis.block -o "${ORDERER_URL}" --ca-file "${OSN_TLS_CA_ROOT_CERT}" --client-cert "${ADMIN_TLS_SIGN_CERT}" --client-key "${ADMIN_TLS_PRIVATE_KEY}"
