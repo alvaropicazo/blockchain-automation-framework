@@ -57,7 +57,7 @@
   vars:
     name: "{{ org.name | lower }}"
     type: "osn_create_channel_job"
-    component_name: "{{ channel_name }}"
+    component_name: "{{ channel_name }}_new"
     component_ns: "{{ org.name | lower}}-net"
     git_protocol: "{{ org.gitops.git_protocol }}"
     git_url: "{{ org.gitops.git_url }}"
