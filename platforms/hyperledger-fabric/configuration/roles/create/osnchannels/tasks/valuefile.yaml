@@ -50,6 +50,14 @@
     add_orderer_value: "{{ add_orderer | default('false') }}"
   when: add_orderer is not defined or add_orderer == false
 
+- name: Delete Helm releases
+  kubernetes.core.helm:
+    kubeconfig: "{{ kubernetes.config_file }}"
+    name: "{{ channel_name }}"
+    release_namespace: "{{ org.name | lower }}-net"
+    state: absent
+  when: add_orderer is defined and add_orderer == 'true'
+
 # Create the value file for creator Organization
 - name: "Create Create_Channel value file osnadmin"
   include_role:
@@ -57,7 +65,7 @@
   vars:
     name: "{{ org.name | lower }}"
     type: "osn_create_channel_job"
-    component_name: "{{ channel_name }}new"
+    component_name: "{{ channel_name }}"
     component_ns: "{{ org.name | lower}}-net"
     git_protocol: "{{ org.gitops.git_protocol }}"
     git_url: "{{ org.gitops.git_url }}"
