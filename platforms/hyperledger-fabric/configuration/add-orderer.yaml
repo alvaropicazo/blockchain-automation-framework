@@ -114,7 +114,7 @@
     loop: "{{ network.channels }}"
     loop_control:
       loop_var: channel
-    when: org.type == 'orderer' and '2.5.' not in network.version
+    when: '2.5.' not in network.version
 
   vars: #These variables can be overriden from the command line
     add_new_org: 'false'                #Default for this playbook is false
