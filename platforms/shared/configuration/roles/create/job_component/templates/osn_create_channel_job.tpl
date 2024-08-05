@@ -38,7 +38,7 @@ orderers:
 
 addOrderer: {{ add_orderer_value }}
 
-{% if add_orderer is defined and add_orderer == true  %}
+{% if add_orderer_value is defined and add_orderer_value == true  %}
 orderer:
   name: {{ first_orderer.name }}
   localMspId: {{ org.name | lower}}MSP
