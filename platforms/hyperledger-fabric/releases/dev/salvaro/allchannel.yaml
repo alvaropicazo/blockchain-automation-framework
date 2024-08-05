@@ -28,3 +28,7 @@ orderers:
 
 addOrderer: true
 
+orderer:
+  name: orderer5
+  localMspId: salvaroMSP
+  address: orderer7.salvaro-net.hlf.blockchaincloudpoc-develop.com:443
