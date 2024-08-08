@@ -12,7 +12,7 @@
 - name: Delete docker creds
   k8s:
     kind: Secret
-    namespace: "{{ component_name }}"
+    namespace: "{{ component_ns }}"
     name: "regcred"
     state: absent
     kubeconfig: "{{ kubernetes.config_file }}"

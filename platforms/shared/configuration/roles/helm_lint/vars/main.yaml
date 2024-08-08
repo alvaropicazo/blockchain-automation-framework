@@ -71,5 +71,3 @@ charts:
   stewards: indy-node
   corda_ent_notary: enterprise-node
   corda_ent_network_map: cenm-networkmap
-  corda_ent_node: enterprise-node
-
