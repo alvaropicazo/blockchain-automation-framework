@@ -6,20 +6,20 @@ global:
     type: kubernetes
 
   cluster:
-    provider: azure
+    provider: aws
     cloudNativeServices: false
   
   proxy:
     provider: none
-    externalUrlSuffix: supplychain-net
+    externalUrlSuffix: hlf.blockchaincloudpoc-develop.com
 
 certs:
   generateCertificates: true
   orgData:
-    caAddress: ca.supplychain-net:7054
-    caAdminUser: supplychain-admin
-    caAdminPassword: supplychain-adminpw
-    orgName: supplychain
+    caAddress: ca.salvaro-net:7054
+    caAdminUser: salvaro-admin
+    caAdminPassword: salvaro-adminpw
+    orgName: salvaro
     type: orderer
     componentSubject: "O=Orderer,L=51.50/-0.13/London,C=GB"
   settings:
@@ -33,5 +33,5 @@ certs:
 orderer:
   consensus: raft
   logLevel: info
-  localMspId: supplychainMSP
+  localMspId: salvaroMSP
   tlsstatus: true

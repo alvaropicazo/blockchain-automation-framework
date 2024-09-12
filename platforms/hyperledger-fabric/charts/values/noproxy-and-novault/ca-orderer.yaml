@@ -2,19 +2,19 @@
 global:
   serviceAccountName: vault-auth
   cluster:
-    provider: azure
+    provider: aws
     cloudNativeServices: false
   vault:
     type: kubernetes
   proxy:
     provider: none
-    externalUrlSuffix: supplychain-net
+    externalUrlSuffix: hlf.blockchaincloudpoc-develop.com
 
 storage:
   size: 512Mi
 server:
   removeCertsOnDelete: true
   tlsStatus: true
-  adminUsername: supplychain-admin
-  adminPassword: supplychain-adminpw
+  adminUsername: salvaro-admin
+  adminPassword: salvaro-adminpw
   subject: "/C=GB/ST=London/L=London/O=Orderer"

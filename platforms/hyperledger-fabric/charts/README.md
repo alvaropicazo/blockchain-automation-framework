@@ -48,11 +48,11 @@ global:
 #### Setup Orderers and Peers in an organization
 ```bash
 # Install the CA Server
-helm upgrade --install supplychain-ca ./fabric-ca-server --namespace supplychain-net --create-namespace --values ./values/noproxy-and-novault/ca-orderer.yaml
+helm upgrade --install salvaro-ca ./fabric-ca-server --namespace salvaro-net --create-namespace --values ./values/noproxy-and-novault/ca-orderer.yaml
 
 # Install the Orderers after CA server is running
-helm upgrade --install orderer1 ./fabric-orderernode --namespace supplychain-net --values ./values/noproxy-and-novault/orderer.yaml
-helm upgrade --install orderer2 ./fabric-orderernode --namespace supplychain-net --values ./values/noproxy-and-novault/orderer.yaml --set certs.settings.createConfigMaps=false
+helm upgrade --install orderer0 ./fabric-orderernode --namespace salvaro-net --values ./values/noproxy-and-novault/orderer.yaml
+helm upgrade --install orderer2 ./fabric-orderernode --namespace salvaro-net --values ./values/noproxy-and-novault/orderer.yaml --set certs.settings.createConfigMaps=false
 helm upgrade --install orderer3 ./fabric-orderernode --namespace supplychain-net --values ./values/noproxy-and-novault/orderer.yaml --set certs.settings.createConfigMaps=false
 ```
 
@@ -62,38 +62,38 @@ helm upgrade --install orderer3 ./fabric-orderernode --namespace supplychain-net
 # OPTIONAL: To use a custom peer configuration, copy core.yaml file into ./fabric-peernode/files
 cp /home/bevel/build/peer0-core.yaml ./fabric-peernode/conf/default_core.yaml
 # Install the peers
-helm upgrade --install peer0 ./fabric-peernode --namespace supplychain-net --values ./values/noproxy-and-novault/peer.yaml
-helm upgrade --install peer1 ./fabric-peernode --namespace supplychain-net --values ./values/noproxy-and-novault/peer.yaml --set peer.gossipPeerAddress=peer0.supplychain-net:7051 --set peer.cliEnabled=true
+helm upgrade --install peer0 ./fabric-peernode --namespace salvaro-net --values ./values/noproxy-and-novault/peer.yaml
+helm upgrade --install peer1 ./fabric-peernode --namespace salvaro-net --values ./values/noproxy-and-novault/peer.yaml --set peer.gossipPeerAddress=peer0.salvaro-net:7051 --set peer.cliEnabled=true
 ```
 
 #### Setup Peers in another organization
 
 ```bash
 # Install the CA Server
-helm upgrade --install carrier-ca ./fabric-ca-server --namespace carrier-net --create-namespace --values ./values/noproxy-and-novault/ca-peer.yaml
+helm upgrade --install calvaro-ca ./fabric-ca-server --namespace calvaro-net --create-namespace --values ./values/noproxy-and-novault/ca-peer.yaml
 
 # Get the Orderer tls certificate and place in fabric-peernode/files
 cd ./fabric-peernode/files
-kubectl --namespace supplychain-net get configmap orderer-tls-cacert -o jsonpath='{.data.cacert}' > orderer.crt
+kubectl --namespace salvaro-net get configmap orderer-tls-cacert -o jsonpath='{.data.cacert}' > orderer.crt
 
 # Install the Peers
 cd ../..
-helm upgrade --install peer0 ./fabric-peernode --namespace carrier-net --values ./values/noproxy-and-novault/carrier.yaml
+helm upgrade --install peer0 ./fabric-peernode --namespace calvaro-net --values ./values/noproxy-and-novault/carrier.yaml
 ```
 
 #### Create Genesis file and other channel artifacts
 ```bash
 # Obtain certificates and the configuration file of each peer organization, place in fabric-genesis/files
 cd ./fabric-genesis/files
-kubectl --namespace carrier-net get secret admin-msp -o json > carrier.json
-kubectl --namespace carrier-net get configmap peer0-msp-config -o json > carrier-config-file.json
+kubectl --namespace calvaro-net get secret admin-msp -o json > carrier.json
+kubectl --namespace calvaro-net get configmap peer0-msp-config -o json > carrier-config-file.json
 
 # OPTIONAL: If additional orderer from a different organization is needed in genesis
-kubectl --namespace carrier-net get secret orderer5-tls -o json > orderer5-orderer-tls.json
+kubectl --namespace calvaro-net get secret orderer5-tls -o json > orderer5-orderer-tls.json
 
 # Generate the genesis block
 cd ../..
-helm install genesis ./fabric-genesis --namespace supplychain-net --values ./values/noproxy-and-novault/genesis.yaml
+helm install genesis ./fabric-genesis --namespace salvaro-net --values ./values/noproxy-and-novault/genesis.yaml
 ```
 
 #### Create channel for Hyperledger Fabric 2.5.x
@@ -146,15 +146,15 @@ helm install peer0-allchannel ./fabric-channel-join --namespace carrier-net --va
 Replace the `"http://vault.url:8200"`, `"https://yourkubernetes.com"` and `"test.yourdomain.com"` in all the files in `./values/proxy-and-vault/` folder and this file.
 
 ```bash
-kubectl create namespace supplychain-net 
+kubectl create namespace salvaro-net 
 
-kubectl -n supplychain-net create secret generic roottoken --from-literal=token=<VAULT_ROOT_TOKEN>
+kubectl -n salvaro-net create secret generic roottoken --from-literal=token=<VAULT_ROOT_TOKEN>
 
-helm upgrade --install supplychain-ca ./fabric-ca-server --namespace supplychain-net --values ./values/proxy-and-vault/ca-orderer.yaml
+helm upgrade --install salvaro-ca ./fabric-ca-server --namespace salvaro-net --values ./values/proxy-and-vault/ca-orderer.yaml
 
 # Install the Orderers after CA server is running
-helm upgrade --install orderer1 ./fabric-orderernode --namespace supplychain-net --values ./values/proxy-and-vault/orderer.yaml
-helm upgrade --install orderer2 ./fabric-orderernode --namespace supplychain-net --values ./values/proxy-and-vault/orderer.yaml --set certs.settings.createConfigMaps=false
+helm upgrade --install orderer1 ./fabric-orderernode --namespace salvaro-net --values ./values/proxy-and-vault/orderer.yaml
+helm upgrade --install orderer2 ./fabric-orderernode --namespace salvaro-net --values ./values/proxy-and-vault/orderer.yaml --set certs.settings.createConfigMaps=false
 helm upgrade --install orderer3 ./fabric-orderernode --namespace supplychain-net --values ./values/proxy-and-vault/orderer.yaml --set certs.settings.createConfigMaps=false
 ```
 

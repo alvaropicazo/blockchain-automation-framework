@@ -2,19 +2,18 @@
 global:
   serviceAccountName: vault-auth
   cluster:
-    provider: azure
+    provider: aws
     cloudNativeServices: false
   vault:
     type: kubernetes
   proxy:
     provider: none
-    externalUrlSuffix: carrier-net
-
+    externalUrlSuffix: calvaro-net
 storage:
   size: 512Mi
 server:
   removeCertsOnDelete: true
   tlsStatus: true
-  adminUsername: carrier-admin
-  adminPassword: carrier-adminpw
+  adminUsername: calvaro-admin
+  adminPassword: calvaro-adminpw
   subject: "/C=GB/ST=London/L=London/O=Carrier"

@@ -5,7 +5,6 @@ dependencies:
     tags:
       - storage
     version: ~1.0.0
-    condition: storage.enabled
   - name: fabric-catools
     alias: certs
     repository: "file://../fabric-catools"

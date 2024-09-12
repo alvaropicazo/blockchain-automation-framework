@@ -2,26 +2,26 @@
 global:
   serviceAccountName: vault-auth
   cluster:
-    provider: azure
+    provider: aws
     cloudNativeServices: false
-    kubernetesUrl: "https://yourkubernetes.com"
+    kubernetesUrl: https://25B52ACACF9BEB99DFD3C53B47616C90.gr7.eu-west-1.eks.amazonaws.com
   vault:
     type: hashicorp
     role: vault-role
-    address: http://vault.url:8200
-    authPath: supplychain
+    address: http://localhost:8200
+    authPath: salvaro
     secretEngine: secretsv2
-    secretPrefix: "data/supplychain"
+    secretPrefix: "data/salvaro"
     tls: false
   proxy:
     provider: haproxy
-    externalUrlSuffix: test.yourdomain.com
+    externalUrlSuffix: hlf.blockchaincloudpoc-develop.com
 
 storage:
   size: 512Mi
 server:
   removeCertsOnDelete: true
   tlsStatus: true
-  adminUsername: supplychain-admin
-  adminPassword: supplychain-adminpw
+  adminUsername: salvaro-admin
+  adminPassword: salvaro-adminpw
   subject: "/C=GB/ST=London/L=London/O=Orderer"
