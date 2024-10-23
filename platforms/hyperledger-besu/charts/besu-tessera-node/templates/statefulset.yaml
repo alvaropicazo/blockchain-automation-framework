@@ -178,7 +178,7 @@ spec:
           echo "Getting Username and Password from the Vault"
 
           # Read the password from the specified file and store it in 'pass'
-          pass=$(cat /keys/tm.password)
+          pass=$(cat /keys/tm.password);
 
           # create an SQL script file
           # This SQL script updates user passwords and creates database tables
